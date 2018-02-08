@@ -73,8 +73,8 @@ function getDataField($data, $field){
 
 /**
 * Searches the whole object for the given field
-* for any publication,  can return an indexed array of
-* the fields
+* for any publication, is faster because it does loops once for all the publications 
+* 
 *
 *@param data the whole json array or associative entries e.g "key": "value" or "key" : array {...}
 *@param field the field being sought or key
