@@ -3,16 +3,29 @@
 <head>
 	<link rel="stylesheet" href="/bibtable/tablesorter-master/css/theme.default.css">
 	<script
-			  src="http://code.jquery.com/jquery-3.3.1.min.js"
-			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			  crossorigin="anonymous"></script>
+	src="http://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
 
-	<script type = "text/javascript" src="/bibtable/tablesorter-master/js/jquery.tablesorter.js"></script>
-	
+	<script type = "text/javascript" src="/bibtable/tablesorter-master/js/jquery.tablesorter.combined.js"></script>
+	<style>
+	.hidden {display : none;}
+	.source:hover {
+		cursor: pointer;
+		
+	}
+	.source:click {
+		background-color: #f9f9f9;
+		min-width: 160px;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		padding: 12px 16px;
+		z-index: 1;
+	}
+</style>
 </head>
 <body>
 	<script type="text/javascript" src="dynData.js"></script>
-	<table id="myTable" class="tablesorter-default"></table>
+	<table id="myTable" class="tablesorter-default" ></table>
 
-	</body>
-	</html>
+</body>
+</html>

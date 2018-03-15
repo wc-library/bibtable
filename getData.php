@@ -13,6 +13,7 @@
 *
 *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
 */
+include 'api_key.php';
 $dataNum = 100; // the limit of sources we want to pull
 $start = 0;
 $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=[]&format=json&limit='. $dataNum .'&start=' . $start; // the link to zotero api
@@ -31,7 +32,7 @@ $i = 0; // keeps track of array position
 
 $isEmpty = false;
 	while(!$isEmpty && $start < 900){
-		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=[]&format=json&limit='. $dataNum .'&start=' . $start;
+		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
 		
 		$response = file_get_contents($data); // pulls in the data 
 		if($response == "[]"){
@@ -165,7 +166,7 @@ $allData->places = $places;
 $allData->publishers = $publishers;
 $allData->isbns = $isbns;
 $allData->urls = $urls;
-//$allData->
+$allData->abstracts = $abstracts;
 
 //var_dump($shortTitles);
 //var_dump($creators);
