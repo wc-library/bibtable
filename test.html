@@ -14,16 +14,22 @@
 		cursor: pointer;
 		
 	}
-	.source:click {
-		background-color: #f9f9f9;
-		min-width: 160px;
-		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-		padding: 12px 16px;
-		z-index: 1;
+	/*.source:after{
+		
+		content: '\02795';
+		font-size: 13px;
+		color: black;
+		float: right;
+		margin-left: 5px;
+	}*/
+	.active: after{
+
+    content: "\2796"; 
 	}
 </style>
 </head>
 <body>
+	<h1> This is the test page</h1>
 	<script type="text/javascript" src="dynData.js"></script>
 	<table id="myTable" class="tablesorter-default" ></table>
 

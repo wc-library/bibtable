@@ -31,9 +31,9 @@ $urls = array(); //getDataField($info, "url");
 $i = 0; // keeps track of array position
 
 $isEmpty = false;
-	while(!$isEmpty && $start < 900){
-		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
-		
+while(!$isEmpty && $start < 900){
+	$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
+
 		$response = file_get_contents($data); // pulls in the data 
 		if($response == "[]"){
 			$isEmpty = true;
@@ -94,7 +94,7 @@ function getClassicFields($data){
 	global $creators;
 	global $dates;
 	global $places;
-	global $publisher;
+	global $publishers;
 	global $isbns;
 	global $abstracts;
 	global $urls;
@@ -117,8 +117,13 @@ function getClassicFields($data){
 		else
 			$shortTitles[$i] = "";
 
-		if(array_key_exists("creators", $scope))
-			$creators[$i] = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
+		if(array_key_exists("creators", $scope)){
+			
+			if(array_key_exists("firstName", $scope["creators"][0]))
+				$creators[$i] = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
+			else
+				$creators[$i] = $scope["creators"][0]["name"];
+		}
 		else
 			$creators[$i] = "";
 
