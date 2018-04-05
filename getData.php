@@ -16,7 +16,7 @@
 include 'api_key.php';
 $dataNum = 100; // the limit of sources we want to pull
 $start = 0;
-$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=[]&format=json&limit='. $dataNum .'&start=' . $start; // the link to zotero api
+// the link to zotero api
 
 $itemTypes = array();//getDataField($info, "itemType");
 $titles = array();//getDataField($info, "title");
@@ -30,6 +30,9 @@ $abstracts = array();//getDataField($info, "abstractNote");
 $urls = array(); //getDataField($info, "url");
 $i = 0; // keeps track of array position
 
+
+function getApiResults(){
+	global $dataNum, $start, $api_key;
 $isEmpty = false;
 while(!$isEmpty && $start < 900){
 	$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
@@ -39,13 +42,14 @@ while(!$isEmpty && $start < 900){
 			$isEmpty = true;
 		}
 		$info = json_decode($response, true); // decodes jason and creates an object
+
 		getClassicFields($info);
 		
 		$start +=100;
 	}
 
-	
 
+}
 
 
 
@@ -87,6 +91,9 @@ function getDataField($data, $field){
 *@return returnField an indexed array of the requested field
 */
 function getClassicFields($data){
+
+	//aparently one cannot manipulate global variables within a method 
+	//without specifying that they are global
 	global $i; 
 	global $itemTypes;
 	global $titles;
@@ -99,24 +106,16 @@ function getClassicFields($data){
 	global $abstracts;
 	global $urls;
 
+	//look through all the data 
 	foreach ($data as $work) {
 		$scope = $work["data"];
 
-		if(array_key_exists("itemType", $scope))
-			$itemTypes[$i] = $scope["itemType"];
-		else
-			$itemTypes[$i] = "";
+		
+		$itemTypes[$i] = checknStore( "itemType", $scope);
+		$titles[$i] = checknStore( "title", $scope);
+		$shortTitles[$i] = checknStore("shortTitle", $scope);
 
-		if(array_key_exists("title", $scope))
-			$titles[$i] = $scope["title"];
-		else
-			$titles[$i] = "";
-
-		if(array_key_exists("shortTitle", $scope))
-			$shortTitles[$i] = $scope["shortTitle"];
-		else
-			$shortTitles[$i] = "";
-
+		//this handled this way because the creators data comes in different formats
 		if(array_key_exists("creators", $scope)){
 			
 			if(array_key_exists("firstName", $scope["creators"][0]))
@@ -127,41 +126,48 @@ function getClassicFields($data){
 		else
 			$creators[$i] = "";
 
-		if(array_key_exists("date", $scope))
-			$dates[$i] = $scope["date"];
-		else
-			$dates[$i] = "";
-
-		if(array_key_exists("place", $scope))
-			$places[$i] = $scope["place"];
-		else
-			$places[$i] = "";
-
-		if(array_key_exists("publisher", $scope))
-			$publishers[$i] = $scope["publisher"];
-		else
-			$publishers[$i] = "";
-
-		if(array_key_exists("ISBN", $scope))
-			$isbns[$i] = $scope["ISBN"];
-		else
-			$isbns[$i] = "";
-
-		if(array_key_exists("abstractNote", $scope))
-			$abstracts[$i] = $scope["abstractNote"];
-		else
-			$abstracts[$i] = "";
-
-		if(array_key_exists("url", $scope))
-			$urls[$i] = $scope["url"];
-		else
-			$urls[$i] = "";
-
+		$dates[$i] = checknStore("date", $scope);
+		$places[$i] = checknStore("place", $scope);
+		$publishers[$i] = checknStore("publisher", $scope);
+		$isbns[$i] = checknStore("ISBN", $scope);
+		$abstracts[$i] = checknStore("abstractNote", $scope);
+		$urls[$i] = checknStore("url", $scope);
 		$i++;
 	}
 
 }
 
+/**
+* This is a helper method for isolating a field
+* it helps reduce clatter in the getClassicFields
+* bassically checks if key exists because some json objects
+* dont have the field, e.g URLs 
+* @param The string that is the key to the value we are looking for e.g creators => "Jane Deer"
+* @param The scope of our search, certain fields occur within objects within objects
+*/
+function checknStore($string, $scope){
+	
+	//if the key doest exist leave it black otherwise store it
+	if(array_key_exists($string, $scope))
+		return $scope[$string];
+	else
+		return  "";
+}
+
+//$allData = (object) array();
+function makeAllData(){
+	global $itemTypes;
+	global $titles;
+	global $shortTitles;
+	global $creators;
+	global $dates;
+	global $places;
+	global $publishers;
+	global $isbns;
+	global $abstracts;
+	global $urls;
+
+$allData = new stdClass();
 $allData->itemtypes = $itemTypes;
 $allData->titles = $titles;
 $allData->shorttitles = $shortTitles;
@@ -172,6 +178,8 @@ $allData->publishers = $publishers;
 $allData->isbns = $isbns;
 $allData->urls = $urls;
 $allData->abstracts = $abstracts;
+return ($allData);
+}
 
 //var_dump($shortTitles);
 //var_dump($creators);
@@ -183,7 +191,46 @@ $allData->abstracts = $abstracts;
 //var_dump($urls);
 
 //$allData
+	
+	
 
-echo json_encode(($allData));
+	function json_cached_results() {
+    
+    $expires = NULL;
+    $cache_file = dirname(__FILE__) . '/cachefile.json';
+    $expires = time() - 2*60*60;
+    
+    if( !file_exists($cache_file) ) die("Cache file is missing: $cache_file");
 
+    //chmod($cache_file, 0755);
+    // Check that the file is older than the expire time and that it's not empty
+    if ( filectime($cache_file) < $expires || file_get_contents($cache_file)  == '' ) {
+
+        // File is too old, refresh cache
+        getApiResults();
+        $api_results =  json_encode(makeAllData()); 
+        
+      
+        						//returnData();
+        
+
+        // Remove cache file on error to avoid writing wrong xml
+        if ( $api_results  != null){
+        	
+            file_put_contents($cache_file,  $api_results);
+        }
+        else
+           file_put_contents($cache_file, "");
+    } else {
+        
+        // Fetch cache
+        $api_results = (file_get_contents($cache_file));
+      
+        
+        
+    }
+
+    return (($api_results));
+}
+echo json_cached_results();
 ?>

@@ -69,7 +69,7 @@ function makeTable(num){
 		table += '<td class="hidden">' + Types[i] + '</td>';
 
 		//this is the beggining of the citation paragraph set up 
-		table += '<td colspan=5><div class="source">'  + constructT(Authors[i]) + '<i>' + constructT(Titles[i]) + '<i>' + constructT(Publishers[i]) + constructT(Dates[i]) + constructT(Places[i]) + constructT(ISBN[i])+ constructT(Types[i]);
+		table += '<td colspan=5><div class="source">'  + constructT(Authors[i]) + '<i>' + constructT(Titles[i]) + '</i>' + constructT(Publishers[i]) + constructT(Dates[i]) + constructT(Places[i]) + constructT(ISBN[i])+ constructT(Types[i]);
 		
 		//anything that needs to be visible only in the drop down
 
