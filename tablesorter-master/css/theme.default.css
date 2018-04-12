@@ -88,10 +88,10 @@ Default Theme
 
 /* Zebra Widget - row alternating colors */
 .tablesorter-default tr.odd > td {
-	background-color: #dfdfdf;
+	background-color: #F1F1F1;
 }
 .tablesorter-default tr.even > td {
-	background-color: #efefef;
+	background-color:  #FAFAFA;
 }
 
 /* Column Widget - column sort colors */

@@ -21,7 +21,11 @@ request.onload = function(){
 		});
 		$(function()
 		{
-			$("#myTable").tablesorter();
+			$("#myTable").tablesorter(
+			{
+				widgets : [ "zebra", "filter" ]
+			}
+			);
 
 		});
 	}
@@ -49,7 +53,8 @@ function makeTable(num){
 		table += '<th>' + tablehead[i] + '</th>';
 	}
 	table +='</tr></thead><tbody>';
-	for(i = 0; i < Authors.length; i++)
+
+	for(i = 0; i < Object.keys(Authors).length; i++)
 	{
 
 
@@ -69,7 +74,7 @@ function makeTable(num){
 		table += '<td class="hidden">' + Types[i] + '</td>';
 
 		//this is the beggining of the citation paragraph set up 
-		table += '<td colspan=5><div class="source">'  + constructT(Authors[i]) + '<i>' + constructT(Titles[i]) + '</i>' + constructT(Publishers[i]) + constructT(Dates[i]) + constructT(Places[i]) + constructT(ISBN[i])+ constructT(Types[i]);
+		table += '<td colspan=5><div class="source">'  +'<b id ="Title">' + constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) + constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
 		
 		//anything that needs to be visible only in the drop down
 
@@ -100,7 +105,9 @@ function constructT(string){
 
 	var toReturn = "";
 	if(string != ""){
-		toReturn = string + ". "
+		toReturn = string + ". ";
+
+		
 	}
 	return toReturn;
 }

@@ -33,9 +33,9 @@ $i = 0; // keeps track of array position
 
 function getApiResults(){
 	global $dataNum, $start, $api_key;
-$isEmpty = false;
-while(!$isEmpty && $start < 900){
-	$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
+	$isEmpty = false;
+	while(!$isEmpty && $start < 900){
+		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
 
 		$response = file_get_contents($data); // pulls in the data 
 		if($response == "[]"){
@@ -106,6 +106,7 @@ function getClassicFields($data){
 	global $abstracts;
 	global $urls;
 
+
 	//look through all the data 
 	foreach ($data as $work) {
 		$scope = $work["data"];
@@ -116,15 +117,53 @@ function getClassicFields($data){
 		$shortTitles[$i] = checknStore("shortTitle", $scope);
 
 		//this handled this way because the creators data comes in different formats
-		if(array_key_exists("creators", $scope)){
-			
-			if(array_key_exists("firstName", $scope["creators"][0]))
-				$creators[$i] = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
-			else
-				$creators[$i] = $scope["creators"][0]["name"];
+		if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
+			$len = count($scope["creators"]); // length of creators array
+			$authorString = ""; // will hold the string of creators built up by the while loop
+			$counter = 0; // counts up the number of creators in the creators array
+			if( $len > 1){
+				/* loop invariant, counter is current creator, 
+				at end of loop, the counter will be at the last creators position
+				this will help with formating
+				*/
+				while($counter < $len-1 ){
+					if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
+						$authorString = $authorString . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"] . ".; "; // the .; is a format from the old brocken zotero parser
+					}
+						else{
+							$authorString = $authorString . $scope["creators"][$counter]["name"] . ".; ";
+						}
+					$counter++; // increase counter, to get to next position
+
+				}
+				//at the end of the loop we now hold the postion of last creator, 
+				//unfortunately, at this moment there are lots of if blocks, but .... parsing is like this
+				if(isset($scope["creators"][$counter]["firstName"] )){
+					$authorString = $authorString . "and " . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"];
+				}
+				else{
+					$authorString = $authorString .  "and " . $scope["creators"][$counter]["name"] ;
+				}
+
+				$creators[$i] = $authorString; // save the author string 
+
+			}else {
+				//if its a single creator, this seems very much like repeated code, I will endevour to improve it, 
+				//but for a single author the format is really simple and different
+				if(isset($scope["creators"][0]["firstName"] )){
+					$creators[$i] = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
+				}
+				else{
+					if(isset($scope["creators"][0]["name"])){
+						$creators[$i] = $scope["creators"][0]["name"];
+					}
+				}
+			}
 		}
-		else
+		else{
 			$creators[$i] = "";
+		}
+
 
 		$dates[$i] = checknStore("date", $scope);
 		$places[$i] = checknStore("place", $scope);
@@ -167,18 +206,19 @@ function makeAllData(){
 	global $abstracts;
 	global $urls;
 
-$allData = new stdClass();
-$allData->itemtypes = $itemTypes;
-$allData->titles = $titles;
-$allData->shorttitles = $shortTitles;
-$allData->creators = $creators;
-$allData->dates = $dates;
-$allData->places = $places;
-$allData->publishers = $publishers;
-$allData->isbns = $isbns;
-$allData->urls = $urls;
-$allData->abstracts = $abstracts;
-return ($allData);
+	$allData = new stdClass();
+	$allData->creators = $creators;
+	$allData->itemtypes = $itemTypes;
+	$allData->titles = $titles;
+	$allData->shorttitles = $shortTitles;
+	
+	$allData->dates = $dates;
+	$allData->places = $places;
+	$allData->publishers = $publishers;
+	$allData->isbns = $isbns;
+	$allData->urls = $urls;
+	$allData->abstracts = $abstracts;
+	return ($allData);
 }
 
 //var_dump($shortTitles);
@@ -191,46 +231,46 @@ return ($allData);
 //var_dump($urls);
 
 //$allData
-	
-	
 
-	function json_cached_results() {
-    
-    $expires = NULL;
-    $cache_file = dirname(__FILE__) . '/cachefile.json';
-    $expires = time() - 2*60*60;
-    
-    if( !file_exists($cache_file) ) die("Cache file is missing: $cache_file");
+
+
+function json_cached_results() {
+
+	$expires = NULL;
+	$cache_file = dirname(__FILE__) . '/cachefile.json';
+	$expires = time() - 2*60*60;
+
+	if( !file_exists($cache_file) ) die("Cache file is missing: $cache_file");
 
     //chmod($cache_file, 0755);
     // Check that the file is older than the expire time and that it's not empty
-    if ( filectime($cache_file) < $expires || file_get_contents($cache_file)  == '' ) {
+		if ( filectime($cache_file) < $expires || file_get_contents($cache_file)  == '' ) {
 
         // File is too old, refresh cache
-        getApiResults();
-        $api_results =  json_encode(makeAllData()); 
-        
-      
+			getApiResults();
+			$api_results =  json_encode(makeAllData()); 
+
+
         						//returnData();
-        
+
 
         // Remove cache file on error to avoid writing wrong xml
-        if ( $api_results  != null){
-        	
-            file_put_contents($cache_file,  $api_results);
-        }
-        else
-           file_put_contents($cache_file, "");
-    } else {
-        
-        // Fetch cache
-        $api_results = (file_get_contents($cache_file));
-      
-        
-        
-    }
+			if ( $api_results  != null){
 
-    return (($api_results));
-}
-echo json_cached_results();
-?>
+				file_put_contents($cache_file,  $api_results);
+			}
+			else
+				file_put_contents($cache_file, "");
+		} else {
+
+        // Fetch cache
+			$api_results = (file_get_contents($cache_file));
+
+
+
+		}
+
+		return (($api_results));
+	}
+	echo json_cached_results();
+	?>
