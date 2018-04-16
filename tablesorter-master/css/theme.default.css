@@ -180,6 +180,8 @@ caption {
 	-moz-transition: height 0.1s ease;
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
+	
+
 }
 /* rows hidden by filtering (needed for child rows) */
 .tablesorter .filtered {

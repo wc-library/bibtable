@@ -57,7 +57,7 @@ function makeTable(num){
 	for(i = 0; i < Object.keys(Authors).length; i++)
 	{
 
-
+		source = "";
 		var yearRE = /\b\d{4}\b/;
 		var year = yearRE.exec(Dates[i]);
 		if(year == null){
@@ -72,24 +72,29 @@ function makeTable(num){
 		table += '<td class="hidden">' + year+ '</td>';
 		table += '<td class="hidden">' + ISBN[i] + '</td>';
 		table += '<td class="hidden">' + Types[i] + '</td>';
+		var linkNAbs = '';
+
+		linkNAbs += '<div class="extra" id="'+ i+'" style="display: none;"> <p>';
+		if(Abstracts[i] != ""){
+			linkNAbs += '<strong> Abstract</strong>: ';
+			source = "source";
+		}
+		linkNAbs += Abstracts[i]+ '</p><p>';
+		if(URLs[i] != ""){
+			linkNAbs += '<strong>Link: </strong>';
+			source = "source";
+		}
+		
+		
+		linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a></p></div></div></td>';
+		linkNAbs += '</tr>';
 
 		//this is the beggining of the citation paragraph set up 
-		table += '<td colspan=5><div class="source">'  +'<b id ="Title">' + constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) + constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
+		table += '<td colspan=5><div class="'+ source +'">'  +'<b id ="Title">' + constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) + constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
 		
 		//anything that needs to be visible only in the drop down
 
-		table += '<div class="extra" id="'+ i+'" style="display: none;"> <p>';
-		if(Abstracts[i] != ""){
-			table += '<strong> Abstract</strong>: ';
-		}
-		table += Abstracts[i]+ '</p><p>';
-		if(URLs[i] != ""){
-			table += '<strong>Link: </strong>';
-		}
-		
-		
-		table +='<a href="' + URLs[i] + '">' + URLs[i] + '</a><p></div></div></td>';
-		table += '</tr>';
+		table+= linkNAbs;
 
 		
 	}
