@@ -34,8 +34,12 @@ $i = 0; // keeps track of array position
 function getApiResults(){
 	global $dataNum, $start, $api_key;
 	$isEmpty = false;
+	if($api_key == ''){
+		echo "error: Missng API key";
+		exit;
+	}
 	while(!$isEmpty && $start < 900){
-		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&format=json&limit='. $dataNum .'&start=' . $start;
+		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&itemTypes?locale&format=json&limit='. $dataNum .'&start=' . $start;
 
 		$response = file_get_contents($data); // pulls in the data 
 		if($response == "[]"){

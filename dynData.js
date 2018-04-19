@@ -6,20 +6,31 @@ request.onload = function(){
 	if (this.readyState == 4 && this.status == 200){
 		num = JSON.parse(this.responseText);
 		console.log(num);
-		makeTable(num);
 		
+		makeTable(num);
+		$(function(){
+			myVar = setTimeout(showPage, 1000);
+		});
 		$(".source").click(function(){
 			
 			$parentSource = $(this);
-			$parentSource.siblings().find('.extra').slideUp();
+			//$parentSource.siblings().find('.extra').slideUp();
 			$("div, div", $(this)).slideToggle("slow");
-			
-			
-
-
 
 		});
-		$(function()
+		
+	}
+};
+
+request.open("GET", "getData.php", true);
+
+request.send();
+
+function showPage(){
+	document.getElementById("loader").style.display = "none";
+	document.getElementById("loadinginfo").style.display="none";
+	document.getElementById("myTable").style.display ="block";
+	$(function()
 		{
 			$("#myTable").tablesorter(
 			{
@@ -28,11 +39,8 @@ request.onload = function(){
 			);
 
 		});
-	}
-};
-request.open("GET", "getData.php", true);
-request.send();
 
+}
 function makeTable(num){
 	var Authors = num.creators;
 	var Titles = num.titles;
@@ -45,7 +53,7 @@ function makeTable(num){
 	var URLs = num.urls;
 
 
-	var tablehead = ["Author", "Title", "Year", "ISBN", "Type"];
+	var tablehead = ["Author", "Title", "Year", "Type"];
 	var len = tablehead.length;
 	var table = '<thead><tr>';
 	for(i = 0; i < len; i++)
@@ -74,7 +82,7 @@ function makeTable(num){
 		table += '<td class="hidden">' + Types[i] + '</td>';
 		var linkNAbs = '';
 
-		linkNAbs += '<div class="extra" id="'+ i+'" style="display: none;"> <p>';
+		linkNAbs += '<div class="extra" id="'+ i+'" style="display: none;"><p>';
 		if(Abstracts[i] != ""){
 			linkNAbs += '<strong> Abstract</strong>: ';
 			source = "source";
