@@ -9,7 +9,11 @@ request.onload = function(){
 		
 		makeTable(num);
 		$(function(){
+			if(num != ""){
+				document.getElementById("loadinginfo").innerHTML = "Formating Sources...";
+			}
 			myVar = setTimeout(showPage, 1000);
+
 		});
 		$(".source").click(function(){
 			
