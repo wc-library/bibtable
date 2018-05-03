@@ -17,7 +17,7 @@ include 'api_key.php';
 $dataNum = 100; // the limit of sources we want to pull
 $start = 0;
 // the link to zotero api
-
+$lastnames = array();
 $itemTypes = array();//getDataField($info, "itemType");
 $titles = array();//getDataField($info, "title");
 $shortTitles = array();
@@ -29,13 +29,14 @@ $isbns = array();//getDataField($info,"ISBN");
 $abstracts = array();//getDataField($info, "abstractNote");
 $urls = array(); //getDataField($info, "url");
 $i = 0; // keeps track of array position
-
+$seq =0;
 
 function getApiResults(){
 	global $dataNum, $start, $api_key;
 	$isEmpty = false;
 	if($api_key == ''){
-		echo "error: Missng API key";
+		echo "00";
+
 		exit;
 	}
 	while(!$isEmpty && $start < 900){
@@ -109,6 +110,8 @@ function getClassicFields($data){
 	global $isbns;
 	global $abstracts;
 	global $urls;
+	global $lastnames;
+
 
 
 	//look through all the data 
@@ -121,9 +124,10 @@ function getClassicFields($data){
 		$shortTitles[$i] = checknStore("shortTitle", $scope);
 
 		//this handled this way because the creators data comes in different formats
+		$authorString = "";
 		if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 			$len = count($scope["creators"]); // length of creators array
-			$authorString = ""; // will hold the string of creators built up by the while loop
+			 // will hold the string of creators built up by the while loop
 			$counter = 0; // counts up the number of creators in the creators array
 			if( $len > 1){
 				/* loop invariant, counter is current creator, 
@@ -144,31 +148,33 @@ function getClassicFields($data){
 				//unfortunately, at this moment there are lots of if blocks, but .... parsing is like this
 				if(isset($scope["creators"][$counter]["firstName"] )){
 					$authorString = $authorString . "and " . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"];
+
 				}
 				else{
 					$authorString = $authorString .  "and " . $scope["creators"][$counter]["name"] ;
 				}
 
-				$creators[$i] = $authorString; // save the author string 
+				//$creators[$i] = $authorString; // save the author string 
 
 			}else {
 				//if its a single creator, this seems very much like repeated code, I will endevour to improve it, 
 				//but for a single author the format is really simple and different
 				if(isset($scope["creators"][0]["firstName"] )){
-					$creators[$i] = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
+					$authorString = $scope["creators"][0]["firstName"] . " " . $scope["creators"][0]["lastName"];
 				}
 				else{
 					if(isset($scope["creators"][0]["name"])){
-						$creators[$i] = $scope["creators"][0]["name"];
+						$authorString = $scope["creators"][0]["name"];
 					}
 				}
 			}
 		}
 		else{
-			$creators[$i] = "";
+			$authorString = ""; 
 		}
-
-
+		$creators[$i] = $authorString;
+		
+		
 		$dates[$i] = checknStore("date", $scope);
 		$places[$i] = checknStore("place", $scope);
 		$publishers[$i] = checknStore("publisher", $scope);
@@ -177,7 +183,7 @@ function getClassicFields($data){
 		$urls[$i] = checknStore("url", $scope);
 		$i++;
 	}
-
+	
 }
 
 /**
@@ -210,6 +216,7 @@ function makeAllData(){
 	global $abstracts;
 	global $urls;
 
+	
 	$allData = new stdClass();
 	$allData->creators = $creators;
 	$allData->itemtypes = $itemTypes;
@@ -240,6 +247,7 @@ function makeAllData(){
 
 function json_cached_results() {
 
+	
 	$expires = NULL;
 	$cache_file = dirname(__FILE__) . '/cachefile.json';
 	$expires = time() - 2*60*60;
@@ -252,6 +260,7 @@ function json_cached_results() {
 
         // File is too old, refresh cache
 			getApiResults();
+			
 			$api_results =  json_encode(makeAllData()); 
 
 
@@ -276,5 +285,7 @@ function json_cached_results() {
 
 		return (($api_results));
 	}
+
+
 	echo json_cached_results();
 	?>

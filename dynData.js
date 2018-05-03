@@ -4,6 +4,13 @@ var request = new XMLHttpRequest();
 
 request.onload = function(){
 	if (this.readyState == 4 && this.status == 200){
+		if(this.responseText == "00"){
+			console.LO
+			document.getElementById("api_error").innerHTML = "error: Missng API key";
+			document.getElementById("loader").style.display = "none";
+			document.getElementById("loadinginfo").style.display="none";
+			die("Api_key Issue");
+		}
 		num = JSON.parse(this.responseText);
 		console.log(num);
 		
@@ -35,14 +42,14 @@ function showPage(){
 	document.getElementById("loadinginfo").style.display="none";
 	document.getElementById("myTable").style.display ="block";
 	$(function()
+	{
+		$("#myTable").tablesorter(
 		{
-			$("#myTable").tablesorter(
-			{
-				widgets : [ "zebra", "filter" ]
-			}
-			);
+			widgets : [ "zebra", "filter" ]
+		}
+		);
 
-		});
+	});
 
 }
 function makeTable(num){
@@ -66,7 +73,7 @@ function makeTable(num){
 	}
 	table +='</tr></thead><tbody>';
 
-	for(i = 0; i < Object.keys(Authors).length; i++)
+	for(i = 0; i < Authors.length; i++)
 	{
 
 		source = "";
