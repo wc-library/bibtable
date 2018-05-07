@@ -62,6 +62,7 @@ function makeTable(num){
 	var Places = num.places;
 	var Abstracts = num.abstracts;
 	var URLs = num.urls;
+	var LastNames = num.lastnames;
 
 
 	var tablehead = ["Author", "Title", "Year", "Type"];
@@ -85,7 +86,7 @@ function makeTable(num){
 		
 
 		table += '<tr>';
-		table += '<td class="hidden">' + Authors[i] + '</td>';
+		table += '<td class="hidden">' + LastNames[i] + '</td>';
 
 		table += '<td class="hidden" >' + Titles[i] + '</td>';
 		table += '<td class="hidden">' + year+ '</td>';

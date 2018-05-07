@@ -29,7 +29,7 @@ $isbns = array();//getDataField($info,"ISBN");
 $abstracts = array();//getDataField($info, "abstractNote");
 $urls = array(); //getDataField($info, "url");
 $i = 0; // keeps track of array position
-$seq =0;
+
 
 function getApiResults(){
 	global $dataNum, $start, $api_key;
@@ -125,7 +125,16 @@ function getClassicFields($data){
 
 		//this handled this way because the creators data comes in different formats
 		$authorString = "";
+		$lastName = "";
 		if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
+			
+			if(isset($scope["creators"][0]["firstName"] )){
+				$lastName = $scope["creators"][0]["lastName"];
+			}else{
+				$lastName = $scope["creators"][0]["name"];
+			}
+
+
 			$len = count($scope["creators"]); // length of creators array
 			 // will hold the string of creators built up by the while loop
 			$counter = 0; // counts up the number of creators in the creators array
@@ -169,10 +178,12 @@ function getClassicFields($data){
 				}
 			}
 		}
-		else{
+		else{ //not necessary, but makes it explicit that if none of the previous conditions are met, then ""
 			$authorString = ""; 
+			$lastName = "";
 		}
 		$creators[$i] = $authorString;
+		$lastnames[$i] = $lastName;
 		
 		
 		$dates[$i] = checknStore("date", $scope);
@@ -215,10 +226,12 @@ function makeAllData(){
 	global $isbns;
 	global $abstracts;
 	global $urls;
+	global $lastnames;
 
 	
 	$allData = new stdClass();
 	$allData->creators = $creators;
+	$allData->lastnames = $lastnames;
 	$allData->itemtypes = $itemTypes;
 	$allData->titles = $titles;
 	$allData->shorttitles = $shortTitles;
