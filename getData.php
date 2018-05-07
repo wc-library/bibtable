@@ -118,10 +118,6 @@ function getClassicFields($data){
 	foreach ($data as $work) {
 		$scope = $work["data"];
 
-		
-		$itemTypes[$i] = checknStore( "itemType", $scope);
-		$titles[$i] = checknStore( "title", $scope);
-		$shortTitles[$i] = checknStore("shortTitle", $scope);
 
 		//this handled this way because the creators data comes in different formats
 		$authorString = "";
@@ -147,9 +143,9 @@ function getClassicFields($data){
 					if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
 						$authorString = $authorString . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"] . ".; "; // the .; is a format from the old brocken zotero parser
 					}
-						else{
-							$authorString = $authorString . $scope["creators"][$counter]["name"] . ".; ";
-						}
+					else{
+						$authorString = $authorString . $scope["creators"][$counter]["name"] . ".; ";
+					}
 					$counter++; // increase counter, to get to next position
 
 				}
@@ -179,22 +175,25 @@ function getClassicFields($data){
 			}
 		}
 		else{ //not necessary, but makes it explicit that if none of the previous conditions are met, then ""
-			$authorString = ""; 
-			$lastName = "";
-		}
-		$creators[$i] = $authorString;
-		$lastnames[$i] = $lastName;
-		
-		
-		$dates[$i] = checknStore("date", $scope);
-		$places[$i] = checknStore("place", $scope);
-		$publishers[$i] = checknStore("publisher", $scope);
-		$isbns[$i] = checknStore("ISBN", $scope);
-		$abstracts[$i] = checknStore("abstractNote", $scope);
-		$urls[$i] = checknStore("url", $scope);
-		$i++;
+		$authorString = ""; 
+		$lastName = "";
 	}
-	
+	$creators[$i] = $authorString;
+	$lastnames[$i] = $lastName;
+
+
+	$itemTypes[$i] = itemT( "itemType", $scope);
+	$titles[$i] = checknStore( "title", $scope);
+	$shortTitles[$i] = checknStore("shortTitle", $scope);
+	$dates[$i] = checknStore("date", $scope);
+	$places[$i] = checknStore("place", $scope);
+	$publishers[$i] = checknStore("publisher", $scope);
+	$isbns[$i] = checknStore("ISBN", $scope);
+	$abstracts[$i] = checknStore("abstractNote", $scope);
+	$urls[$i] = checknStore("url", $scope);
+	$i++;
+}
+
 }
 
 /**
@@ -212,6 +211,34 @@ function checknStore($string, $scope){
 		return $scope[$string];
 	else
 		return  "";
+}
+
+/*
+* This method is similar to the checkNStore, except it works on itemtypes
+* The items associative array maps a key which is an item type and
+* returns the same item type in a better format
+* @param The string that is the key to the value we are looking for e.g creators => "Jane Deer"
+* @param The scope of our search, certain fields occur within objects within objects
+*/
+function itemT($string, $scope){
+	
+	$items = array(
+		"journalArticle" => "Journal Article",
+		"book" => "Book",
+		"document" => "Document",
+		"attachment" => "Attachment",
+		"webpage" => "Web Page",
+		"bookSection" => "Book Section",
+		"thesis" => "Thesis",
+		"blogPost" => "Blog Post",
+		"magazineArticle" =>"Magazine Article",
+		"conferencePaper" => "Conference Paper"
+	);
+
+	if(array_key_exists($string, $scope))
+		return $items[$scope[$string]];
+	else
+		return "";
 }
 
 //$allData = (object) array();
