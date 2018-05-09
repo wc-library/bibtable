@@ -94,7 +94,6 @@ function makeTable(num){
 		//add these in the order of the tablehead array elements
 		table += '<tr>';
 		table += '<td class="hidden">' + LastNames[i] + '</td>';
-
 		table += '<td class="hidden" >' + Titles[i] + '</td>';
 		table += '<td class="hidden">' + year+ '</td>';
 		table += '<td class="hidden">' + Types[i] + '</td>';
@@ -110,10 +109,10 @@ function makeTable(num){
 		linkNAbs += Abstracts[i]+ '</p><p>'; // add abstract
 		if(URLs[i] != ""){
 			linkNAbs += '<strong>Link: </strong>';
-			source = "source"; // if this has an abstract, make it clickable and highlightable
+			source = "source"; // if this has an abstract, make it clickable and
+            linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a>'; // add link
         }
 
-        linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a>'; // add link
         linkNAbs += '</p></div></div></td></tr>';
 
 		//this is the beggining of the citation paragraph set up 

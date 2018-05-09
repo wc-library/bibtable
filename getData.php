@@ -272,18 +272,6 @@ function makeAllData(){
 	return ($allData);
 }
 
-//var_dump($shortTitles);
-//var_dump($creators);
-//var_dump($dates);
-//var_dump($places);
-//var_dump($publisher);
-//var_dump($isbns);
-//var_dump($abstracts);
-//var_dump($urls);
-
-//$allData
-
-
 
 function json_cached_results() {
 
@@ -318,8 +306,6 @@ function json_cached_results() {
 
         // Fetch cache
 			$api_results = (file_get_contents($cache_file));
-
-
 
 		}
 
