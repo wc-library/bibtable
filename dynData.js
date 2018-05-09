@@ -88,7 +88,7 @@ function makeTable(num){
 		var yearRE = /\b\d{4}\b/;
 		var year = yearRE.exec(Dates[i]);
 		if(year == null){
-			year = 0; // some sources dont have dates, will ask about policy on these
+			year = 0; // some sources don't have dates, will ask about policy on these
 		}
 		
 		//add these in the order of the tablehead array elements
@@ -108,9 +108,14 @@ function makeTable(num){
 		}
 		linkNAbs += Abstracts[i]+ '</p><p>'; // add abstract
 		if(URLs[i] != ""){
-			linkNAbs += '<strong>Link: </strong>';
-			source = "source"; // if this has an abstract, make it clickable and
-            linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a>'; // add link
+			if(URLs[i].length >= 1){
+				size = URLs[i].length;
+				for(cur = 0; cur < size; cur++) {// Run through URLs if there are multiple
+                    linkNAbs += '<strong>Link: </strong>';
+                    source = "source"; // if this has an abstract, make it clickable and
+                    linkNAbs += '<a href="' + URLs[i][cur] + '">' + URLs[i][cur] + '</a>'; // add link
+                }
+			}
         }
 
         linkNAbs += '</p></div></div></td></tr>';
