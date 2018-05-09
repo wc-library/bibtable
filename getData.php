@@ -10,7 +10,7 @@
 * document in php. Forgivenesss!!!
 *
 * publicationarray[index][somekey][possible value or even array] is the struction of the api return
-*
+
 *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
 */
 include 'api_key.php';
@@ -134,7 +134,7 @@ function getClassicFields($data){
 			$len = count($scope["creators"]); // length of creators array
 			 // will hold the string of creators built up by the while loop
 			$counter = 0; // counts up the number of creators in the creators array
-			if( $len > 1){
+			if( $len > 1){ // We will need to loop through all creators
 				/* loop invariant, counter is current creator, 
 				at end of loop, the counter will be at the last creators position
 				this will help with formating

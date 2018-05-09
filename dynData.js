@@ -6,7 +6,7 @@ request.onload = function(){
 	if (this.readyState == 4 && this.status == 200){
 		if(this.responseText == "00"){
 			//CHECKS IF api key is missing
-			document.getElementById("api_error").innerHTML = "error: Missng API key";
+			document.getElementById("api_error").innerHTML = "error: Missing API key";
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("loadinginfo").style.display="none";
 			die("Api_key Issue");
@@ -19,7 +19,7 @@ request.onload = function(){
 		//start the loader that waits while zotero source is called, and table is constructed
 		$(function(){
 			if(num != ""){
-				document.getElementById("loadinginfo").innerHTML = "Formating Sources...";
+				document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
 			}
 			myVar = setTimeout(showPage, 1000);
 
@@ -111,11 +111,10 @@ function makeTable(num){
 		if(URLs[i] != ""){
 			linkNAbs += '<strong>Link: </strong>';
 			source = "source"; // if this has an abstract, make it clickable and highlightable
-		}
-		
-		
-		linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a></p></div></div></td>'; //add link
-		linkNAbs += '</tr>';
+        }
+
+        linkNAbs +='<a href="' + URLs[i] + '">' + URLs[i] + '</a>'; // add link
+        linkNAbs += '</p></div></div></td></tr>';
 
 		//this is the beggining of the citation paragraph set up 
 		table += '<td colspan=5><div class="'+ source +'">'  +'<b id ="Title">' + constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) + constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
