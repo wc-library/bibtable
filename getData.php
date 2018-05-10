@@ -94,7 +94,7 @@ function getClassicFields($data){
         if(isset($work["data"]["parentItem"]))
             $parentItem[$i] = $work["data"]["parentItem"];
 
-        
+
         $scope = $work["data"];
 
         //this handled this way because the creators data comes in different formats
