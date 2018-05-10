@@ -104,35 +104,57 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.29.5">Version 2.29.5</a> (2018-01-30)
+#### <a name="v2.30.3">Version 2.30.3</a> (2018-03-30)
 
+* Core:
+  * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
 * Docs:
-  * Update jQuery to v3.3.1.
-  * Add jQuery UI theme selector to scroller demo. See [issue #1506](https://github.com/Mottie/tablesorter/issues/1506).
-  * Minor fixes to links.
-* Filter:
-  * Clean up language settings & allow empty strings. See [issue #1505](https://github.com/Mottie/tablesorter/issues/1505).
-  * Fix linting issue.
-  * Fix version numbering.
+  * Remove link preload because it isn't supported in Firefox.
+
+#### <a name="v2.30.2">Version 2.30.2</a> (2018-03-26)
+
+* Core:
+  * Allow passing headers from multiple rows. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Build:
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Pager:
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Resizable:
+  * Adjust handle position for jQuery v3.3.0+. Fixes [issue #1544](https://github.com/Mottie/tablesorter/issues/1544).
+* Vertical Group:
+  * Fix border css for last row.
 * Parser:
-  * Add radio parser. See [issue #1502(https://github.com/Mottie/tablesorter/issues/1502).
-
-#### <a name="v2.29.4">Version 2.29.4</a> (2018-01-18)
-
-* Docs:
-  * Downgrade Bootstrap JS (v3.3.7) in demos.
-* Filter:
-  * Add `filter_filterLabel` to support filter input ARIA labels. See [issue #1495](https://github.com/Mottie/tablesorter/issues/1495).
-  * Change filter row role from "row" to "search".
-  * Fix select2 issue. Closes [issue #1497](https://github.com/Mottie/tablesorter/issues/1497).
+  * Input-select: Fix TypeError `hasSticky` is undefined. See [issue #1534](https://github.com/Mottie/tablesorter/issues/1534) & [PR #1535](https://github.com/Mottie/tablesorter/pull/1535); thanks [@adamz01h](https://github.com/adamz01h).
+* Docs
+  * Improve load time.
+  * Update incorrect default. See [issue #1510](https://github.com/Mottie/tablesorter/issues/1510).
+  * Replace whitespace with symbols.
 * Meta:
-  * Change date format in file comments to "YYYY-MM-DD".
+  * Update dependencies.
 
-#### <a name="v2.29.3">Version 2.29.3</a> (2018-01-10)
+#### <a name="v2.30.1">Version 2.30.1</a> (2018-03-19)
 
+* Core:
+  * Only validate options while debugging. Closes [issue #1528](https://github.com/Mottie/tablesorter/issues/1528)
+* Pager:
+  * Show all rows, not pages. Fixes [issue #1529](https://github.com/Mottie/tablesorter/issues/1529)
+* SaveSort:
+  * Fix JS error. See [issue #1525](https://github.com/Mottie/tablesorter/issues/1525)
+
+#### <a name="v2.30.0">Version 2.30.0</a> (2018-03-18)
+
+* Core:
+  * [Debug](https://mottie.github.io/tablesorter/docs/#debug) now allows you to debug components separately; set to `true` as usual, or set to `'core filter'` to only show the core and filter widget debug logs.
+  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
+* Filter:
+  * Make `onlyAvail` work with showProcessing. Fixes [issue #1518](https://github.com/Mottie/tablesorter/issues/1518).
+  * Escape quotes in select options. See [issue #1527](https://github.com/Mottie/tablesorter/issues/1527).
+* Pager:
+  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
+* Global:
+  * Add editor eslint &amp; fix issues. File versions were not updated for this change!
 * Docs:
-  * Update Bootstrap to v4-beta.3.
-  * Add scroller widget incompatibilities section.
-  * Add pager size all setting.
-* Parser:
-  * Network parsers now return a text value. Fixes [issue #1494](https://github.com/Mottie/tablesorter/issues/1494).
+  * Update Bootstrap v4.0.0.
+  * Adjust (accordion) link position.
+  * Fix scroller fixed column border alignment.

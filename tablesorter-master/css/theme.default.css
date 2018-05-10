@@ -2,8 +2,6 @@
 Default Theme
 *************/
 /* overall */
-
-
 .tablesorter-default {
 	width: 100%;
 	font: 12px/18px Arial, Sans-serif;
@@ -12,22 +10,8 @@ Default Theme
 	border-spacing: 0;
 	margin: 10px 0 15px;
 	text-align: left;
-	position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
 }
 
-@-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
-}
-
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
-}
 /* header */
 .tablesorter-default th,
 .tablesorter-default thead td {
@@ -45,12 +29,11 @@ Default Theme
 .tablesorter-default .header,
 .tablesorter-default .tablesorter-header {
 	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
-	
-	background-position: 0% 50%;
+	background-position: center right;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	white-space: normal;
-	padding: 4px 20px 4px 20px;
+	padding: 4px 20px 4px 4px;
 }
 .tablesorter-default thead .headerSortUp,
 .tablesorter-default thead .tablesorter-headerSortUp,
@@ -105,10 +88,10 @@ Default Theme
 
 /* Zebra Widget - row alternating colors */
 .tablesorter-default tr.odd > td {
-	background-color: #F1F1F1;
+	background-color: #dfdfdf;
 }
 .tablesorter-default tr.even > td {
-	background-color:  #FAFAFA;
+	background-color: #efefef;
 }
 
 /* Column Widget - column sort colors */
@@ -197,8 +180,6 @@ caption {
 	-moz-transition: height 0.1s ease;
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
-	
-
 }
 /* rows hidden by filtering (needed for child rows) */
 .tablesorter .filtered {

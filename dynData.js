@@ -113,7 +113,8 @@ function makeTable(num){
 				for(cur = 0; cur < size; cur++) {// Run through URLs if there are multiple
                     linkNAbs += '<strong>Link: </strong>';
                     source = "source"; // if this has an abstract, make it clickable and
-                    linkNAbs += '<a href="' + URLs[i][cur] + '">' + URLs[i][cur] + '</a>'; // add link
+                    //linkNAbs += '<a href="' + URLs[i][cur] + '">' + URLs[i][cur] + '</a>'; // add link
+					linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
                 }
 			}
         }
