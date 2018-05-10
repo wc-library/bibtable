@@ -42,7 +42,7 @@ function getApiResults(){
 	while(!$isEmpty && $start < 900){
 		$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&itemTypes?locale&format=json&limit='. $dataNum .'&start=' . $start;
 
-		$response = file_get_contents($data); // pulls in the data 
+		$response = file_get_contents($data); // pulls in the data
 		if($response == "[]"){
 			$isEmpty = true;
 		}

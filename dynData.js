@@ -3,14 +3,15 @@ var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
 request.onload = function(){
-	if (this.readyState == 4 && this.status == 200){
-		if(this.responseText == "00"){
+	if (this.readyState === 4 && this.status === 200){
+		if(this.responseText === "00"){
 			//CHECKS IF api key is missing
 			document.getElementById("api_error").innerHTML = "error: Missing API key";
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("loadinginfo").style.display="none";
 			die("Api_key Issue");
 		}
+
 		num = JSON.parse(this.responseText);
 		console.log(num);
 		
@@ -37,7 +38,6 @@ request.onload = function(){
 };
 
 request.open("GET", "getData.php", true); //request info from api
-
 request.send();
 
 
