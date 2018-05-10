@@ -93,6 +93,8 @@ function getClassicFields($data){
 
         if(isset($work["data"]["parentItem"]))
             $parentItem[$i] = $work["data"]["parentItem"];
+        else
+        	$parentItem[$i] = ""; // Assign dummy value to keep array index fill for each array
 
 
         $scope = $work["data"];
@@ -156,7 +158,8 @@ function getClassicFields($data){
         $urls[$i] = checknStore("url", $scope);
         $i++;
     }
-
+//    $parentItem = array_values($parentItem);
+//    var_dump($parentItem);
 
 }
 

@@ -69,7 +69,9 @@ function makeTable(num){
 	var Abstracts = num.abstracts;
 	var URLs = num.urls;
 	var LastNames = num.lastnames;
-	// var Children = num.children;
+	var NumChildren = num.children;
+	var Keys = num.keys;
+	var parentItems = num.parentItem;
 
 
 	//add new sort field in this array
@@ -115,6 +117,14 @@ function makeTable(num){
 			linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
         }
 
+        if(NumChildren[i] > 0){ // TODO Properly append children items
+			count = NumChildren[i];
+			while(count > 0){
+				index = parentItems.indexOf(Keys[i]);
+				linkNAbs += Titles[index];
+				count--;
+			}
+		}
 
         linkNAbs += '</p></div></div></td></tr>';
 
