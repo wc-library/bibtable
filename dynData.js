@@ -30,7 +30,7 @@ request.onload = function(){
 			
 			$parentSource = $(this);
 			//$parentSource.siblings().find('.extra').slideUp();
-			$("div, div", $(this)).slideToggle("slow");
+			$("div, div", $(this)).slideToggle("fast");
 
 		});
 		
@@ -69,6 +69,7 @@ function makeTable(num){
 	var Abstracts = num.abstracts;
 	var URLs = num.urls;
 	var LastNames = num.lastnames;
+	// var Children = num.children;
 
 
 	//add new sort field in this array
@@ -108,16 +109,12 @@ function makeTable(num){
 		}
 		linkNAbs += Abstracts[i]+ '</p><p>'; // add abstract
 		if(URLs[i] != ""){
-			if(URLs[i].length >= 1){
-				size = URLs[i].length;
-				for(cur = 0; cur < size; cur++) {// Run through URLs if there are multiple
-                    linkNAbs += '<strong>Link: </strong>';
-                    source = "source"; // if this has an abstract, make it clickable and
-                    //linkNAbs += '<a href="' + URLs[i][cur] + '">' + URLs[i][cur] + '</a>'; // add link
-					linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
-                }
-			}
+			linkNAbs += '<strong>Link: </strong>';
+			source = "source"; // if this has an abstract, make it clickable and
+			//linkNAbs += '<a href="' + URLs[i][cur] + '">' + URLs[i][cur] + '</a>'; // add link
+			linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
         }
+
 
         linkNAbs += '</p></div></div></td></tr>';
 
@@ -127,7 +124,6 @@ function makeTable(num){
 		//anything that needs to be visible only in the drop down
 
 		table+= linkNAbs; //append links and abstracts to table
-
 		
 	}
 
@@ -135,9 +131,22 @@ function makeTable(num){
 	var mainTable = document.getElementById('myTable'); //get the table named "myTable"
 	mainTable.innerHTML +=table; // add table to html page
 	
-
-	
 }
+
+/**
+ * Checks if the next item is an attachment to current
+ * Recursively checks until false
+ */
+function checkNext(index){
+	if(index >= Titles.length){
+		return "";
+	} else if (Titles[++index] == "Snapshot"){
+		return Titles[index] + checkNext(index);
+	} else {
+		return "";
+	}
+}
+
 /**
 *  Method helps with formating, checks if string is empty. Adds a "." for non-empty strings
 *
