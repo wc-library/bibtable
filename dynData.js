@@ -2,9 +2,8 @@
  * dynData.js
  *
  * Javascript program to take the JSON from getData and format it into a HTML table
+ * with a collapsible section for Abstract and all attachments
  */
-
-
 
 
 var num; //holds json parsed response from server
@@ -95,11 +94,12 @@ function makeTable(num){
     var Attachments = new Array(size);
 
     while (i < size){
-        if(Types[i] == "Attachment") {
+        if(Types[i] === "Attachment") {
         	let pkey = ParentItems[i];
-        	console.assert(pkey != "");
-        	let pindex = Keys.indexOf(pkey);
-            Attachments[pindex] += '<p><strong>' + Titles[i] + '</strong> ' + '<a href="' + URLs[i]+ '">' + URLs[i] + '</a></p>';
+        	if(pkey !== "") {
+                let pindex = Keys.indexOf(pkey);
+                Attachments[pindex] = '<p><strong>' + Titles[i] + ': </strong>' + '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
+            }
             Titles[i] = ""; // Remove title to specify that it should no longer be added to table
         }
         i++;
@@ -124,16 +124,16 @@ function makeTable(num){
 
             //this constructs the link and abstracts hidden div but does not add it yet
             let linkNAbs = '<div class="extra" id="' + i + '" style="display: none;">';
-            if (Abstracts[i] != "") {
-                linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p><p>';
+            if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
+                linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
                 source = "source"; // if this has a link, make it clickable and highlightable/
             } else
-				linkNAbs+= '<p><strong>N/A</strong></p>';
+				linkNAbs+= '<p><strong>Abstract: </strong>N/A</p>';
 
-            if (URLs[i] != "") {
-                linkNAbs += '<strong>Link: </strong>';
+            if (URLs[i] !== "" && URLs[i] !== undefined) {
+                linkNAbs += '<p><strong>Link: </strong>';
                 source = "source"; // if this has an abstract, make it clickable and
-                linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
+                linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
             }
 
 
@@ -144,9 +144,11 @@ function makeTable(num){
 
             //anything that needs to be visible only in the drop down
 
-            if (Attachments[i] != null && Attachments[i] != undefined)
+			console.log("linkNAbs: " + linkNAbs + " -no attachment\n");
+            if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
 
+            console.log("linkNAbs: " + linkNAbs + " -after attachment\n");
 
             linkNAbs += '</div></td></tr>';
             table += linkNAbs; //append links and abstracts to table
@@ -161,17 +163,15 @@ function makeTable(num){
 }
 
 /**
- *  Method helps with formating, checks if string is empty. Adds a "." for non-empty strings
+ *  Method helps with formatting, checks if string is empty. Adds a "." for non-empty strings
  *
- *  parameter: the string to be formated.
+ *  parameter: the string to be formatted.
  */
 function constructT(string){
 
-    var toReturn = "";
+    let toReturn = "";
     if(string != ""){
         toReturn = string + ". ";
-
-
     }
     return toReturn;
 }
