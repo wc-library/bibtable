@@ -94,6 +94,8 @@ function makeTable(num){
     var Attachments = new Array(size);
 
     while (i < size){
+    	if(Abstracts[i] === "")
+    		Abstracts[i] = "N/A"; // Fix to add drop-down for all options
         if(Types[i] === "Attachment") {
         	let pkey = ParentItems[i];
         	if(pkey !== "") {
@@ -127,10 +129,8 @@ function makeTable(num){
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
                 source = "source"; // if this has a link, make it clickable and highlightable/
-            } else
-				linkNAbs+= '<p><strong>Abstract: </strong>N/A</p>';
-
-            if (URLs[i] !== "" && URLs[i] !== undefined) {
+            }
+            if (URLs[i] !== "") {
                 linkNAbs += '<p><strong>Link: </strong>';
                 source = "source"; // if this has an abstract, make it clickable and
                 linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
@@ -143,12 +143,8 @@ function makeTable(num){
                 constructT(Places[i]) + constructT(Dates[i]) + constructT(ISBN[i]) + constructT(Types[i]);
 
             //anything that needs to be visible only in the drop down
-
-			console.log("linkNAbs: " + linkNAbs + " -no attachment\n");
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
-
-            console.log("linkNAbs: " + linkNAbs + " -after attachment\n");
 
             linkNAbs += '</div></td></tr>';
             table += linkNAbs; //append links and abstracts to table
