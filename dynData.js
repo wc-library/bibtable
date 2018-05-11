@@ -74,7 +74,6 @@ function makeTable(num){
     var Abstracts = num.abstracts;
     var URLs = num.urls;
     var LastNames = num.lastnames;
-    var NumChildren = num.children;
     var Keys = num.keys;
     var ParentItems = num.parentItem;
 
@@ -128,7 +127,8 @@ function makeTable(num){
             if (Abstracts[i] != "") {
                 linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p><p>';
                 source = "source"; // if this has a link, make it clickable and highlightable/
-            }
+            } else
+				linkNAbs+= '<p><strong>N/A</strong></p>';
 
             if (URLs[i] != "") {
                 linkNAbs += '<strong>Link: </strong>';
@@ -144,9 +144,9 @@ function makeTable(num){
 
             //anything that needs to be visible only in the drop down
 
-            if (Attachments[i] != null)
+            if (Attachments[i] != null && Attachments[i] != undefined)
                 linkNAbs += Attachments[i];
-            
+
 
             linkNAbs += '</div></td></tr>';
             table += linkNAbs; //append links and abstracts to table

@@ -30,30 +30,21 @@ $publishers = array();//getDataField($info,"publisher");
 $isbns = array();//getDataField($info,"ISBN");
 $abstracts = array();//getDataField($info, "abstractNote");
 $urls = array(); //getDataField($info, "url");
-$numChildren = array(); //getDataField)$info, "numChildren";
 $parentItem = array();
 
 function getApiResults(){
-    global $dataNum, $start, $api_key;
+    global $dataNum, $api_key;
     $isEmpty = false;
     if($api_key == ''){
         echo "00";
 
         exit;
     }
-    while(!$isEmpty && $start < 900){
-        $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .'&itemTypes?locale&format=json&limit='. $dataNum .'&start=' . $start;
-
+        $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .
+            '&itemTypes?locale&format=json&limit='. $dataNum; //.'&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
-        if($response == "[]"){
-            $isEmpty = true;
-        }
         $info = json_decode($response, true); // decodes jason and creates an object
-
         getClassicFields($info);
-
-        $start +=100;
-    }
 }
 
 /**
@@ -65,7 +56,8 @@ function getApiResults(){
  *@param field the field being sought or key
  */
 function getClassicFields($data){
-	global $keys;
+
+    global $keys;
     global $lastnames;
     global $itemTypes;
     global $titles;
@@ -77,7 +69,6 @@ function getClassicFields($data){
     global $isbns;
     global $abstracts;
     global $urls;
-    global $numChildren;
     global $parentItem;
 
     //look through all the data
@@ -85,11 +76,6 @@ function getClassicFields($data){
     foreach ($data as $work) {
 
 		$keys[$i] = $work["key"]; // Guaranteed value
-
-        if(isset($work["meta"]["numChildren"]))
-            $numChildren[$i] = $work["meta"]["numChildren"];
-        else
-        	$numChildren[$i] = 0; // TODO: probably not needed
 
         if(isset($work["data"]["parentItem"]))
             $parentItem[$i] = $work["data"]["parentItem"];
@@ -99,7 +85,7 @@ function getClassicFields($data){
 
         $scope = $work["data"];
 
-        //this handled this way because the creators data comes in different formats
+        // this handled this way because the creators data comes in different formats
         $authorString = "";
         if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 
@@ -136,7 +122,6 @@ function getClassicFields($data){
                     } else {
                         $authorString = $authorString . "and " . $scope["creators"][$counter]["name"];
                     }
-                    //$creators[$i] = $authorString; // save the author string
                 }
             }
         }
@@ -158,9 +143,6 @@ function getClassicFields($data){
         $urls[$i] = checknStore("url", $scope);
         $i++;
     }
-//    $parentItem = array_values($parentItem);
-//    var_dump($parentItem);
-
 }
 
 /**
@@ -224,7 +206,6 @@ function makeAllData(){
     global $isbns;
     global $abstracts;
     global $urls;
-    global $numChildren;
     global $parentItem;
 
     $allData = new stdClass();
@@ -240,7 +221,6 @@ function makeAllData(){
     $allData->isbns = $isbns;
     $allData->urls = $urls;
     $allData->abstracts = $abstracts;
-    $allData->children = $numChildren;
     $allData->parentItem = $parentItem;
     return ($allData);
 }
