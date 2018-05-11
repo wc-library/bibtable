@@ -30,6 +30,7 @@ request.onload = function(){
             myVar = setTimeout(showPage, 1000);
 
         });
+
         //reveals hidden div with abstracts and links
         $(".source").click(function(){
 
@@ -38,7 +39,6 @@ request.onload = function(){
             $("div, div", $(this)).slideToggle("fast");
 
         });
-
     }
 };
 
@@ -50,34 +50,32 @@ function showPage(){
     document.getElementById("loadinginfo").style.display="none"; //hides the loading message
     document.getElementById("myTable").style.display ="block"; //displays the table
 
-    //calls the tablesorter witch should return A sortable table
+    // Initialize tablesorter
     $(function()
     {
         $("#myTable").tablesorter(
             {
-                widgets : [ "zebra", "filter" ]
+                widgets : ["zebra", "filter"]
             }
         );
-
     });
 
 }
 function makeTable(num){
-    var Authors = num.creators;
-    var Titles = num.titles;
-    var ISBN = num.isbns;
-    var Types = num.itemtypes;
-    var Dates = num.dates;
-    var Publishers = num.publishers;
-    var Places = num.places;
-    var Abstracts = num.abstracts;
-    var URLs = num.urls;
-    var LastNames = num.lastnames;
-    var Keys = num.keys;
-    var ParentItems = num.parentItem;
+    let Authors = num.creators;
+    let Titles = num.titles;
+    let ISBN = num.isbns;
+    let Types = num.itemtypes;
+    let Dates = num.dates;
+    let Publishers = num.publishers;
+    let Places = num.places;
+    let Abstracts = num.abstracts;
+    let URLs = num.urls;
+    let Keys = num.keys;
+    let ParentItems = num.parentItem;
 
     // Create table headers
-    let tablehead = ["Author", "Title", "Year", "Type"];
+    let tablehead = ["Title", "Author", "Year", "Type"];
     let len = tablehead.length;
     let table = '<thead><tr>';
     let tl = 0;
@@ -91,11 +89,11 @@ function makeTable(num){
     let i = 0;
     let size = Titles.length;
 
-    var Attachments = new Array(size);
+    let Attachments = new Array(size);
 
     while (i < size){
-    	if(Abstracts[i] === "")
-    		Abstracts[i] = "N/A"; // Fix to add drop-down for all options
+    	// if(Abstracts[i] === "")
+    	// 	Abstracts[i] = "N/A"; // Fix to add drop-down for all options
         if(Types[i] === "Attachment") {
         	let pkey = ParentItems[i];
         	if(pkey !== "") {
@@ -109,7 +107,6 @@ function makeTable(num){
 
     i = 0;
     while (i < size) {
-        let source = "";
         let yearRE = /\b\d{4}\b/;
         let year = yearRE.exec(Dates[i]);
         if(year == null){
@@ -119,32 +116,34 @@ function makeTable(num){
         if (Titles[i] !== "") {
             //add these in the order of the tablehead array elements
             table += '<tr>';
-            table += '<td class="hidden">' + LastNames[i] + '</td>';
-            table += '<td class="hidden" >' + Titles[i] + '</td>';
-            table += '<td class="hidden">' + year + '</td>';
-            table += '<td class="hidden">' + Types[i] + '</td>';
+            table += '<td class="source"><b>' + Titles[i] + '</b></td>';
+            table += '<td>' + Authors[i] + '</td>';
+            table += '<td>' + year + '</td>';
+            table += '<td>' + Types[i] + '</td>';
 
             //this constructs the link and abstracts hidden div but does not add it yet
             let linkNAbs = '<div class="extra" id="' + i + '" style="display: none;">';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
-                source = "source"; // if this has a link, make it clickable and highlightable/
             }
             if (URLs[i] !== "") {
                 linkNAbs += '<p><strong>Link: </strong>';
-                source = "source"; // if this has an abstract, make it clickable and
                 linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
             }
 
 
             // Add item info
-            table += '<td colspan=5><div class="' + source + '">' + '<b id ="Title">' +
-                constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) +
-                constructT(Places[i]) + constructT(Dates[i]) + constructT(ISBN[i]) + constructT(Types[i]);
+            // table += '<td colspan=5><div class="' + "source" + '">' + '<b id ="Title">' +
+            //     constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) +
+            //     constructT(Places[i]) + constructT(Dates[i]) + constructT(ISBN[i]) + constructT(Types[i]);
 
             //anything that needs to be visible only in the drop down
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
+
+            table += '<td colspan=5>'
+            linkNAbs += constructT(Authors[i], "Author: ") + constructT(Publishers[i], "\nPublishers: ") +
+                constructT(Places[i], " ") + constructT(ISBN[i], " ISBN: ");
 
             linkNAbs += '</div></td></tr>';
             table += linkNAbs; //append links and abstracts to table
@@ -163,11 +162,10 @@ function makeTable(num){
  *
  *  parameter: the string to be formatted.
  */
-function constructT(string){
+function constructT(string, type){
 
-    let toReturn = "";
-    if(string != ""){
-        toReturn = string + ". ";
-    }
-    return toReturn;
+   if (string === "")
+	   return string;
+   else
+   		return type + string + "\n";
 }

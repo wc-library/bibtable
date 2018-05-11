@@ -99,14 +99,14 @@ function getClassicFields($data){
             // will hold the string of creators built up by the while loop
             $counter = 0; // counts up the number of creators in the creators array
 
-            if( $len >= 1){ // We will need to loop through all creators
+            if( $len > 1){ // We will need to loop through all creators
                 /* loop invariant, counter is current creator,
                 at end of loop, the counter will be at the last creators position
                 this will help with formating
                 */
                 do {
                     if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
-                        $authorString = $authorString . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"] . ".; "; // the .; is a format from the old brocken zotero parser
+                        $authorString = $authorString . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"] . "; "; // the .; is a format from the old broken zotero parser
                     }
                     else{
                         $authorString = $authorString . $scope["creators"][$counter]["name"] . ".; ";
@@ -123,6 +123,11 @@ function getClassicFields($data){
                         $authorString = $authorString . "and " . $scope["creators"][$counter]["name"];
                     }
                 }
+            } else if ($len == 1) {
+                if (isset($scope["creators"][$counter]["firstName"]))// check if key is set
+                    $authorString = $authorString . $scope["creators"][0]["firstName"] . " " . $scope["creators"][$counter]["lastName"]; // the .; is a format from the old broken zotero parser
+                else
+                    $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
         else{ //not necessary, but makes it explicit that if none of the previous conditions are met, then ""
