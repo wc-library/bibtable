@@ -35,7 +35,6 @@ request.onload = function(){
         $(".source").click(function(){
 
             $parentSource = $(this);
-            //$parentSource.siblings().find('.extra').slideUp();
             $("div, div", $(this)).slideToggle("fast");
 
         });
@@ -116,7 +115,7 @@ function makeTable(num){
         if (Titles[i] !== "") {
             //add these in the order of the tablehead array elements
             table += '<tr>';
-            table += '<td class="source"><b>' + Titles[i] + '</b></td>';
+            table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
@@ -141,11 +140,11 @@ function makeTable(num){
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
 
-            table += '<td colspan=5>'
+            table += '<td colspan=5><div class="source">'
             linkNAbs += constructT(Authors[i], "Author: ") + constructT(Publishers[i], "\nPublishers: ") +
                 constructT(Places[i], " ") + constructT(ISBN[i], " ISBN: ");
 
-            linkNAbs += '</div></td></tr>';
+            linkNAbs += '</div></div></td></tr>';
             table += linkNAbs; //append links and abstracts to table
         }
         i++;
@@ -167,5 +166,5 @@ function constructT(string, type){
    if (string === "")
 	   return string;
    else
-   		return type + string + "\n";
+   		return type + string;
 }
