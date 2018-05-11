@@ -1,4 +1,12 @@
-		
+/**
+ * dynData.js
+ *
+ * Javascript program to take the JSON from getData and format it into a HTML table
+ */
+
+
+
+
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
@@ -13,10 +21,8 @@ request.onload = function(){
 		}
 
 		num = JSON.parse(this.responseText);
-		console.log(num);
-		
 		makeTable(num); // construct a table
-		
+
 		//start the loader that waits while zotero source is called, and table is constructed
 		$(function(){
 			if(num != ""){
@@ -27,25 +33,24 @@ request.onload = function(){
 		});
 		//reveals hidden div with abstracts and links
 		$(".source").click(function(){
-			
+
 			$parentSource = $(this);
 			//$parentSource.siblings().find('.extra').slideUp();
 			$("div, div", $(this)).slideToggle("fast");
 
 		});
-		
+
 	}
 };
 
 request.open("GET", "getData.php", true); //request info from api
 request.send();
 
-
 function showPage(){
 	document.getElementById("loader").style.display = "none"; //hides loading icon
 	document.getElementById("loadinginfo").style.display="none"; //hides the loading message
 	document.getElementById("myTable").style.display ="block"; //displays the table
-	
+
 	//calls the tablesorter witch should return A sortable table
 	$(function()
 	{
@@ -59,57 +64,58 @@ function showPage(){
 
 }
 function makeTable(num){
-	var Authors = num.creators;
-	var Titles = num.titles;
-	var ISBN = num.isbns;
-	var Types = num.itemtypes;
-	var Dates = num.dates;
-	var Publishers = num.publishers;
-	var Places = num.places;
-	var Abstracts = num.abstracts;
-	var URLs = num.urls;
-	var LastNames = num.lastnames;
-	var NumChildren = num.children;
-	var Keys = num.keys;
-	var parentItems = num.parentItem;
+    var Authors = num.creators;
+    var Titles = num.titles;
+    var ISBN = num.isbns;
+    var Types = num.itemtypes;
+    var Dates = num.dates;
+    var Publishers = num.publishers;
+    var Places = num.places;
+    var Abstracts = num.abstracts;
+    var URLs = num.urls;
+    var LastNames = num.lastnames;
+    var NumChildren = num.children;
+    var Keys = num.keys;
+    var parentItems = num.parentItem;
 
+    let attch = 0;
 
-	//add new sort field in this array
-	var tablehead = ["Author", "Title", "Year", "Type"];
-	var len = tablehead.length;
-	var table = '<thead><tr>';
-	for(i = 0; i < len; i++)
+	// Create table headers
+	let tablehead = ["Author", "Title", "Year", "Type"];
+	let len = tablehead.length;
+	let table = '<thead><tr>';
+	let tl = 0;
+	while(tl < len)
 	{
-		table += '<th>' + tablehead[i] + '</th>';
+		table += '<th>' + tablehead[tl] + '</th>';
+		tl++;
 	}
 	table +='</tr></thead><tbody>';
 
-	for(i = 0; i < Authors.length; i++)
-	{
-
-		source = "";
-		var yearRE = /\b\d{4}\b/;
-		var year = yearRE.exec(Dates[i]);
+	let i = 0;
+	let size = Titles.length;
+	while (i < size) {
+		let source = "";
+		let yearRE = /\b\d{4}\b/;
+		let year = yearRE.exec(Dates[i]);
 		if(year == null){
-			year = 0; // some sources don't have dates, will ask about policy on these
+			year = ""; // some sources don't have dates, will ask about policy on these
 		}
-		
+
 		//add these in the order of the tablehead array elements
 		table += '<tr>';
 		table += '<td class="hidden">' + LastNames[i] + '</td>';
 		table += '<td class="hidden" >' + Titles[i] + '</td>';
 		table += '<td class="hidden">' + year+ '</td>';
 		table += '<td class="hidden">' + Types[i] + '</td>';
-		
-		//this constructs the link and abstracts hidden div
-		var linkNAbs = '';
 
-		linkNAbs += '<div class="extra" id="'+ i+'" style="display: none;"><p>';
+		//this constructs the link and abstracts hidden div but does not add it yet
+		let linkNAbs = '<div class="extra" id="'+ i+'" style="display: none;">';
 		if(Abstracts[i] != ""){
-			linkNAbs += '<strong> Abstract</strong>: ';
+			linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p><p>';
 			source = "source"; // if this has a link, make it clickable and highlightable/
 		}
-		linkNAbs += Abstracts[i]+ '</p><p>'; // add abstract
+
 		if(URLs[i] != ""){
 			linkNAbs += '<strong>Link: </strong>';
 			source = "source"; // if this has an abstract, make it clickable and
@@ -117,38 +123,54 @@ function makeTable(num){
 			linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a>';
         }
 
-        if(NumChildren[i] > 0){ // TODO Properly append children items
-			count = NumChildren[i];
-			while(count > 0){
-				index = parentItems.indexOf(Keys[i]);
-				linkNAbs += Titles[index];
-				count--;
-			}
-		}
 
-        linkNAbs += '</p></div></div></td></tr>';
 
-		//this is the beggining of the citation paragraph set up 
-		table += '<td colspan=5><div class="'+ source +'">'  +'<b id ="Title">' + constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) + constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
-		
+		// Add item info
+		table += '<td colspan=5><div class="'+ source +'">'  +'<b id ="Title">' +
+			constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) +
+			constructT(Places[i]) + constructT(Dates[i]) +  constructT(ISBN[i])+ constructT(Types[i]);
+
 		//anything that needs to be visible only in the drop down
 
-		table+= linkNAbs; //append links and abstracts to table
-		
-	}
+		if(NumChildren[i] > 0){
+			console.log("Adding Children");
+			let count = NumChildren[i];
+			let j = 0;
+			while(j < count){
+				if(i + 1 >= size)
+					break;
+				else{
+					if(Types[i + 1] == "Attachment") {
+						attch++;
+                        i++;
+                        linkNAbs += '<p><strong>' + Titles[i] + '</strong> ' + '<a href="' + URLs[i]+ '">' + URLs[i] + '</a></p>';
+                    }
+				}
+				/*if(Titles[i] != "Snapshot")
+					j++;
+				else
+					console.log("SNAPSHOT");*/
+			j++;
+			}
+		}
+        linkNAbs += '</div></td></tr>';
+        table+= linkNAbs; //append links and abstracts to table
+	i++;
 
+    }
+	console.log("Number of attachments: " + attch);
 	table += '</tbody>'; //close off table
 	var mainTable = document.getElementById('myTable'); //get the table named "myTable"
 	mainTable.innerHTML +=table; // add table to html page
-	
+
 }
 
 /**
  * Checks if the next item is an attachment to current
  * Recursively checks until false
  */
-function checkNext(index){
-	if(index >= Titles.length){
+function checkNext(Types, index){
+	if(index >= Types.length){
 		return "";
 	} else if (Titles[++index] == "Snapshot"){
 		return Titles[index] + checkNext(index);
@@ -160,7 +182,7 @@ function checkNext(index){
 /**
 *  Method helps with formating, checks if string is empty. Adds a "." for non-empty strings
 *
-*  parameter: the string to be formated. 
+*  parameter: the string to be formated.
 */
 function constructT(string){
 
@@ -168,7 +190,7 @@ function constructT(string){
 	if(string != ""){
 		toReturn = string + ". ";
 
-		
+
 	}
 	return toReturn;
 }
