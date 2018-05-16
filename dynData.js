@@ -33,15 +33,12 @@ request.onload = function(){
 
         //reveals hidden div with abstracts and links
         $(".source").click(function() {
-            console.log('Clicked');
-        // }).find([".extra"]).click(function() {
-            $("td, div", $(this)).slideToggle(0);
+
+            let $this = $(this).find('.content');
+            $(".content").not($this).hide(); // Only allow one dropdown open at once
+
+            $("td, div", $(this)).toggle();
         });
-            //let parentSource = $(this);
-            // if (parentSource.style.display === "none")
-            //     parentSource.style.display = "block";
-            // else
-            //     parentSource.style.display = "none";
     }
 };
 
@@ -118,14 +115,14 @@ function makeTable(num){
 
         if (Titles[i] !== "") {
             // add these in the order of the table head array
-            table += '<tr class="source">';
+            table += '<tr class="source row">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
 
             //this constructs the link and abstracts hidden div but does not add it yet
-            let linkNAbs = '<div class="extra" id="' + i + '" style="display: none;">';
+            let linkNAbs = '<div class="extra content" id="' + i + '" style="display: none;"><b>' + Titles[i] + '</b>';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
