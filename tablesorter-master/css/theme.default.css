@@ -147,7 +147,7 @@ caption {
 	/*** *********************************************** ***/
 	/*** change this padding to modify the thickness     ***/
 	/*** of the closed filter row (height = padding x 2) ***/
-	padding: 2px;
+	padding: 0.5px;
 	/*** *********************************************** ***/
 	margin: 0;
 	line-height: 0;

@@ -32,12 +32,16 @@ request.onload = function(){
         });
 
         //reveals hidden div with abstracts and links
-        $(".source").click(function(){
-
-            $parentSource = $(this);
-            $("div, div", $(this)).slideToggle("fast");
-
+        $(".source").click(function() {
+            console.log('Clicked');
+        // }).find([".extra"]).click(function() {
+            $("td, div", $(this)).slideToggle(0);
         });
+            //let parentSource = $(this);
+            // if (parentSource.style.display === "none")
+            //     parentSource.style.display = "block";
+            // else
+            //     parentSource.style.display = "none";
     }
 };
 
@@ -90,9 +94,7 @@ function makeTable(num){
 
     let Attachments = new Array(size);
 
-    while (i < size){
-    	// if(Abstracts[i] === "")
-    	// 	Abstracts[i] = "N/A"; // Fix to add drop-down for all options
+    while (i < size){ // Append all attachments to their parents and remove them from the list
         if(Types[i] === "Attachment") {
         	let pkey = ParentItems[i];
         	if(pkey !== "") {
@@ -101,6 +103,8 @@ function makeTable(num){
             }
             Titles[i] = ""; // Remove title to specify that it should no longer be added to table
         }
+        if(Abstracts[i] === "")
+            Abstracts[i] = "N/A";
         i++;
     }
 
@@ -109,12 +113,12 @@ function makeTable(num){
         let yearRE = /\b\d{4}\b/;
         let year = yearRE.exec(Dates[i]);
         if(year == null){
-            year = ""; // some sources don't have dates, will ask about policy on these
+            year = ""; // some sources don't have dates
         }
 
         if (Titles[i] !== "") {
-            //add these in the order of the tablehead array elements
-            table += '<tr>';
+            // add these in the order of the table head array
+            table += '<tr class="source">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
@@ -130,22 +134,16 @@ function makeTable(num){
                 linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
             }
 
-
-            // Add item info
-            // table += '<td colspan=5><div class="' + "source" + '">' + '<b id ="Title">' +
-            //     constructT(Titles[i]) + '</b>' + constructT(Authors[i]) + constructT(Publishers[i]) +
-            //     constructT(Places[i]) + constructT(Dates[i]) + constructT(ISBN[i]) + constructT(Types[i]);
-
             //anything that needs to be visible only in the drop down
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
 
-            table += '<td colspan=5><div class="source">'
-            linkNAbs += constructT(Authors[i], "Author: ") + constructT(Publishers[i], "\nPublishers: ") +
-                constructT(Places[i], " ") + constructT(ISBN[i], " ISBN: ");
+            table += '<td colspan=4 class="extra">';
 
-            linkNAbs += '</div></div></td></tr>';
-            table += linkNAbs; //append links and abstracts to table
+            linkNAbs += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
+                constructT(Places[i], ". ") + constructT(ISBN[i], ". <b>ISBN</b>: ");
+
+            table += linkNAbs + '</div></td></tr>';
         }
         i++;
 
