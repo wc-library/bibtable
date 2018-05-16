@@ -34,8 +34,8 @@ request.onload = function(){
         //reveals hidden div with abstracts and links
         $(".source").click(function() {
 
-            let $this = $(this).find('.content');
-            $(".content").not($this).hide(); // Only allow one dropdown open at once
+            // let $this = $(this).find('.content');
+            // $(".content").not($this).hide(); // Only allow one dropdown open at once
 
             $("td, div", $(this)).toggle();
         });
