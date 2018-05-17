@@ -31,10 +31,28 @@ request.onload = function(){
 
         });
 
+        $(".extra").click(function (){
+            $("td, div", $(this)).slideToggle(200);
+        });
+
         //reveals hidden div with abstracts and links
         $(".source").click(function() {
 
-            $("td, div", $(this)).toggle();
+            let $target = $(event.target);
+            if ($target.closest("tr").parent().find('.extra').attr("colspan") > 1) {
+                $target.toggle();
+            } else {
+                $target.closest("tr").parent().find('.extra').toggle();
+                console.log($target.closest("tr").parent().find('.extra'));
+            }
+
+            // let $title = $(this).find('.head');
+            // $title.show();
+            // let $this = $(this).find('.content');
+            // $('.extra .content').not($this).hide();
+
+
+            //$("td, div", $(this)).toggle();
         });
     }
 };
@@ -44,21 +62,25 @@ request.send();
 
 function showPage(){
     document.getElementById("loader").style.display = "none"; //hides loading icon
-    document.getElementById("loadinginfo").style.display="none"; //hides the loading message
-    document.getElementById("myTable").style.display ="block"; //displays the table
+    document.getElementById("loadinginfo").style.display = "none"; //hides the loading message
+    document.getElementById("myTable").style.display = "block"; //displays the table
 
     // Initialize tablesorter
     $(function()
     {
         $("#myTable").tablesorter(
             {
-                widgets : ["zebra", "filter"]
+                widgets : ["zebra", "filter"], // Color code even and odd rows, add search boxes
+                widgetOptions: {
+                    zebra: ["alt-row"]
+                }
             }
         );
     });
 
 }
 function makeTable(num){
+    // Create single-dimensional arrays from JSON
     let Authors = num.creators;
     let Titles = num.titles;
     let ISBN = num.isbns;
@@ -103,40 +125,43 @@ function makeTable(num){
     }
 
     i = 0;
-    while (i < size) {
+    while (i < size) { // Loop through all items
         let yearRE = /\b\d{4}\b/;
         let year = yearRE.exec(Dates[i]);
         if(year == null){
             year = ""; // some sources don't have dates
         }
 
-        if (Titles[i] !== "") {
+        if (Titles[i] !== "") { // Skip empty titles or attachments
             // add these in the order of the table head array
             table += '<tr class="source">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
-            table += '<td>' + Types[i] + '</td>';
+            table += '<td>' + Types[i] + '</td></tr>';
 
-            //this constructs the link and abstracts hidden div but does not add it yet
-            let linkNAbs = '<div class="extra" id="' + i + '" style="display: none;"><b>' + Titles[i] + '</b>';
+
+            table += '<tr class="extra"><td colspan="4" class="extra">';
+
+            // this constructs the hidden div but does not yet add it to the table
+            let hidden = '<div class="extra" id="' + i + '" style="display: none;">';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
-                linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
+                hidden += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
             if (URLs[i] !== "") {
-                linkNAbs += '<p><strong>Link: </strong><a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
+                hidden += '<p><strong>Link: </strong><a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
             }
 
-            //anything that needs to be visible only in the drop down
+            // Add other attachments to hidden div
             if (Attachments[i] != null && Attachments[i] !== undefined)
-                linkNAbs += Attachments[i];
+                hidden += Attachments[i];
 
-            table += '<td colspan="4" class="extra">';
+            // Add Publishers, publishing location, and ISBN as available
+            hidden += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
+                constructT(Places[i], ". ") + constructT(ISBN[i], ". <b>ISBN</b>: ") + '</div>';
 
-            linkNAbs += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
-                constructT(Places[i], ". ") + constructT(ISBN[i], ". <b>ISBN</b>: ");
-
-            table += linkNAbs + '</div></td></tr>';
+            table += hidden;
+            table += '</tr></td>';
         }
         i++;
 
