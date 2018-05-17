@@ -34,9 +34,6 @@ request.onload = function(){
         //reveals hidden div with abstracts and links
         $(".source").click(function() {
 
-            // let $this = $(this).find('.content');
-            // $(".content").not($this).hide(); // Only allow one dropdown open at once
-
             $("td, div", $(this)).toggle();
         });
     }
@@ -115,27 +112,26 @@ function makeTable(num){
 
         if (Titles[i] !== "") {
             // add these in the order of the table head array
-            table += '<tr class="source row">';
+            table += '<tr class="source">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
 
             //this constructs the link and abstracts hidden div but does not add it yet
-            let linkNAbs = '<div class="extra content" id="' + i + '" style="display: none;"><b>' + Titles[i] + '</b>';
+            let linkNAbs = '<div class="extra" id="' + i + '" style="display: none;"><b>' + Titles[i] + '</b>';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 linkNAbs += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
             if (URLs[i] !== "") {
-                linkNAbs += '<p><strong>Link: </strong>';
-                linkNAbs += '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
+                linkNAbs += '<p><strong>Link: </strong><a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
             }
 
             //anything that needs to be visible only in the drop down
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 linkNAbs += Attachments[i];
 
-            table += '<td colspan=4 class="extra">';
+            table += '<td colspan="4" class="extra">';
 
             linkNAbs += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
                 constructT(Places[i], ". ") + constructT(ISBN[i], ". <b>ISBN</b>: ");
