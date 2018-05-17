@@ -6,7 +6,7 @@
  * If one has the index of all one of the fields, i.e title, the the
  * index can be applied for other fields that are associated with the
  * title. There is some unused space in the arrays for some empty fields
- * but this is less of the usual case. Well, I hope. Also, I dont know how to
+ * but this is less of the usual case. Well, I hope. Also, I don't know how to
  * document in php. Forgivenesss!!!
  *
  * publicationarray[index][somekey][possible value or even array] is the structure of the api return
@@ -17,24 +17,8 @@ include 'api_key.php';
 $dataNum = 100; // the limit of sources we want to pull
 $start = 0;
 
-// Assign global variables - PHP wants these to be separate
-$keys = array();
-$lastnames = array();
-$itemTypes = array();//getDataField($info, "itemType");
-$titles = array();//getDataField($info, "title");
-$shortTitles = array();
-$creators = array();//getDataField($info, "creators");
-$dates = array();//getDataField($info,"date");
-$places = array();//getDataField($info,"place");
-$publishers = array();//getDataField($info,"publisher");
-$isbns = array();//getDataField($info,"ISBN");
-$abstracts = array();//getDataField($info, "abstractNote");
-$urls = array(); //getDataField($info, "url");
-$parentItem = array();
-
 function getApiResults(){
     global $dataNum, $api_key;
-    $isEmpty = false;
     if($api_key == ''){
         echo "00";
 
@@ -58,18 +42,31 @@ function getApiResults(){
 function getClassicFields($data){
 
     global $keys;
+    $keys = array();
     global $lastnames;
+    $lastnames = array();
     global $itemTypes;
+    $itemTypes = array();
     global $titles;
+    $titles = array();
     global $shortTitles;
+    $shortTitles = array();
     global $creators;
-    global $dates;
+    $creators = array();
+    global $dates ;
+    $dates = array();
     global $places;
+    $places = array();
     global $publishers;
+    $publishers = array();
     global $isbns;
+    $isbns = array();
     global $abstracts;
+    $abstracts = array();
     global $urls;
+    $urls = array();
     global $parentItem;
+    $parentItem = array();
 
     //look through all the data
     $i = 0;

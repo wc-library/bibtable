@@ -27,22 +27,23 @@ request.onload = function(){
             if(num != ""){
                 document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
             }
-            myVar = setTimeout(showPage, 1000);
+            myVar = setTimeout(showPage, 500);
 
         });
 
         $(".extra").click(function (){
-            $("td, div", $(this)).slideToggle(200);
+            $("td, div", $(this)).slideToggle(500);
         });
 
         //reveals hidden div with abstracts and links
-        $(".source").click(function() {
+        $(".source").click(function(event) {
+            event.stopPropagation();
 
             let $target = $(event.target);
-            if ($target.closest("tr").parent().find('.extra').attr("colspan") > 1) {
-                $target.toggle();
+            if ($target.closest("tr").parent().find('.extra').attr("colspan") > 3) {
+                // $target.closest().toggle();
             } else {
-                $target.closest("tr").parent().find('.extra').toggle();
+                $target.closest("tr").parent().find('.extra').slideToggle(500);
                 console.log($target.closest("tr").parent().find('.extra'));
             }
 
@@ -50,8 +51,6 @@ request.onload = function(){
             // $title.show();
             // let $this = $(this).find('.content');
             // $('.extra .content').not($this).hide();
-
-
             //$("td, div", $(this)).toggle();
         });
     }
@@ -71,9 +70,9 @@ function showPage(){
         $("#myTable").tablesorter(
             {
                 widgets : ["zebra", "filter"], // Color code even and odd rows, add search boxes
-                widgetOptions: {
-                    zebra: ["alt-row"]
-                }
+                // widgetOptions: {
+                //     zebra: ["alt-row"]
+                // }
             }
         );
     });
