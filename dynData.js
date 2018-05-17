@@ -32,26 +32,14 @@ request.onload = function(){
         });
 
         $(".extra").click(function (){
-            $("td, div", $(this)).slideToggle(500);
+            $(this).slideToggle(300);
+            $("td div", $(this)).hide();
         });
 
         //reveals hidden div with abstracts and links
         $(".source").click(function(event) {
-            event.stopPropagation();
-
-            let $target = $(event.target);
-            if ($target.closest("tr").parent().find('.extra').attr("colspan") > 3) {
-                // $target.closest().toggle();
-            } else {
-                $target.closest("tr").parent().find('.extra').slideToggle(500);
-                console.log($target.closest("tr").parent().find('.extra'));
-            }
-
-            // let $title = $(this).find('.head');
-            // $title.show();
-            // let $this = $(this).find('.content');
-            // $('.extra .content').not($this).hide();
-            //$("td, div", $(this)).toggle();
+                $(this).next().slideToggle(300);
+                $(this).next().find('.content').slideToggle(300);
         });
     }
 };
@@ -69,10 +57,7 @@ function showPage(){
     {
         $("#myTable").tablesorter(
             {
-                widgets : ["zebra", "filter"], // Color code even and odd rows, add search boxes
-                // widgetOptions: {
-                //     zebra: ["alt-row"]
-                // }
+                widgets: ["zebra", "filter"], // Color code even and odd rows, add search boxes
             }
         );
     });
@@ -140,10 +125,10 @@ function makeTable(num){
             table += '<td>' + Types[i] + '</td></tr>';
 
 
-            table += '<tr class="extra"><td colspan="4" class="extra">';
+            table += '<tr class="extra"><td colspan="4">';
 
             // this constructs the hidden div but does not yet add it to the table
-            let hidden = '<div class="extra" id="' + i + '" style="display: none;">';
+            let hidden = '<div class="extra content" id="' + i + '" style="display: none;">';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 hidden += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
