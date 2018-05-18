@@ -41,6 +41,7 @@ $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
 
+echo json_cached_results();
 
 function getApiResults(){
     global $dataNum, $api_key, $start;
@@ -244,7 +245,7 @@ function makeAllData(){
 function json_cached_results() {
 
     $cache_file = dirname(__FILE__) . '/cachefile.json';
-    $expires = time() - 2*60*60;
+    $expires = time() - 2*60*60; // 2 hours
 
     if(!file_exists($cache_file))
         die("Cache file is missing: $cache_file");
@@ -256,11 +257,7 @@ function json_cached_results() {
         getApiResults();
         $api_results =  json_encode(makeAllData());
 
-        // Remove cache file on error to avoid writing wrong xml
-        if ($api_results != null)
-            file_put_contents($cache_file,  $api_results);
-        else
-            file_put_contents($cache_file, "");
+        file_put_contents($cache_file,  $api_results);
 
     } else {
         // Fetch cache
@@ -270,5 +267,4 @@ function json_cached_results() {
     return (($api_results));
 }
 
-echo json_cached_results();
 ?>

@@ -44,6 +44,7 @@ request.onload = function(){
     }
 };
 
+// $.ajax('/getData.php');
 request.open("GET", "getData.php", true); //request info from api
 request.send();
 
