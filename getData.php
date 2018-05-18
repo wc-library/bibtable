@@ -14,21 +14,54 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
  */
 include 'api_key.php';
-$dataNum = 100; // the limit of sources we want to pull
+$dataNum = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
 
+// Corresponding name in dynData.js
+global $creators;   // Authors
+$creators = array();
+global $titles;     // Titles
+$titles = array();
+global $isbns;      // ISBNs
+$isbns = array();
+global $itemtypes;  // Types
+$itemtypes = array();
+global $dates ;     // Dates
+$dates = array();
+global $publishers; // Publishers
+$publishers = array();
+global $places;     // Places
+$places = array();
+global $abstracts;  // Abstracts
+$abstracts = array();
+global $urls;       // URL links
+$urls = array();
+global $keys;       // Keys
+$keys = array();
+global $parentItem; // ParentItems
+$parentItem = array();
+
+
 function getApiResults(){
-    global $dataNum, $api_key;
+    global $dataNum, $api_key, $start;
     if($api_key == ''){
         echo "00";
-
         exit;
     }
-        $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key='. $api_key .
-            '&itemTypes?locale&format=json&limit='. $dataNum; //.'&start=' . $start;
+
+    $start = 0;
+    while($start < 20000) {
+
+        $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=' . $api_key .
+            '&itemTypes?locale&format=json&limit=' . $dataNum . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
-        $info = json_decode($response, true); // decodes jason and creates an object
-        getClassicFields($info);
+        $info = json_decode($response, true); // decodes json and creates an object
+        getClassicFields($info, $start);
+
+        if(count($info) < 100) // Stop loop if current is less than limit
+            break;
+        $start+=100;
+    }
 }
 
 /**
@@ -39,45 +72,32 @@ function getApiResults(){
  *@param data the whole json array or associative entries e.g "key": "value" or "key" : array {...}
  *@param field the field being sought or key
  */
-function getClassicFields($data){
+function getClassicFields($data, $offset){
 
-    global $keys;
-    $keys = array();
-    global $lastnames;
-    $lastnames = array();
-    global $itemTypes;
-    $itemTypes = array();
-    global $titles;
-    $titles = array();
-    global $shortTitles;
-    $shortTitles = array();
-    global $creators;
-    $creators = array();
-    global $dates ;
-    $dates = array();
-    global $places;
-    $places = array();
-    global $publishers;
-    $publishers = array();
-    global $isbns;
-    $isbns = array();
-    global $abstracts;
-    $abstracts = array();
-    global $urls;
-    $urls = array();
-    global $parentItem;
-    $parentItem = array();
+    // Remind globals
+    global $creators;   // Authors
+    global $titles;     // Titles
+    global $isbns;      // ISBNs
+    global $itemtypes;  // Types
+    global $dates ;     // Dates
+    global $publishers; // Publishers
+    global $places;     // Places
+    global $abstracts;  // Abstracts
+    global $urls;       // URL links
+    global $keys;       // Keys
+    global $parentItem; // ParentItems
+
 
     //look through all the data
     $i = 0;
     foreach ($data as $work) {
 
-		$keys[$i] = $work["key"]; // Guaranteed value
+		$keys[$i + $offset] = $work["key"]; // Guaranteed value
 
         if(isset($work["data"]["parentItem"]))
-            $parentItem[$i] = $work["data"]["parentItem"];
+            $parentItem[$i + $offset] = $work["data"]["parentItem"];
         else
-        	$parentItem[$i] = ""; // Assign dummy value to keep array index fill for each array
+        	$parentItem[$i + $offset] = ""; // Assign dummy value to keep array index fill for each array
 
 
         $scope = $work["data"];
@@ -131,18 +151,15 @@ function getClassicFields($data){
             $lastName = "";
         }
 
-        $creators[$i] = $authorString;
-        $lastnames[$i] = $lastName;
-
-        $itemTypes[$i] = itemT( "itemType", $scope);
-        $titles[$i] = checknStore( "title", $scope);
-        $shortTitles[$i] = checknStore("shortTitle", $scope);
-        $dates[$i] = checknStore("date", $scope);
-        $places[$i] = checknStore("place", $scope);
-        $publishers[$i] = checknStore("publisher", $scope);
-        $isbns[$i] = checknStore("ISBN", $scope);
-        $abstracts[$i] = checknStore("abstractNote", $scope);
-        $urls[$i] = checknStore("url", $scope);
+        $creators[$i + $offset] = $authorString;
+        $itemtypes[$i + $offset] = itemT( "itemType", $scope);
+        $titles[$i + $offset] = checknStore( "title", $scope);
+        $dates[$i + $offset] = checknStore("date", $scope);
+        $places[$i + $offset] = checknStore("place", $scope);
+        $publishers[$i + $offset] = checknStore("publisher", $scope);
+        $isbns[$i + $offset] = checknStore("ISBN", $scope);
+        $abstracts[$i + $offset] = checknStore("abstractNote", $scope);
+        $urls[$i + $offset] = checknStore("url", $scope);
         $i++;
     }
 }
@@ -197,10 +214,8 @@ function makeAllData(){
 
     // Remind PHP of globals
 	global $keys;
-    global $lastnames;
-    global $itemTypes;
+    global $itemtypes;
     global $titles;
-    global $shortTitles;
     global $creators;
     global $dates;
     global $places;
@@ -213,10 +228,8 @@ function makeAllData(){
     $allData = new stdClass();
     $allData->keys = $keys;
     $allData->creators = $creators;
-    $allData->lastnames = $lastnames;
-    $allData->itemtypes = $itemTypes;
+    $allData->itemtypes = $itemtypes;
     $allData->titles = $titles;
-    $allData->shorttitles = $shortTitles;
     $allData->dates = $dates;
     $allData->places = $places;
     $allData->publishers = $publishers;
@@ -230,36 +243,28 @@ function makeAllData(){
 
 function json_cached_results() {
 
-
-    $expires = NULL;
     $cache_file = dirname(__FILE__) . '/cachefile.json';
     $expires = time() - 2*60*60;
 
-    if( !file_exists($cache_file) ) die("Cache file is missing: $cache_file");
+    if(!file_exists($cache_file))
+        die("Cache file is missing: $cache_file");
 
-    //chmod($cache_file, 0755);
     // Check that the file is older than the expire time and that it's not empty
-    if ( filectime($cache_file) < $expires || file_get_contents($cache_file)  == '' ) {
+    if (filectime($cache_file) < $expires || file_get_contents($cache_file)  == '') {
 
         // File is too old, refresh cache
         getApiResults();
-
         $api_results =  json_encode(makeAllData());
-        //returnData();
-
 
         // Remove cache file on error to avoid writing wrong xml
-        if ( $api_results  != null){
-
+        if ($api_results != null)
             file_put_contents($cache_file,  $api_results);
-        }
         else
             file_put_contents($cache_file, "");
-    } else {
 
+    } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_file));
-
     }
 
     return (($api_results));
