@@ -257,7 +257,10 @@ function json_cached_results() {
         getApiResults();
         $api_results =  json_encode(makeAllData());
 
-        file_put_contents($cache_file,  $api_results);
+        if($api_results != null) {
+            file_put_contents($cache_file, $api_results);
+        } else
+            file_put_contents($cache_file, '');
 
     } else {
         // Fetch cache
