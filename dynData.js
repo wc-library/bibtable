@@ -62,23 +62,20 @@ function showPage(){
     // Initialize tablesorter
     $(function()
     {
-        var $table = $("#myTable").tablesorter({
-                // theme: blue,
+        $("#myTable").tablesorter({
 
                 widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
                 widget_options: {
                     // pager_output: '{startRow} - {endRow}} / {filteredRows} ({totalRows})',
                     // pager_removeRows: false,
 
-                    // filter_childRows: true,
-                    // filter_cssFilter: 'tablesorter-filter',
-                    // filter_startsWith: false,
-                    // filter_ignoreCase: true
+                    filter_childRows: false,
+                    filter_cssFilter: 'tablesorter-filter',
+                    filter_startsWith: false,
+                    filter_ignoreCase: true
                 }
             }
         );
-
-        // $table.find('.tablesorter-childRow').addClass('hidden');
     });
 }
 function makeTable(num){
@@ -136,17 +133,17 @@ function makeTable(num){
 
         if (Titles[i] !== "") { // Skip empty titles or attachments
             // add these in the order of the table head array
-            table += '<tr class="source tablesorter-childRow">';
+            table += '<tr class="source">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td></tr>';
 
 
-            table += '<tr class="extra"><td colspan="4">';
+            table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 
             // this constructs the hidden div but does not yet add it to the table
-            let hidden = '<div class="extra content" id="' + i + '" style="display: none;">';
+            let hidden = '<div class="extra content " id="' + i + '" style="display: none;">';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
                 hidden += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
