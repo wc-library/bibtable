@@ -31,10 +31,15 @@ request.onload = function(){
 
         });
 
+        // Allow extra to minimize
         $(".extra").click(function (){
             $(this).slideToggle(300);
             $("td div", $(this)).hide();
         });
+        $(".extra a").click(function (e){
+            e.stopPropagation();
+        });
+
 
         //reveals hidden div with abstracts and links
         $(".source").click(function(event) {
@@ -100,7 +105,7 @@ function makeTable(num){
         	let pkey = ParentItems[i];
         	if(pkey !== "") {
                 let pindex = Keys.indexOf(pkey);
-                Attachments[pindex] = '<p><strong>' + Titles[i] + ': </strong>' + '<a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
+                Attachments[pindex] = '<p><strong>' + Titles[i] + ': </strong>' + '<a href="' + URLs[i] + '" target="_blank">' + URLs[i] + '</a></p>';
             }
             Titles[i] = ""; // Remove title to specify that it should no longer be added to table
         }
@@ -134,7 +139,7 @@ function makeTable(num){
                 hidden += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
             }
             if (URLs[i] !== "") {
-                hidden += '<p><strong>Link: </strong><a href="' + URLs[i] + '">' + URLs[i] + '</a></p>';
+                hidden += '<p><strong>Link: </strong><a href="' + URLs[i] + '" target="_blank">' + URLs[i] + '</a></p>';
             }
 
             // Add other attachments to hidden div
