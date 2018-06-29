@@ -95,6 +95,21 @@ function makeTable(num){
     // Create table headers
     let tablehead = ["Title", "Author", "Year", "Type"];
     let len = tablehead.length;
+    // let table = '<div id="pager" class="pager">\n' +
+    //     '<form>\n' +
+    //     '<input type="button" value="&lt;&lt;" class="first" />\n' +
+    //     '<input type="button" value="&lt;" class="prev" />\n' +
+    //     '<input type="text" class="pagedisplay"/>\n' +
+    //     '<input type="button" value="&gt;" class="next" />\n' +
+    //     '<input type="button" value="&gt;&gt;" class="last" />\n' +
+    //     '<select class="pagesize">\n' +
+    //     '<option selected="selected"  value="10">10</option>\n' +
+    //     '<option value="20">20</option>\n' +
+    //     '<option value="30">30</option>\n' +
+    //     '<option value="40">40</option>\n' +
+    //     '</select>\n' +
+    //     '</form>\n' +
+    //     '</div>';
     let table = '<thead><tr>';
     let tl = 0;
     while(tl < len)
@@ -169,7 +184,6 @@ function makeTable(num){
     table += '</tbody>'; //close off table
     var mainTable = document.getElementById('myTable'); //get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
-
 }
 
 /**
