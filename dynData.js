@@ -40,11 +40,12 @@ request.onload = function(){
             e.stopPropagation();
         });
 
-
         //reveals hidden div with abstracts and links
         $(".source").click(function(event) {
-                $(this).next().slideToggle(300);
-                $(this).next().find('.content').slideToggle(300);
+            // $(this).find(".extra").hide();
+            $(this).next().slideToggle(300);
+            $(this).next().find('.content').slideToggle(300);
+            console.log($(this).next());
         });
     }
 };
@@ -61,13 +62,24 @@ function showPage(){
     // Initialize tablesorter
     $(function()
     {
-        $("#myTable").tablesorter(
-            {
-                widgets: ["zebra", "filter"], // Color code even and odd rows, add search boxes
+        var $table = $("#myTable").tablesorter({
+                // theme: blue,
+
+                widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
+                widget_options: {
+                    // pager_output: '{startRow} - {endRow}} / {filteredRows} ({totalRows})',
+                    // pager_removeRows: false,
+
+                    // filter_childRows: true,
+                    // filter_cssFilter: 'tablesorter-filter',
+                    // filter_startsWith: false,
+                    // filter_ignoreCase: true
+                }
             }
         );
-    });
 
+        // $table.find('.tablesorter-childRow').addClass('hidden');
+    });
 }
 function makeTable(num){
     // Create single-dimensional arrays from JSON
@@ -102,8 +114,8 @@ function makeTable(num){
 
     while (i < size){ // Append all attachments to their parents and remove them from the list
         if(Types[i] === "Attachment") {
-        	let pkey = ParentItems[i];
-        	if(pkey !== "") {
+            let pkey = ParentItems[i];
+            if(pkey !== "") {
                 let pindex = Keys.indexOf(pkey);
                 Attachments[pindex] = '<p><strong>' + Titles[i] + ': </strong>' + '<a href="' + URLs[i] + '" target="_blank">' + URLs[i] + '</a></p>';
             }
@@ -124,7 +136,7 @@ function makeTable(num){
 
         if (Titles[i] !== "") { // Skip empty titles or attachments
             // add these in the order of the table head array
-            table += '<tr class="source">';
+            table += '<tr class="source tablesorter-childRow">';
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
@@ -152,6 +164,7 @@ function makeTable(num){
 
             table += hidden;
             table += '</tr></td>';
+            console.log(table);
         }
         i++;
 
@@ -169,8 +182,8 @@ function makeTable(num){
  */
 function constructT(string, type){
 
-   if (string === "")
-	   return string;
-   else
-   		return type + string;
+    if (string === "")
+        return string;
+    else
+        return type + string;
 }
