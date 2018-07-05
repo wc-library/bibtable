@@ -39,7 +39,8 @@ function parse($jarray){
     $html = '<table class="head"><thead><tr>' .
         '<th scope="col">Name</th>' .
         '<th scope="col">Items</th>' .
-        '<th scope="col">Subcollections</th></tr></thead>';
+        '<th scope="col">Subcollections</th>' .
+        '<th scope="col">Link</th></tr></thead>';
 
     $i = 0;
     foreach ($jarray as $piece) {
@@ -51,7 +52,8 @@ function parse($jarray){
 
         $html .= '</td>' . '<tr><td>' . $names[$i];
         $html .= '<td>' . $items[$i] . '</td>';
-        $html .= '<td>' . $subcollections[$i] . '</td></tr>';
+        $html .= '<td>' . $subcollections[$i] . '</td>';
+        $html .= '<td><button class="button">Push me</button></td></tr>';
         $i++;
     }
     return $html;
