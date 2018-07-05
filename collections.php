@@ -30,27 +30,28 @@ echo $table;
 
 
 function parse($jarray){
-    global $api_key;
     global $keys;
     global $names;
     global $items;
     global $links;
+    global $subcollections;
 
     $html = '<table class="head"><thead><tr>' .
         '<th scope="col">Name</th>' .
         '<th scope="col">Items</th>' .
-        '<th scope="col">Link</th></tr></thead>';
+        '<th scope="col">Subcollections</th></tr></thead>';
 
     $i = 0;
     foreach ($jarray as $piece) {
         $names[$i] = $piece["data"]["name"];
         $keys[$i] = $piece["data"]["key"];
         $items[$i] = $piece["meta"]["numItems"];
-        $links[$i] = $piece["links"]["self"]["href"] . 'key=' . $api_key;
+        $links[$i] = $piece["links"]["self"]["href"];
+        $subcollections[$i] = $piece["meta"]["numCollections"];
 
         $html .= '</td>' . '<tr><td>' . $names[$i];
         $html .= '<td>' . $items[$i] . '</td>';
-        $html .= '<td><a href="' . $links[$i] . '">Link</a></td></tr>';
+        $html .= '<td>' . $subcollections[$i] . '</td></tr>';
         $i++;
     }
     return $html;
