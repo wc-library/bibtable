@@ -63,7 +63,7 @@ function showPage(){
     $(function()
     {
         let $table = $("#myTable").tablesorter({
-
+            theme: 'blue',
             widthFixed : true,
 
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
@@ -72,31 +72,17 @@ function showPage(){
                 // pager_removeRows: false,
 
                 filter_childRows: false,
-                filter_cssFilter: 'tablesorter-filter',
                 filter_startsWith: false,
                 filter_ignoreCase: true,
                 filter_external: '.search',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
-
             }
         });
 
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
-
-        // $('button[data-column]').on('click', function() {
-        //     var $this = $(this),
-        //         totalColumns = $table[0].config.columns,
-        //         col = $this.data('column'), // zero-based index or "all"
-        //         filter = [];
-        //
-        //     // text to add to filter
-        //     filter[ col === 'all' ? totalColumns : col ] = $this.text();
-        //     $table.trigger('search', [ filter ]);
-        //     return false;
-        // });
 
         $('button').click(function() {
             $('table').trigger('sortReset');
