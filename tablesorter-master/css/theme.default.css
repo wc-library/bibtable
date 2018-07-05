@@ -125,12 +125,12 @@ caption {
 /* filter widget */
 .tablesorter-default .tablesorter-filter-row {
 	background-color: #eee;
+	horiz-align: left;
 }
 .tablesorter-default .tablesorter-filter-row td {
 	background-color: #eee;
 	border-bottom: #ccc 1px solid;
 	line-height: normal;
-	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;
 	-moz-transition: line-height 0.1s ease;
 	-o-transition: line-height 0.1s ease;

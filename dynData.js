@@ -62,20 +62,47 @@ function showPage(){
     // Initialize tablesorter
     $(function()
     {
-        $("#myTable").tablesorter({
+        let $table = $("#myTable").tablesorter({
 
-                widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
-                widget_options: {
-                    // pager_output: '{startRow} - {endRow}} / {filteredRows} ({totalRows})',
-                    // pager_removeRows: false,
+            widthFixed : true,
 
-                    filter_childRows: false,
-                    filter_cssFilter: 'tablesorter-filter',
-                    filter_startsWith: false,
-                    filter_ignoreCase: true
-                }
+            widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
+            widget_options: {
+                // pager_output: '{startRow} - {endRow}} / {filteredRows} ({totalRows})',
+                // pager_removeRows: false,
+
+                filter_childRows: false,
+                filter_cssFilter: 'tablesorter-filter',
+                filter_startsWith: false,
+                filter_ignoreCase: true,
+                filter_external: '.search',
+                filter_reset: '.reset',
+                filter_searchDelay : 200,
+                filter_saveFilters : true,
+
             }
-        );
+        });
+
+        $.tablesorter.filter.bindSearch($table, $('.search'));
+        $.tablesorter.fixColumnWidth($table);
+
+        // $('button[data-column]').on('click', function() {
+        //     var $this = $(this),
+        //         totalColumns = $table[0].config.columns,
+        //         col = $this.data('column'), // zero-based index or "all"
+        //         filter = [];
+        //
+        //     // text to add to filter
+        //     filter[ col === 'all' ? totalColumns : col ] = $this.text();
+        //     $table.trigger('search', [ filter ]);
+        //     return false;
+        // });
+
+        $('button').click(function() {
+            $('table').trigger('sortReset');
+            return false;
+        });
+
     });
 }
 function makeTable(num){
@@ -93,30 +120,10 @@ function makeTable(num){
     let ParentItems = num.parentItem;
 
     // Create table headers
-    let tablehead = ["Title", "Author", "Year", "Type"];
-    let len = tablehead.length;
-    // let table = '<div id="pager" class="pager">\n' +
-    //     '<form>\n' +
-    //     '<input type="button" value="&lt;&lt;" class="first" />\n' +
-    //     '<input type="button" value="&lt;" class="prev" />\n' +
-    //     '<input type="text" class="pagedisplay"/>\n' +
-    //     '<input type="button" value="&gt;" class="next" />\n' +
-    //     '<input type="button" value="&gt;&gt;" class="last" />\n' +
-    //     '<select class="pagesize">\n' +
-    //     '<option selected="selected"  value="10">10</option>\n' +
-    //     '<option value="20">20</option>\n' +
-    //     '<option value="30">30</option>\n' +
-    //     '<option value="40">40</option>\n' +
-    //     '</select>\n' +
-    //     '</form>\n' +
-    //     '</div>';
-    let table = '<thead><tr>';
-    let tl = 0;
-    while(tl < len)
-    {
-        table += '<th>' + tablehead[tl] + '</th>';
-        tl++;
-    }
+    let table = '<thead><tr><th class="col-6">Title</th>';
+    table += '<th class="col-2">Author</th>';
+    table += '<th class="col-2">Year</th>';
+    table += '<th class="col-2 filter-select filter-onlyAvail">Type</th>';
     table +='</tr></thead><tbody>';
 
     let i = 0;
@@ -176,7 +183,6 @@ function makeTable(num){
 
             table += hidden;
             table += '</tr></td>';
-            console.log(table);
         }
         i++;
 

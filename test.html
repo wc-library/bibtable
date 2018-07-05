@@ -16,12 +16,15 @@
 	<script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
 
 </head>
-<body>
+	<body>
 
-	<h1>Bibtable</h1>
-	<div>
+		<h1>Bibtable</h1>
 		<div>
-			<h2 style="text-align:center; color: grey;" id="loadinginfo">Loading Sources...</h2></div>
+			<input class="search" type="search" data-column="all" placeholder="Search all" autocomplete="off">
+			<button type="button" class="button reset">Reset Sort</button>
+			<div>
+				<h2 style="text-align:center; color: grey;" id="loadinginfo">Loading Sources...</h2>
+			</div>
 
 			<div id="loader"></div>
 		</div>
@@ -30,7 +33,7 @@
 		</div>
 		<script type="text/javascript" src="dynData.js"></script>
 
-		<table style="display:none;" id="myTable" class="tablesorter-default" ></table>
+		<table style="display:none;" id="myTable" class="tablesorter-default tablesorter-blue" ></table>
 
-</body>
+	</body>
 </html>

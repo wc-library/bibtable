@@ -10,10 +10,15 @@
 
 .extra { /* The hidden div with extra information */
 	display: none;
-	padding:4px 8px!important;
+	padding:4px 4px!important;
 	background-color: #F8F8F8;
 	border-left:3px solid #ccc!important;
 }
+
+/*.tablesorter-filter {*/
+    /*padding-left: 0;*/
+    /*margin-left: 0;*/
+/*}*/
 
 #loader {
 	position: absolute;
