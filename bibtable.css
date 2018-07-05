@@ -15,11 +15,12 @@
 	border-left:3px solid #ccc!important;
 }
 
-/*.tablesorter-filter {*/
-    /*padding-left: 0;*/
-    /*margin-left: 0;*/
-/*}*/
+.tablesorter-filter {
+    padding-left: 4px;
+    margin-left: 4px;
+}
 
+/* Spinning wheel at load time */
 #loader {
 	position: absolute;
 	align-self: center;

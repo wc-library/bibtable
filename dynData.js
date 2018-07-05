@@ -36,6 +36,7 @@ request.onload = function(){
             $(this).slideToggle(300);
             $("td div", $(this)).hide();
         });
+        // Don't minimize when links are selected
         $(".extra a").click(function (e){
             e.stopPropagation();
         });
@@ -45,7 +46,6 @@ request.onload = function(){
             // $(this).find(".extra").hide();
             $(this).next().slideToggle(300);
             $(this).next().find('.content').slideToggle(300);
-            console.log($(this).next());
         });
     }
 };
@@ -78,6 +78,17 @@ function showPage(){
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
+                // filter_functions: {
+                //     1 : {
+                //         "A - D" : function(e, n, f, i, $r, c, data) { return /^[A-D]/.test(e); },
+                //         "E - H" : function(e, n, f, i, $r, c, data) { return /^[E-H]/.test(e); },
+                //         "I - L" : function(e, n, f, i, $r, c, data) { return /^[I-L]/.test(e); },
+                //         "M - P" : function(e, n, f, i, $r, c, data) { return /^[M-P]/.test(e); },
+                //         "Q - T" : function(e, n, f, i, $r, c, data) { return /^[Q-T]/.test(e); },
+                //         "U - X" : function(e, n, f, i, $r, c, data) { return /^[U-X]/.test(e); },
+                //         "Y - Z" : function(e, n, f, i, $r, c, data) { return /^[Y-Z]/.test(e); }
+                //     }
+                // }
             }
         });
 
@@ -86,9 +97,9 @@ function showPage(){
 
         $('button').click(function() {
             $('table').trigger('sortReset');
+            // TODO: find way to clear dropdown
             return false;
         });
-
     });
 }
 function makeTable(num){
@@ -106,10 +117,10 @@ function makeTable(num){
     let ParentItems = num.parentItem;
 
     // Create table headers
-    let table = '<thead><tr><th class="col-6">Title</th>';
-    table += '<th class="col-2">Author</th>';
-    table += '<th class="col-2">Year</th>';
-    table += '<th class="col-2 filter-select filter-onlyAvail">Type</th>';
+    let table = '<thead><tr><th>Title</th>';
+    table += '<th>Author</th>';
+    table += '<th>Year</th>';
+    table += '<th class="filter-select filter-onlyAvail">Type</th>';
     table +='</tr></thead><tbody>';
 
     let i = 0;

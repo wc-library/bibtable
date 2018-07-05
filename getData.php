@@ -14,7 +14,7 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
  */
 include 'api_key.php';
-$dataNum = 100; // the limit of sources we want to pull. This is the max supported by the API
+$limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
 
 // Corresponding name in dynData.js
@@ -44,17 +44,17 @@ $parentItem = array();
 echo json_cached_results();
 
 function getApiResults(){
-    global $dataNum, $api_key, $start;
+    global $limit, $api_key, $start;
     if($api_key == ''){
         echo "00";
         exit;
     }
 
     $start = 0;
-    while($start < 20000) {
+    while(true) { // Run until break
 
         $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=' . $api_key .
-            '&itemTypes?locale&format=json&limit=' . $dataNum . '&start=' . $start;
+            '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object
         getClassicFields($info, $start);
@@ -63,6 +63,7 @@ function getApiResults(){
             break;
         $start+=100;
     }
+
 }
 
 /**
