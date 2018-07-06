@@ -7,7 +7,7 @@
  * Authors: Robin Kelmen, Jesse Tatum
  */
 
-
+//TODO: Refactor this so that it only controls the table creation and loader
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
@@ -104,6 +104,7 @@ function showPage(){
         });
     });
 }
+
 function makeTable(num){
     // Create single-dimensional arrays from JSON
     let Authors = num.creators;
@@ -186,7 +187,7 @@ function makeTable(num){
         i++;
 
     }
-    table += '</tbody>'; //close off table
+    table += '</tbody>'; // close off table
 
     var mainTable = document.getElementById('myTable'); //get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
