@@ -5,17 +5,22 @@
  * The set up basically keep the fields in arrays for easy access
  * If one has the index of all one of the fields, i.e title, the the
  * index can be applied for other fields that are associated with the
- * title. There is some unused space in the arrays for some empty fields
- * but this is less of the usual case. Well, I hope. Also, I don't know how to
- * document in php. Forgivenesss!!!
+ * title.
  *
  * publicationarray[index][somekey][possible value or even array] is the structure of the api return
-
- *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
+ *
+ *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
+
+global $ckey;
+if (isset($_POST['ckey']))
+    $ckey = $_POST['ckey'];
+echo $ckey;
+// TODO Error check
+
 
 // Corresponding name in dynData.js
 global $creators;   // Authors
@@ -44,7 +49,7 @@ $parentItem = array();
 echo json_cached_results();
 
 function getApiResults(){
-    global $limit, $api_key, $start;
+    global $limit, $api_key, $start, $ckey;
     if($api_key == ''){
         echo "00";
         exit;
@@ -53,7 +58,7 @@ function getApiResults(){
     $start = 0;
     while(true) { // Run until break
 
-        $data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=' . $api_key .
+        $data = 'https://api.zotero.org/users/77162/collections/' . $ckey . '/items?key=' . $api_key .
             '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object

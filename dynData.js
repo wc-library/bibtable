@@ -3,6 +3,8 @@
  *
  * Javascript program to take the JSON from getData and format it into a HTML table
  * with a collapsible section for Abstract and all attachments
+ *
+ * Authors: Robin Kelmen, Jesse Tatum
  */
 
 

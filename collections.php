@@ -1,13 +1,25 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<h1>Zotero Collections</h1>
 <?php
 /**
- * Created by PhpStorm.
- * User: jessetatum
+ *
+ * Interface to display the contents of a user's Zotero collections
+ * and link to a viewing table.
+ *
+ * Author: Jesse Tatum
  * Date: 7/5/18
  * Time: 3:02 PM
  */
 include 'api_key.php';
+//include 'getData.php';
 global $links;
 global $api_key;
+global $ckey;
 
 if($api_key == ''){
     echo "00";
@@ -20,14 +32,23 @@ $opts = array(
         'header'=>"Zotero-API-Key: " . $api_key
     )
 );
+$context = stream_context_create($opts); // Create request with API key in headers
 
-$context = stream_context_create($opts);
+// Grab User Info
+$tmp = file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context);
+$userInfo = json_decode($tmp, true);
+$username = $userInfo["username"];
+$userID = $userInfo["userID"];
+
+echo "<h3>Username: " . $username . "</h3>";
+echo "<h3>User ID: " . $userID . "</h3>";
+
+// Grab collection info for user
 $response = file_get_contents('https://api.zotero.org/users/77162/collections/top', false, $context);
 $jarray = json_decode($response, true); // json to array
 
 $table = parse($jarray);
 echo $table;
-
 
 function parse($jarray){
     global $keys;
@@ -53,9 +74,28 @@ function parse($jarray){
         $html .= '</td>' . '<tr><td>' . $names[$i];
         $html .= '<td>' . $items[$i] . '</td>';
         $html .= '<td>' . $subcollections[$i] . '</td>';
-        $html .= '<td><button class="button">Push me</button></td></tr>';
+        $html .= '<td><form method="post">' .
+            '<button type="submit" class="button" value="' . $keys[$i] .
+            '">View table</button></form></td></tr>';
         $i++;
     }
     return $html;
 }
 ?>
+<script type="application/javascript">
+    var dynData = $.getScript("dynData.js");
+
+    $(document).ready(function(){
+        $('.button').click(function(){
+            console.log($(this).val());
+            // return $(this).val();
+            $.ajax({
+                type: "POST",
+                url: 'getData.php',
+                data: { 'ckey': $(this).val() }
+            });
+        });
+    });
+</script>
+</body>
+</html>
