@@ -9,7 +9,6 @@
  */
 ?>
 
-<html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -19,7 +18,6 @@
 
 <?php
 include 'api_key.php';
-//include 'getData.php';
 global $links;
 global $api_key;
 global $ckey;
@@ -84,16 +82,13 @@ function parse($jarray){
     return $html;
 }
 ?>
-<table style="display:none;" id="myTable" class="tablesorter-default" ></table>
+</body>
 <script type="application/javascript">
     // var dynData = $.getScript("dynData.js");
 
     $(document).ready(function(){
         $('.button').click(function(e){
-            e.preventDefault();
-            console.log($(this).val());
-            // return $(this).val();
-            var req = $.ajax({
+            $.ajax({
                 type: "POST",
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() }
@@ -103,5 +98,5 @@ function parse($jarray){
         });
     });
 </script>
-</body>
+
 </html>

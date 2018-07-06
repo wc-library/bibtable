@@ -187,6 +187,7 @@ function makeTable(num){
 
     }
     table += '</tbody>'; //close off table
+
     var mainTable = document.getElementById('myTable'); //get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
 }
