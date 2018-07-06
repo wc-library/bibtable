@@ -1,13 +1,5 @@
-<html>
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-</head>
-<body>
-<h1>Zotero Collections</h1>
 <?php
 /**
- *
  * Interface to display the contents of a user's Zotero collections
  * and link to a viewing table.
  *
@@ -15,6 +7,17 @@
  * Date: 7/5/18
  * Time: 3:02 PM
  */
+?>
+
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<h1>Zotero Collections</h1>
+
+<?php
 include 'api_key.php';
 //include 'getData.php';
 global $links;
@@ -35,8 +38,7 @@ $opts = array(
 $context = stream_context_create($opts); // Create request with API key in headers
 
 // Grab User Info
-$tmp = file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context);
-$userInfo = json_decode($tmp, true);
+$userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context), true);
 $username = $userInfo["username"];
 $userID = $userInfo["userID"];
 
@@ -82,17 +84,21 @@ function parse($jarray){
     return $html;
 }
 ?>
+<table style="display:none;" id="myTable" class="tablesorter-default" ></table>
 <script type="application/javascript">
-    var dynData = $.getScript("dynData.js");
+    // var dynData = $.getScript("dynData.js");
 
     $(document).ready(function(){
-        $('.button').click(function(){
+        $('.button').click(function(e){
+            e.preventDefault();
             console.log($(this).val());
             // return $(this).val();
-            $.ajax({
+            var req = $.ajax({
                 type: "POST",
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() }
+            }).done(function(msg){
+                console.log("Data saved: " + msg);
             });
         });
     });

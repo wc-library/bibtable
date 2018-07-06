@@ -1,26 +1,18 @@
 <?php
 
 /**
- * This  defines methods for parsing data from the Zotero API
- * The set up basically keep the fields in arrays for easy access
- * If one has the index of all one of the fields, i.e title, the the
- * index can be applied for other fields that are associated with the
- * title.
+ * This script is designed to create a request to the Zotero API and
+ * parse the fields and store them in arrays for easy access.
  *
- * publicationarray[index][somekey][possible value or even array] is the structure of the api return
+ * The arrays are then sent as JSON to dynData.js for the table creation.
+ * Results are cached to speed load time with a cache expiry time of 2 hours.
+ *
  *
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
-
-global $ckey;
-if (isset($_POST['ckey']))
-    $ckey = $_POST['ckey'];
-echo $ckey;
-// TODO Error check
-
 
 // Corresponding name in dynData.js
 global $creators;   // Authors
@@ -46,8 +38,17 @@ $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
 
-echo json_cached_results();
+global $ckey;
+if (isset($_POST['ckey']))
+    $ckey = $_POST['ckey'];
+else
+    $ckey = '89F8HEPX'; // Default value for testing
 
+// TODO Error check
+
+echo json_cached_results(); // To import into dynData.js
+
+// Pull all data from Zotero. This is the bottleneck
 function getApiResults(){
     global $limit, $api_key, $start, $ckey;
     if($api_key == ''){
@@ -58,17 +59,16 @@ function getApiResults(){
     $start = 0;
     while(true) { // Run until break
 
-        $data = 'https://api.zotero.org/users/77162/collections/' . $ckey . '/items?key=' . $api_key .
+        $data = 'https://api.zotero.org/users/77162/collections/'. $ckey  . '/items?key=' . $api_key .
             '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object
-        getClassicFields($info, $start);
+        parseFields($info, $start);
 
         if(count($info) < 100) // Stop loop if current is less than limit
             break;
         $start+=100;
     }
-
 }
 
 /**
@@ -79,7 +79,7 @@ function getApiResults(){
  *@param data the whole json array or associative entries e.g "key": "value" or "key" : array {...}
  *@param field the field being sought or key
  */
-function getClassicFields($data, $offset){
+function parseFields($data, $offset){
 
     // Remind globals
     global $creators;   // Authors
@@ -99,12 +99,12 @@ function getClassicFields($data, $offset){
     $i = 0;
     foreach ($data as $work) {
 
-		$keys[$i + $offset] = $work["key"]; // Guaranteed value
+        $keys[$i + $offset] = $work["key"]; // Guaranteed value
 
         if(isset($work["data"]["parentItem"]))
             $parentItem[$i + $offset] = $work["data"]["parentItem"];
         else
-        	$parentItem[$i + $offset] = ""; // Assign dummy value to keep array index fill for each array
+            $parentItem[$i + $offset] = ""; // Assign dummy value to keep array index fill for each array
 
 
         $scope = $work["data"];
@@ -140,7 +140,7 @@ function getClassicFields($data, $offset){
                 } while($counter < $len-1 );
                 //at the end of the loop we now hold the postion of last creator,
                 //unfortunately, at this moment there are lots of if blocks, but .... parsing is like this
-				if($len > 1) {
+                if($len > 1) {
                     if (isset($scope["creators"][$counter]["firstName"])) {
                         $authorString = $authorString . "and " . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"];
                     } else {
@@ -220,7 +220,7 @@ function itemT($string, $scope){
 function makeAllData(){
 
     // Remind PHP of globals
-	global $keys;
+    global $keys;
     global $itemtypes;
     global $titles;
     global $creators;
@@ -250,30 +250,37 @@ function makeAllData(){
 
 function json_cached_results() {
 
+    global $ckey;
     $cache_file = dirname(__FILE__) . '/cachefile.json';
+    $ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+    $cache_key = file_get_contents($ckey_dir);
+
     $expires = time() - 2*60*60; // 2 hours
 
     if(!file_exists($cache_file))
         die("Cache file is missing: $cache_file");
+    if(!file_exists($ckey_dir))
+        die("Cache key is missing: $cache_file");
 
+    // echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey;
     // Check that the file is older than the expire time and that it's not empty
-    if (filectime($cache_file) < $expires || file_get_contents($cache_file)  == '') {
+    if ($cache_key != $ckey || filectime($cache_file) < $expires || file_get_contents($cache_file)  == '') {
 
         // File is too old, refresh cache
         getApiResults();
-        $api_results =  json_encode(makeAllData());
+        $api_results = json_encode(makeAllData());
 
-        if($api_results != null) {
+        if ($api_results != null)
             file_put_contents($cache_file, $api_results);
-        } else
+        else
             file_put_contents($cache_file, '');
+
+        file_put_contents($ckey_dir, $ckey);
 
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_file));
     }
-
     return (($api_results));
 }
-
 ?>
