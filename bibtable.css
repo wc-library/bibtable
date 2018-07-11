@@ -35,6 +35,7 @@
 	height: 120px;
 	animation: spinz 2s linear infinite;
 	-webkit-animation: spin 2s linear infinite;
+	padding: 10px 10px 10px 10px;
 }
 
 @-webkit-keyframes spin {

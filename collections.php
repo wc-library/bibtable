@@ -8,7 +8,7 @@
  * Time: 3:02 PM
  */
 ?>
-
+<html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -84,7 +84,6 @@ function parse($jarray){
 ?>
 </body>
 <script type="application/javascript">
-    // var dynData = $.getScript("dynData.js");
 
     $(document).ready(function(){
         $('.button').click(function(e){
@@ -100,5 +99,4 @@ function parse($jarray){
       });
     });
 </script>
-
 </html>

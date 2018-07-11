@@ -20,6 +20,7 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
+        // console.log(this.responseText);
         num = JSON.parse(this.responseText);
         makeTable(num); // construct a table
 
@@ -28,7 +29,7 @@ request.onload = function(){
             if(num != ""){
                 document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
             }
-            // myVar = setTimeout(showPage, 500);
+            myVar = setTimeout(showPage, 500);
 
         });
 
