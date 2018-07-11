@@ -93,9 +93,11 @@ function parse($jarray){
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() }
             }).done(function(msg){
-                console.log("Data saved: " + msg);
+                // console.log("Data saved: " + msg);
+                // $.getScript("dynData.js");
+                window.location.replace("display.html");
             });
-        });
+      });
     });
 </script>
 

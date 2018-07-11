@@ -7,7 +7,6 @@
  * Authors: Robin Kelmen, Jesse Tatum
  */
 
-//TODO: Refactor this so that it only controls the table creation and loader
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
@@ -29,7 +28,7 @@ request.onload = function(){
             if(num != ""){
                 document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
             }
-            myVar = setTimeout(showPage, 500);
+            // myVar = setTimeout(showPage, 500);
 
         });
 
