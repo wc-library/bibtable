@@ -266,13 +266,13 @@ function json_cached_results() {
 
 //     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
     // Check that the file is older than the expire time and that it's not empty
-    if ($cache_key != $ckey || filectime($cache_dir) < $expires || file_get_contents($cache_dir)  == '') {
+    if ($cache_key != $ckey || filectime($cache_dir) < $expires) {
 
         // File is too old, refresh cache
         getApiResults();
         $api_results = json_encode(makeAllData());
 
-        if ($api_results != null)
+        if ($api_results != null && $api_results != '')
             file_put_contents($cache_dir, $api_results);
         else
             file_put_contents($cache_dir, '');
