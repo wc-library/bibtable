@@ -42,10 +42,9 @@ global $ckey;
 
 if (isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
-
 else
-    $ckey = '89F8HEPX'; // Default value for testing
-// TODO Error check
+    $ckey = file_get_contents(dirname(__FILE__) . '/cachekey.txt');
+
 print json_cached_results(); // To import into dynData.js
 
 
@@ -252,23 +251,23 @@ function makeAllData(){
 
 function json_cached_results() {
 
-//    global $ckey;
-//    $cache_dir = dirname(__FILE__) . '/cachefile.json';
-//    $ckey_dir = dirname(__FILE__) . '/cachekey.txt';
-//
-//    $expires = time() - 2*60*60; // 2 hours
-//
-//    // Create files if missing
-//    if(!file_exists($cache_dir))
-//        fopen($cache_dir, 'r+');
-//    if(!file_exists($ckey_dir))
-//        fopen($ckey_dir, 'r+');
-//
-//    $cache_key = file_get_contents($ckey_dir);
-//
-////     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
-//    // Check that the file is older than the expire time and that it's not empty
-//    if ($cache_key != $ckey || filectime($cache_dir) < $expires) {
+    global $ckey;
+    $cache_dir = dirname(__FILE__) . '/cachefile.json';
+    $ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+
+    $expires = time() - 2*60*60; // 2 hours
+
+    // Create files if missing
+    if(!file_exists($cache_dir))
+        fopen($cache_dir, 'r+');
+    if(!file_exists($ckey_dir))
+        fopen($ckey_dir, 'r+');
+
+    $cache_key = file_get_contents($ckey_dir);
+
+//     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
+    // Check that the file is older than the expire time and that it's not empty
+    if ($cache_key != $ckey || filectime($cache_dir) < $expires) {
 
         // File is too old, refresh cache
         getApiResults();
@@ -281,10 +280,10 @@ function json_cached_results() {
 
         file_put_contents($ckey_dir, $ckey);
 
-//    } else {
+    } else {
         // Fetch cache
-//        $api_results = (file_get_contents($cache_dir));
-//    }
+        $api_results = (file_get_contents($cache_dir));
+    }
     return (($api_results));
 }
 ?>

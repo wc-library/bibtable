@@ -85,20 +85,26 @@ function parse($jarray){
 </body>
 <script type="application/javascript">
 
-    
-
     // $(document).ready(function(){
-    //     $('.button').click(function(e){
-    //         $.ajax({
-    //             type: "POST",
-    //             url: 'getData.php',
-    //             data: { 'ckey': $(this).val() }
-    //         }).done(function(msg){
-    //             console.log("Data saved: " + msg);
-    //             // $.getScript("dynData.js");
-    //             window.location.href = "display.html";
-    //         });
-    //   });
-    // });
+    //     $('.button').click({
+    //         $.getScript("dynData.js");
+    //     }).done({
+    //         window.location.replace("display.html")
+    //     })
+    // })
+
+    $(document).ready(function(){
+        $('.button').click(function(e){
+            $.ajax({
+                type: "POST",
+                url: 'getData.php',
+                data: { 'ckey': $(this).val() }
+            }).done(function(msg){
+                console.log("Data saved: " + msg);
+                // $.getScript("dynData.js");
+                window.location.href = "display.html";
+            });
+      });
+    });
 </script>
 </html>
