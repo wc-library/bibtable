@@ -10,7 +10,7 @@
 ?>
 <html>
 <head>
-
+    <title>Collections</title>
     <link rel="stylesheet" href="collections.css">
 
     <!-- jQuery -->
