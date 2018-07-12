@@ -98,7 +98,7 @@ function parse($jarray){
         $html .= '<td>' . $items[$i] . '</td>';
         $html .= '<td>' . $subcollections[$i] . '</td>';
         $html .= '<td><form method="post">' .
-            '<button type="reset" name="ckey" class="btn btn-primary" value="' . $keys[$i] .
+            '<button type="submit" class="button btn btn-primary" value="' . $keys[$i] .
             '">View table</button></form></td></tr>';
         $i++;
     }
@@ -111,13 +111,12 @@ function parse($jarray){
 
     $(document).ready(function(){
         $('.button').click(function(e){
-            e.stopPropagation();
-
             $.ajax({
                 type: "POST",
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() }
             }).done(function(msg){
+                console.log(msg);
                 $.getScript("dynData.js");
                 window.location.href = "display.html";
             });

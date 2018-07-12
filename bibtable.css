@@ -1,4 +1,6 @@
-.hidden {display: none;}
+.hidden {
+	display: none;
+}
 
 .source:hover {cursor: pointer;}
 
@@ -13,6 +15,17 @@
 	padding:4px 4px!important;
 	background-color: #F8F8F8;
 	border-left:3px solid #ccc!important;
+	width: 100% !important;
+}
+
+table {
+	table-layout: fixed;
+	width: 100% !important;
+}
+
+td {
+	/*display: inline;*/
+	display: table-cell;
 }
 
 .tablesorter-filter {
