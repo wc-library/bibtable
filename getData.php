@@ -37,16 +37,19 @@ global $keys;       // Keys
 $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
+global $tags;
+$ags = array();
 
 global $ckey;
 
+// This script is called twice. This is minimally problematic due to caching
+// First call gets from post and second pulls from cache
 if (isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
 else
     $ckey = file_get_contents(dirname(__FILE__) . '/cachekey.txt');
 
 print json_cached_results(); // To import into dynData.js
-
 
 
 // Pull all data from Zotero. This is the bottleneck
@@ -94,6 +97,7 @@ function parseFields($data, $offset){
     global $urls;       // URL links
     global $keys;       // Keys
     global $parentItem; // ParentItems
+    global $tags;
 
 
     //look through all the data
@@ -119,6 +123,8 @@ function parseFields($data, $offset){
             }else if(isset($scope["creators"][0]["name"])){
                 $lastName = $scope["creators"][0]["name"];
             }
+
+            // TODO: Check tag for data and parse into internal array
 
             $len = count($scope["creators"]); // length of creators array
             // will hold the string of creators built up by the while loop

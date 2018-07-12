@@ -1,0 +1,18 @@
+.table {
+    width: auto;
+    margin: 0 auto !important;
+}
+
+h4 {
+    padding-left: 10px;
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+tr td {
+    horiz-align: center;
+}
+
+.jumbotron {
+    margin-bottom: 0;
+}
