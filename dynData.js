@@ -178,8 +178,8 @@ function makeTable(num){
                 hidden += Attachments[i];
 
             // Add Publishers, publishing location, and ISBN as available
-            hidden += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
-                constructT(Places[i], ". ") + constructT(ISBN[i], ". <b>ISBN</b>: ") + '</div>';
+            hidden += constructT(constructT(Publishers[i], "\n<b>Publishers</b>: "), ". ") +
+                constructT(Places[i], " ") + constructT(ISBN[i], ". <b>ISBN</b>: ") + '</div>';
 
             table += hidden;
             table += '</tr></td>';
