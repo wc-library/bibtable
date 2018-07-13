@@ -3,3 +3,5 @@ api_key.php
 tablesorter-master/.eslintignore
 tablesorter-master/.eslintrc
 node_modules/*
+cachefile.json
+cachekey.txt
