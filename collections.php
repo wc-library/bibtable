@@ -64,6 +64,8 @@ echo "<h4 class='lead' id='pwd'>User ID: " . $userID . "</h4>";
     </div>
 </div>
 </div>
+<div class="loader">
+</div>
 
 <?php
 // Grab collection info for user
@@ -119,7 +121,7 @@ function parse($jarray){
                 data: { 'ckey': $(this).val() }
             }).done(function(msg){
                 console.log(msg);
-                // $.getScript("dynData.js");
+                $.getScript("dynData.js");
             });
         });
     });
