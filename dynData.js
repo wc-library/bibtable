@@ -24,7 +24,7 @@ request.onload = function(){
         num = JSON.parse(this.responseText);
         makeTable(num); // construct a table
 
-        //start the loader that waits while zotero source is called, and table is constructed
+        // start the loader that waits while zotero source is called, and table is constructed
         $(function(){
             if(num != ""){
                 document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
@@ -38,12 +38,13 @@ request.onload = function(){
             $(this).slideToggle(300);
             $("td div", $(this)).hide();
         });
+
         // Don't minimize when links are selected
         $(".extra a").click(function (e){
             e.stopPropagation();
         });
 
-        //reveals hidden div with abstracts and links
+        // reveals hidden div with abstracts and links
         $(".source").click(function(event) {
             // $(this).find(".extra").hide();
             $(this).next().slideToggle(300);
@@ -70,27 +71,13 @@ function showPage(){
 
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
-                // pager_output: '{startRow} - {endRow}} / {filteredRows} ({totalRows})',
-                // pager_removeRows: false,
-
                 filter_childRows: false,
                 filter_startsWith: false,
                 filter_ignoreCase: true,
                 filter_external: '.search',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
-                filter_saveFilters : true,
-                // filter_functions: {
-                //     1 : {
-                //         "A - D" : function(e, n, f, i, $r, c, data) { return /^[A-D]/.test(e); },
-                //         "E - H" : function(e, n, f, i, $r, c, data) { return /^[E-H]/.test(e); },
-                //         "I - L" : function(e, n, f, i, $r, c, data) { return /^[I-L]/.test(e); },
-                //         "M - P" : function(e, n, f, i, $r, c, data) { return /^[M-P]/.test(e); },
-                //         "Q - T" : function(e, n, f, i, $r, c, data) { return /^[Q-T]/.test(e); },
-                //         "U - X" : function(e, n, f, i, $r, c, data) { return /^[U-X]/.test(e); },
-                //         "Y - Z" : function(e, n, f, i, $r, c, data) { return /^[Y-Z]/.test(e); }
-                //     }
-                // }
+                filter_saveFilters : true
             }
         });
 

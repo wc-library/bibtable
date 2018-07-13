@@ -37,17 +37,26 @@ global $keys;       // Keys
 $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
-global $tags;
-$tags = array();
+//global $tags;
+//$tags = array();
 
 global $ckey;
+global $ckey_dir;
+$ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+global $cache_dir;
+$cache_dir = dirname(__FILE__) . '/cachefile.json';
+
 
 // This script is called twice. This is minimally problematic due to caching
 // First call uses key from post and second pulls from cache
-if (isset($_POST['ckey']))
+if (isset($_POST['ckey'])) {
     $ckey = $_POST['ckey'];
-else
-    $ckey = file_get_contents(dirname(__FILE__) . '/cachekey.txt');
+    file_put_contents($ckey_dir, $ckey);
+} else
+    $ckey = file_get_contents($ckey_dir);
+
+if ($ckey == '')
+    file_put_contents($cache_dir, '');
 
 print json_cached_results(); // To import into dynData.js
 
@@ -60,6 +69,7 @@ function getApiResults(){
         exit;
     }
 
+    $start = 0;
     while(true) { // Run until break
 
         $data = 'https://api.zotero.org/users/77162/collections/'. $ckey  . '/items?key=' . $api_key .
@@ -96,7 +106,7 @@ function parseFields($data, $offset){
     global $urls;       // URL links
     global $keys;       // Keys
     global $parentItem; // ParentItems
-    global $tags;       // Item tags
+//    global $tags;       // Item tags
 
 
     //look through all the data
@@ -116,6 +126,12 @@ function parseFields($data, $offset){
         // this handled this way because the creators data comes in different formats
         $authorString = "";
         if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
+
+            if(isset($scope["creators"][0]["firstName"] )){
+                $lastName = $scope["creators"][0]["lastName"];
+            }else if(isset($scope["creators"][0]["name"])){
+                $lastName = $scope["creators"][0]["name"];
+            }
 
             $len = count($scope["creators"]); // length of creators array
             // will hold the string of creators built up by the while loop
@@ -152,17 +168,19 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-
-        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
-            $j = 0;
-            $content = array();
-            while (isset($scope["tags"][$j]["tag"])){
-                $content[$j] = $scope["tags"][$j]["tag"];
-                $j++;
-            }
-            $tags[$i + $offset] = $content;
-        } else
-            $tags[$i + $offset] = "";
+        else {
+            $lastName = "";
+        }
+//        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+//            $j = 0;
+//            $content = array();
+//            while (isset($scope["tags"][$j]["tag"])){
+//                $content[$j] = $scope["tags"][$j]["tag"];
+//                $j++;
+//            }
+//            $tags[$i + $offset] = $content;
+//        } else
+//            $tags[$i + $offset] = "";
 
         $creators[$i + $offset] = $authorString;
         $itemtypes[$i + $offset] = itemT($scope);
@@ -251,7 +269,7 @@ function makeAllData(){
     $allData->urls = $urls;
     $allData->abstracts = $abstracts;
     $allData->parentItem = $parentItem;
-    $allData->tags = $tags;
+//    $allData->tags = $tags;
     return ($allData);
 }
 
@@ -259,8 +277,8 @@ function makeAllData(){
 function json_cached_results() {
 
     global $ckey;
-    $cache_dir = dirname(__FILE__) . '/cachefile.json';
-    $ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+    global $cache_dir;
+    global $ckey_dir;
 
     $expires = time() - 2*60*60; // 2 hours
 
