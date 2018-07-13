@@ -121,7 +121,7 @@ function parse($jarray){
                 data: { 'ckey': $(this).val() }
             }).done(function(msg){
                 console.log(msg);
-                // $.getScript("dynData.js");
+                $.getScript("dynData.js");
             });
         });
     });

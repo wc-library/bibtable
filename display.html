@@ -29,26 +29,21 @@
 
 </head>
 <body>
-<h1 class="page-header">Bibtable</h1>
+<h1>Bibtable</h1>
     <div>
-        <a href="collections.php">Back</a><br>
-        <input class="search pull-left" type="search" data-column="all" placeholder="Search all" autocomplete="off">
-        <input class="search pull-left" type="search" data-column="all" placeholder="Tags" autocomplete="off">
-        <!--curl &#45;&#45;header "Zotero-API-Key: DnmDsLoJFyrJ0UrgMjS6gfJ3" https://api.zotero.org/users/77162/collections/MW994N9D/tags-->
-
-        <button type="button" class="btn btn-inverse reset pull-right">Reset Sort</button>
+        <input class="search" type="search" data-column="all" placeholder="Search all" autocomplete="off">
+        <button type="button" class="reset">Reset Sort</button>
 
         <div>
             <h2 style="text-align:center; color: grey;" id="loadinginfo">Loading Sources...</h2>
         </div>
+        <div id="loader"></div>
     </div>
-<br>
-    <div id="loader"></div>
-
 
     <div id="api_key_error">
         <h2 style="text-align:center; color: grey;" id="api_error"></h2>
     </div>
+
     <table style="display:none;" id="myTable" class="tablesorter-default" ></table>
     <script type="text/javascript" src="dynData.js"></script>
 
