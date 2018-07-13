@@ -1,0 +1,24 @@
+#login {
+    text-align: center;
+    width: 25%;
+    height: 100%;
+    border: 2px solid black;
+    background-color: rgba(239,239,239,.85);
+}
+
+form {
+    padding: 45px 5px 15px 5px;
+}
+
+.in {
+    margin-top: 5px;
+    padding: 5px 5px 5px 5px;
+}
+
+.page-header{
+    text-align: center;
+}
+
+.btn {
+    margin-top: 15px;
+}

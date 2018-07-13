@@ -4,6 +4,10 @@
 
 .source:hover {cursor: pointer;}
 
+.tablesorter-filter{
+	margin: 0 0 0 0;
+}
+
 .source{ /* Where we want the dropdown to be */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	background-position: center right;
@@ -26,6 +30,15 @@ table {
 td {
 	/*display: inline;*/
 	display: table-cell;
+}
+
+input {
+	margin-left: 10px !important;
+}
+
+a {
+	padding: 5px 5px 5px 5px;
+	margin: 5px 5px 5px 5px;
 }
 
 .tablesorter-filter {

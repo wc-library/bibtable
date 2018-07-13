@@ -118,6 +118,7 @@ function makeTable(num){
     let URLs = num.urls;
     let Keys = num.keys;
     let ParentItems = num.parentItem;
+    let Tags = num.tags;
 
     // Create table headers
     let table = '<thead><tr><th>Title</th>';

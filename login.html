@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Login</title>
 
+    <link rel="stylesheet" href="login.css"/>
+
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -25,14 +27,20 @@
 </head>
 <h1 class="page-header">Bibtable Login Page</h1>
 <body>
-<form>
-    <input type="text" placeholder="Username or User ID"><br>
-    <input type="text" placeholder="API Key">
-    <button type="submit">Submit</button>
+<div class="container" id="login">
+    <form>
+        <h3>Login</h3>
+        <input type="text" class="in" placeholder="Username or User ID"><br>
+        <input type="text" class="in" placeholder="API Key"><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
 
-</form>
+    </form>
+</div>
+
 </body>
 <script type="application/javascript">
+
+    // curl https://api.zotero.org/keys/DnmDsLoJFyrJ0UrgMjS6gfJ3
 
     $(document).ready(function(){
         $('.button').click(function(e){
