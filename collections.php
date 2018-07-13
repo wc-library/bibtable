@@ -111,14 +111,15 @@ function parse($jarray){
 
     $(document).ready(function(){
         $('.button').click(function(e){
+            e.preventDefault();
+            window.location.href = "display.html";
             $.ajax({
                 type: "POST",
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() }
             }).done(function(msg){
                 console.log(msg);
-                $.getScript("dynData.js");
-                window.location.href = "display.html";
+                // $.getScript("dynData.js");
             });
         });
     });
