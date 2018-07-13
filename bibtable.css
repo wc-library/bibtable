@@ -29,8 +29,18 @@ td {
 }
 
 .tablesorter-filter {
-    padding-left: 4px;
-    margin-left: 4px;
+	margin: 0 0 0 0;
+    /*padding-left: 4px;*/
+    /*margin-left: 4px;*/
+}
+
+input {
+	margin-left: 10px !important;
+}
+
+a {
+	padding: 5px 5px 5px 5px;
+	margin: 5px 5px 5px 5px;
 }
 
 /* Spinning wheel at load time */

@@ -41,13 +41,21 @@ global $tags;
 $ags = array();
 
 global $ckey;
+global $ckey_dir;
+$ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+global $cache_dir;
+$cache_dir = dirname(__FILE__) . '/cachefile.json';
+
 
 // This script is called twice. This is minimally problematic due to caching
 // First call gets from post and second pulls from cache
 if (isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
 else
-    $ckey = file_get_contents(dirname(__FILE__) . '/cachekey.txt');
+    $ckey = file_get_contents($ckey_dir);
+
+if ($ckey == '')
+    file_put_contents($cache_dir, '');
 
 print json_cached_results(); // To import into dynData.js
 
@@ -118,11 +126,11 @@ function parseFields($data, $offset){
         $authorString = "";
         if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 
-            if(isset($scope["creators"][0]["firstName"] )){
-                $lastName = $scope["creators"][0]["lastName"];
-            }else if(isset($scope["creators"][0]["name"])){
-                $lastName = $scope["creators"][0]["name"];
-            }
+//            if(isset($scope["creators"][0]["firstName"] )){
+//                $lastName = $scope["creators"][0]["lastName"];
+//            }else if(isset($scope["creators"][0]["name"])){
+//                $lastName = $scope["creators"][0]["name"];
+//            }
 
             // TODO: Check tag for data and parse into internal array
 
@@ -161,9 +169,20 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-        else{ //not necessary, but makes it explicit that if none of the previous conditions are met, then ""
-            $lastName = "";
-        }
+//        else{ //not necessary, but makes it explicit that if none of the previous conditions are met, then ""
+//            $lastName = "";
+//        }
+
+        //        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+        //            $j = 0;
+        //            $content = array();
+        //            while (isset($scope["tags"][$j]["tag"])){
+        //                $content[$j] = $scope["tags"][$j]["tag"];
+        //                $j++;
+        //            }
+        //            $tags[$i + $offset] = $content;
+        //        } else
+        //            $tags[$i + $offset] = "";
 
         $creators[$i + $offset] = $authorString;
         $itemtypes[$i + $offset] = itemT( "itemType", $scope);
@@ -258,8 +277,8 @@ function makeAllData(){
 function json_cached_results() {
 
     global $ckey;
-    $cache_dir = dirname(__FILE__) . '/cachefile.json';
-    $ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+    global $cache_dir;
+    global $ckey_dir;
 
     $expires = time() - 2*60*60; // 2 hours
 
