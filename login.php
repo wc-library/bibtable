@@ -5,9 +5,29 @@
  * Date: 7/18/18
  * Time: 3:42 PM
  */
+include 'api_key.php';
 
-$user = $_POST[1];
-$api = $_POST[2];
+$user = $_POST['user'];
+$api = $_POST['api'];
+
+$opts = array(
+    'http'=>array(
+        'method'=>"GET",
+        'header'=>"Zotero-API-Key: " . $api_key
+    )
+);
+$context = stream_context_create($opts); // Create request with API key in headers
+
+// Grab User Info
+$userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api, false, $context), true);
+if (json_last_error() == JSON_ERROR_NONE){
+    $username = $userInfo["username"];
+    $userID = $userInfo["userID"];
+}
+else
+    echo "error";
+
+// Check values
 
 ?>
 
@@ -43,7 +63,7 @@ $api = $_POST[2];
 <div class="container">
     <form>
         <div class="form-group">
-            <label for="user">Username or UserID</label>
+            <label for="user">Username or User ID</label>
             <input type="text" id="user" class="form-control" placeholder="Username or User ID" required><br>
         </div>
         <div class="form-group">
@@ -52,7 +72,7 @@ $api = $_POST[2];
             <small id="apiHelp" class="form-text text-muted">This needs to be generated from your Zotero account. <a href="https://www.zotero.org/settings/keys">Link</a> </small>
 
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary formbtn">Submit</button>
     </form>
 </div>
 
@@ -66,18 +86,21 @@ $api = $_POST[2];
     console.log("API: " + api);
 
     $(document).ready(function(){
-        $.ajax({
-            type: "POST",
-            url: 'login.php',
-            data: { 'user': user, 'api': api },
-            success: function(msg) {
-                console.log(msg);
-                window.location.href = 'collections.php';
-            },
-            error: function(error){
-                alert("Error, please try again.\nError details: " + JSON.stringify(error));
-            }
-        })
+        $('.formbtn').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: 'login.php',
+                data: {'user': user, 'api': api},
+                success: function (msg) {
+                    console.log(msg);
+                    window.location.href = 'collections.php';
+                },
+                error: function (error) {
+                    alert("Error, please try again.\nError details: " + JSON.stringify(error));
+                }
+            })
+        });
     });
 </script>
 

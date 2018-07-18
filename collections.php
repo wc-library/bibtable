@@ -82,7 +82,7 @@ function parse($jarray){
     global $links;
     global $subcollections;
 
-    $html = '<table class="table table-striped"><thead class="thead-light"><tr>' .
+    $html = '<table id="collection-table" class="table table-striped"><thead class="thead-light"><tr>' .
         '<th scope="col">Collection Name</th>' .
         '<th scope="col">Items</th>' .
         '<th scope="col">Sub-collections</th>' .
@@ -108,22 +108,28 @@ function parse($jarray){
     return $html;
 }
 ?>
+<table style="display:none;" id="myTable" class="tablesorter-default" ></table>
 </body>
 <script type="application/javascript">
 
+    var collection = document.getElementById("collection-table");
+    var myTable = document.getElementById("myTable");
+
     $(document).ready(function(){
+        myTable.style.display = "none";
         $('.button').click(function(e){
             // e.preventDefault();
-            window.location.href = "display.html";
+            // window.location.href = "display.html";
             $.ajax({
                 type: "POST",
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() },
                 success: function(msg) {
                     console.log(msg);
+                    collection.style.display = "block";
                 },
                 error: function(error){
-                    window.location.href = "collections.php";
+                    // window.location.href = "collections.php";
                     alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
                 }
             }).done(function() {
