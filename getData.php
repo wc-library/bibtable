@@ -54,8 +54,8 @@ if (isset($_POST['ckey']))
 else
     $ckey = file_get_contents($ckey_dir);
 
-if ($ckey == '')
-    file_put_contents($cache_dir, '');
+//if ($ckey == '')
+//    file_put_contents($cache_dir, '');
 
 print json_cached_results(); // To import into dynData.js
 

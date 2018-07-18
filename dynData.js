@@ -16,7 +16,6 @@ request.onload = function(){
             //CHECKS IF api key is missing
             document.getElementById("api_error").innerHTML = "error: Missing API key";
             document.getElementById("loader").style.display = "none";
-            document.getElementById("loadinginfo").style.display="none";
             die("Api_key Issue");
         }
 
@@ -26,11 +25,7 @@ request.onload = function(){
 
         //start the loader that waits while zotero source is called, and table is constructed
         $(function(){
-            if(num != ""){
-                document.getElementById("loadinginfo").innerHTML = "Formatting Sources...";
-            }
             myVar = setTimeout(showPage, 500);
-
         });
 
         // Allow extra to minimize
@@ -58,7 +53,6 @@ request.send();
 
 function showPage(){
     document.getElementById("loader").style.display = "none"; //hides loading icon
-    document.getElementById("loadinginfo").style.display = "none"; //hides the loading message
     document.getElementById("myTable").style.display = "block"; //displays the table
 
     // Initialize tablesorter

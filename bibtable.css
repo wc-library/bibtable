@@ -18,6 +18,10 @@
 	width: 100% !important;
 }
 
+.page-header {
+	margin-left: 10px !important;
+}
+
 table {
 	table-layout: fixed;
 	width: 100% !important;
@@ -34,7 +38,7 @@ td {
     /*margin-left: 4px;*/
 }
 
-input {
+.search {
 	margin-left: 10px !important;
 }
 
