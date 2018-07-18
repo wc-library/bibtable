@@ -4,10 +4,6 @@
 
 .source:hover {cursor: pointer;}
 
-.tablesorter-filter{
-	margin: 0 0 0 0;
-}
-
 .source{ /* Where we want the dropdown to be */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	background-position: center right;
@@ -22,7 +18,11 @@
 	width: 100% !important;
 }
 
-table {git m
+.page-header {
+	margin-left: 10px !important;
+}
+
+table {
 	table-layout: fixed;
 	width: 100% !important;
 }
@@ -32,18 +32,19 @@ td {
 	display: table-cell;
 }
 
-input {
+.tablesorter-filter {
+	margin: 0 0 0 0;
+    /*padding-left: 4px;*/
+    /*margin-left: 4px;*/
+}
+
+.search {
 	margin-left: 10px !important;
 }
 
 a {
 	padding: 5px 5px 5px 5px;
 	margin: 5px 5px 5px 5px;
-}
-
-.tablesorter-filter {
-    padding-left: 4px;
-    margin-left: 4px;
 }
 
 /* Spinning wheel at load time */

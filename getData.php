@@ -37,8 +37,9 @@ global $keys;       // Keys
 $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
-//global $tags;
-//$tags = array();
+
+global $tags;
+$ags = array();
 
 global $ckey;
 global $ckey_dir;
@@ -48,15 +49,16 @@ $cache_dir = dirname(__FILE__) . '/cachefile.json';
 
 
 // This script is called twice. This is minimally problematic due to caching
-// First call uses key from post and second pulls from cache
-if (isset($_POST['ckey'])) {
+
+// First call gets from post and second pulls from cache
+if (isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
-    file_put_contents($ckey_dir, $ckey);
-} else
+else
     $ckey = file_get_contents($ckey_dir);
 
-if ($ckey == '')
-    file_put_contents($cache_dir, '');
+//if ($ckey == '')
+//    file_put_contents($cache_dir, '');
+
 
 print json_cached_results(); // To import into dynData.js
 
@@ -106,7 +108,8 @@ function parseFields($data, $offset){
     global $urls;       // URL links
     global $keys;       // Keys
     global $parentItem; // ParentItems
-//    global $tags;       // Item tags
+    global $tags;       // Item tags
+
 
 
     //look through all the data
@@ -127,11 +130,13 @@ function parseFields($data, $offset){
         $authorString = "";
         if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 
-            if(isset($scope["creators"][0]["firstName"] )){
-                $lastName = $scope["creators"][0]["lastName"];
-            }else if(isset($scope["creators"][0]["name"])){
-                $lastName = $scope["creators"][0]["name"];
-            }
+//            if(isset($scope["creators"][0]["firstName"] )){
+//                $lastName = $scope["creators"][0]["lastName"];
+//            }else if(isset($scope["creators"][0]["name"])){
+//                $lastName = $scope["creators"][0]["name"];
+//            }
+
+            // TODO: Check tag for data and parse into internal array
 
             $len = count($scope["creators"]); // length of creators array
             // will hold the string of creators built up by the while loop
@@ -140,7 +145,7 @@ function parseFields($data, $offset){
             if( $len > 1){ // We will need to loop through all creators
                 /* loop invariant, counter is current creator,
                 at end of loop, the counter will be at the last creators position
-                this will help with formatting
+                this will help with formating
                 */
                 do {
                     if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
@@ -152,8 +157,8 @@ function parseFields($data, $offset){
 
                     $counter++; // increase counter, to get to next position
                 } while($counter < $len-1 );
-                //at the end of the loop we now hold the position of last creator,
-                //unfortunately, at this moment there are lots of if blocks
+                //at the end of the loop we now hold the postion of last creator,
+                //unfortunately, at this moment there are lots of if blocks, but .... parsing is like this
                 if($len > 1) {
                     if (isset($scope["creators"][$counter]["firstName"])) {
                         $authorString = $authorString . "and " . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"];
@@ -168,22 +173,19 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-        else {
-            $lastName = "";
-        }
-//        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
-//            $j = 0;
-//            $content = array();
-//            while (isset($scope["tags"][$j]["tag"])){
-//                $content[$j] = $scope["tags"][$j]["tag"];
-//                $j++;
-//            }
-//            $tags[$i + $offset] = $content;
-//        } else
-//            $tags[$i + $offset] = "";
+        //        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+        //            $j = 0;
+        //            $content = array();
+        //            while (isset($scope["tags"][$j]["tag"])){
+        //                $content[$j] = $scope["tags"][$j]["tag"];
+        //                $j++;
+        //            }
+        //            $tags[$i + $offset] = $content;
+        //        } else
+        //            $tags[$i + $offset] = "";
 
         $creators[$i + $offset] = $authorString;
-        $itemtypes[$i + $offset] = itemT($scope);
+        $itemtypes[$i + $offset] = itemT( "itemType", $scope);
         $titles[$i + $offset] = checknStore( "title", $scope);
         $dates[$i + $offset] = checknStore("date", $scope);
         $places[$i + $offset] = checknStore("place", $scope);
@@ -219,7 +221,7 @@ function checknStore($string, $scope){
 * @param The string that is the key to the value we are looking for e.g creators => "Jane Deer"
 * @param The scope of our search, certain fields occur within objects within objects
 */
-function itemT($scope){
+function itemT($string, $scope){
 
     $items = array(
         "journalArticle" => "Journal Article",
@@ -234,8 +236,8 @@ function itemT($scope){
         "conferencePaper" => "Conference Paper"
     );
 
-    if(array_key_exists("itemtypes", $scope))
-        return $items[$scope["itemtypes"]];
+    if(array_key_exists($string, $scope))
+        return $items[$scope[$string]];
     else
         return "";
 }
@@ -255,7 +257,6 @@ function makeAllData(){
     global $abstracts;
     global $urls;
     global $parentItem;
-    global $tags;
 
     $allData = new stdClass();
     $allData->keys = $keys;
@@ -270,6 +271,7 @@ function makeAllData(){
     $allData->abstracts = $abstracts;
     $allData->parentItem = $parentItem;
 //    $allData->tags = $tags;
+
     return ($allData);
 }
 
@@ -292,7 +294,7 @@ function json_cached_results() {
 
 //     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
     // Check that the file is older than the expire time and that it's not empty
-    if ($cache_key != $ckey || filectime($cache_dir) < $expires || file_get_contents($cache_dir) == "") {
+    if ($cache_key != $ckey || filectime($cache_dir) < $expires) {
 
         // File is too old, refresh cache
         getApiResults();
