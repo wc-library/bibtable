@@ -13,7 +13,7 @@ var request = new XMLHttpRequest();
 request.onload = function(){
     if (this.readyState === 4 && this.status === 200){
         if(this.responseText === "00"){
-            //CHECKS IF api key is missing
+            // CHECKS IF api key is missing
             document.getElementById("api_error").innerHTML = "error: Missing API key";
             document.getElementById("loader").style.display = "none";
             die("Api_key Issue");
@@ -170,7 +170,7 @@ function makeTable(num){
     }
     table += '</tbody>'; // close off table
 
-    var mainTable = document.getElementById('myTable'); //get the table named "myTable"
+    var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
 }
 

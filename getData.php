@@ -49,16 +49,12 @@ $cache_dir = dirname(__FILE__) . '/cachefile.json';
 
 
 // This script is called twice. This is minimally problematic due to caching
-
 // First call gets from post and second pulls from cache
-if (isset($_POST['ckey']))
+if (isset($_POST['ckey'])) {
     $ckey = $_POST['ckey'];
-else
+    file_put_contents($cache_dir, $ckey);
+} else
     $ckey = file_get_contents($ckey_dir);
-
-//if ($ckey == '')
-//    file_put_contents($cache_dir, '');
-
 
 print json_cached_results(); // To import into dynData.js
 
@@ -294,7 +290,7 @@ function json_cached_results() {
 
 //     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
     // Check that the file is older than the expire time and that it's not empty
-    if ($cache_key != $ckey || filectime($cache_dir) < $expires) {
+    if ($cache_key != $ckey || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
 
         // File is too old, refresh cache
         getApiResults();

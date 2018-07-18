@@ -11,7 +11,7 @@
 <html>
 <head>
     <title>Collections</title>
-    <link rel="stylesheet" href="collections.css">
+    <link rel="stylesheet" href="stylesheets/collections.css">
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -113,14 +113,20 @@ function parse($jarray){
 
     $(document).ready(function(){
         $('.button').click(function(e){
-            e.preventDefault();
+            // e.preventDefault();
             window.location.href = "display.html";
             $.ajax({
                 type: "POST",
                 url: 'getData.php',
-                data: { 'ckey': $(this).val() }
-            }).done(function(msg){
-                console.log(msg);
+                data: { 'ckey': $(this).val() },
+                success: function(msg) {
+                    console.log(msg);
+                },
+                error: function(error){
+                    window.location.href = "collections.php";
+                    alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
+                }
+            }).done(function() {
                 $.getScript("dynData.js");
             });
         });
