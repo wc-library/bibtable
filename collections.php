@@ -126,18 +126,19 @@ function parse($jarray){
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() },
                 success: function(msg) {
+                    window.location.replace('display.html');
+
                     console.log(msg);
                     loader.style.display = "none";
                     loaderdiv.style.display= "none";
 
-                    window.location.replace('display.html');
+                    $.getScript('dynData.js');
+
                 },
                 error: function(error){
                     window.location.href = "collections.php";
                     alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
                 }
-            }).done(function(msg) {
-                $.getScript('dynData.js');
             });
         });
     });

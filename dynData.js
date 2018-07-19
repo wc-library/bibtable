@@ -15,6 +15,7 @@ request.onload = function(){
         if(this.responseText === "00"){
             // CHECKS IF api key is missing
             document.getElementById("api_error").innerHTML = "error: Missing API key";
+            document.getElementById("loader").style.display = "none";
             die("Api_key Issue");
         }
 
@@ -24,6 +25,7 @@ request.onload = function(){
 
         // start the loader that waits while zotero source is called, and table is constructed
         $(function(){
+
             myVar = setTimeout(showPage, 500);
         });
 
@@ -170,6 +172,8 @@ function makeTable(num){
 
     var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("loader-wrapper").style.display = "none";
 }
 
 /**
