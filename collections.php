@@ -5,7 +5,6 @@
  *
  * Author: Jesse Tatum
  * Date: 7/5/18
- * Time: 3:02 PM
  */
 ?>
 <html>

@@ -56,10 +56,10 @@ if (isset($_POST['ckey'])) {
 } else
     $ckey = file_get_contents($ckey_dir);
 
-print json_cached_results(); // To import into dynData.js
+print json_cached_results(); // To export to dynData.js
 
 
-// Pull all data from Zotero. This is the bottleneck
+// Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
     global $limit, $api_key, $start, $ckey;
     if($api_key == ''){
@@ -132,8 +132,6 @@ function parseFields($data, $offset){
 //                $lastName = $scope["creators"][0]["name"];
 //            }
 
-            // TODO: Check tag for data and parse into internal array
-
             $len = count($scope["creators"]); // length of creators array
             // will hold the string of creators built up by the while loop
             $counter = 0; // counts up the number of creators in the creators array
@@ -169,16 +167,16 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-        //        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
-        //            $j = 0;
-        //            $content = array();
-        //            while (isset($scope["tags"][$j]["tag"])){
-        //                $content[$j] = $scope["tags"][$j]["tag"];
-        //                $j++;
-        //            }
-        //            $tags[$i + $offset] = $content;
-        //        } else
-        //            $tags[$i + $offset] = "";
+//                if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+//                    $j = 0;
+//                    $content = array();
+//                    while (isset($scope["tags"][$j]["tag"])){
+//                        $content[$j] = $scope["tags"][$j]["tag"];
+//                        $j++;
+//                    }
+//                    $tags[$i + $offset] = $content;
+//                } else
+//                    $tags[$i + $offset] = "";
 
         $creators[$i + $offset] = $authorString;
         $itemtypes[$i + $offset] = itemT( "itemType", $scope);
@@ -280,13 +278,12 @@ function json_cached_results() {
 
     $expires = time() - 2*60*60; // 2 hours
 
-    // Create files if missing or get
+    // fopen will create or open as needed
     $cfh = fopen($cache_dir, 'wb');
     $kfh = fopen($ckey_dir, 'wb');
 
     $cache_key = file_get_contents($ckey_dir);
 
-//     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
     // Check if stored key matches posted key
     // Check that the file is older than the expire time and that it's not empty
     if ($cache_key != $ckey || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
