@@ -281,8 +281,8 @@ function json_cached_results() {
     $expires = time() - 2*60*60; // 2 hours
 
     // Create files if missing or get
-    $cfh = fopen($cache_dir, 'r+');
-    $kfh = fopen($ckey_dir, 'r+');
+    $cfh = fopen($cache_dir, 'wb');
+    $kfh = fopen($ckey_dir, 'wb');
 
     $cache_key = file_get_contents($ckey_dir);
 

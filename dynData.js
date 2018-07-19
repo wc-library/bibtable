@@ -57,7 +57,7 @@ function showPage(){
     // Initialize tablesorter
     $(function()
     {
-        $("#myTable").tablesorter({
+        $table = $("#myTable").tablesorter({
             theme: 'blue',
             widthFixed : true,
 
