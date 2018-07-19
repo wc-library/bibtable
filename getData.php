@@ -37,9 +37,8 @@ global $keys;       // Keys
 $keys = array();
 global $parentItem; // ParentItems
 $parentItem = array();
-
 global $tags;
-$ags = array();
+$tags = array();    // Description Tags
 
 global $ckey;
 global $ckey_dir;
@@ -167,16 +166,16 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-//                if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
-//                    $j = 0;
-//                    $content = array();
-//                    while (isset($scope["tags"][$j]["tag"])){
-//                        $content[$j] = $scope["tags"][$j]["tag"];
-//                        $j++;
-//                    }
-//                    $tags[$i + $offset] = $content;
-//                } else
-//                    $tags[$i + $offset] = "";
+                if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+                    $j = 0;
+                    $content = array();
+                    while (isset($scope["tags"][$j]["tag"])){
+                        $content[$j] = $scope["tags"][$j]["tag"];
+                        $j++;
+                    }
+                    $tags[$i + $offset] = $content;
+                } else
+                    $tags[$i + $offset] = "";
 
         $creators[$i + $offset] = $authorString;
         $itemtypes[$i + $offset] = itemT( "itemType", $scope);
@@ -251,6 +250,7 @@ function makeAllData(){
     global $abstracts;
     global $urls;
     global $parentItem;
+    global $tags;
 
     $allData = new stdClass();
     $allData->keys = $keys;
@@ -264,7 +264,7 @@ function makeAllData(){
     $allData->urls = $urls;
     $allData->abstracts = $abstracts;
     $allData->parentItem = $parentItem;
-//    $allData->tags = $tags;
+    $allData->tags = $tags;
 
     return ($allData);
 }
@@ -304,6 +304,7 @@ function json_cached_results() {
         $api_results = (file_get_contents($cache_dir));
     }
 
+    // Always close files
     fclose($cfh);
     fclose($kfh);
 

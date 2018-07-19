@@ -25,7 +25,6 @@ request.onload = function(){
 
         // start the loader that waits while zotero source is called, and table is constructed
         $(function(){
-
             myVar = setTimeout(showPage, 500);
         });
 
@@ -52,6 +51,9 @@ request.onload = function(){
 // TODO: Request is failing in Chrome when call is async
 request.open("GET", "getData.php", false); //request info from api
 request.send();
+
+document.getElementById("loader").style.display = "none";
+document.getElementById("loader-wrapper").style.display = "none";
 
 function showPage(){
     document.getElementById("myTable").style.display = "block"; //displays the table
@@ -99,15 +101,31 @@ function makeTable(num){
     let URLs = num.urls;
     let Keys = num.keys;
     let ParentItems = num.parentItem;
+    let Tags = num.tags;
+
+    let allTags = Array();
+
+    let i;
+    let j;
+
+    for(i = 0; i < Tags.length; i++)
+        for (j = 0; j < Tags[i].length; j++)
+            if($.inArray(Tags[i][j], allTags, i) === -1) // Start at i for small speed optimization
+                allTags.push(Tags[i][j]);
+
+    let table = '<select>';
+    for(i=0; i < allTags.length; i++)
+        table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
+    table += '</select>';
 
     // Create table headers
-    let table = '<thead><tr><th>Title</th>';
+    table += '<thead><tr><th>Title</th>';
     table += '<th>Author</th>';
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
     table +='</tr></thead><tbody>';
 
-    let i = 0;
+    i = 0;
     let size = Titles.length;
 
     let Attachments = new Array(size);
@@ -172,8 +190,6 @@ function makeTable(num){
 
     var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("loader-wrapper").style.display = "none";
 }
 
 /**

@@ -126,11 +126,10 @@ function parse($jarray){
                 url: 'getData.php',
                 data: { 'ckey': $(this).val() },
                 success: function(msg) {
-                    window.location.replace('display.html');
-
                     console.log(msg);
                     loader.style.display = "none";
                     loaderdiv.style.display= "none";
+                    window.location.replace('display.html');
 
                     $.getScript('dynData.js');
 
