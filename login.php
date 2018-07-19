@@ -23,11 +23,18 @@ $userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api,
 if (json_last_error() == JSON_ERROR_NONE){
     $username = $userInfo["username"];
     $userID = $userInfo["userID"];
-}
-else
-    echo "error";
+} else
+    handleError("Invalid API key");
 
 // Check values
+if ($user == $username || $user == $userID)
+    if ($api == $api_key)
+        //login
+        echo "nice";
+
+function handleError(msg){
+    echo "Error: " . msg;
+}
 
 ?>
 
@@ -69,7 +76,7 @@ else
         <div class="form-group">
             <label for="api">API Key</label>
             <input type="text" class="form-control" id="api" placeholder="API Key" required>
-            <small id="apiHelp" class="form-text text-muted">This needs to be generated from your Zotero account. <a href="https://www.zotero.org/settings/keys">Link</a> </small>
+            <small id="apiHelp" class="form-text text-muted">This needs to be generated from your <a href="https://www.zotero.org/settings/keys">Zotero</a> account.  </small>
 
         </div>
         <button type="submit" class="btn btn-primary formbtn">Submit</button>
