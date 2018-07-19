@@ -110,40 +110,18 @@ function parse($jarray){
 }
 ?>
 
-<div class="container">
-    <h1 class="page-header">Bibtable</h1>
-    <div>
-        <a href="collections.php">Back</a><br>
-        <input class="search pull-left" type="search" data-column="all" placeholder="Search all" autocomplete="off">
-        <!--<input class="filter-select filter-onlyAvail pull-left" type="search" data-column="all" placeholder="Tags" autocomplete="off">-->
-        <!--curl &#45;&#45;header "Zotero-API-Key: DnmDsLoJFyrJ0UrgMjS6gfJ3" https://api.zotero.org/users/77162/collections/MW994N9D/tags-->
-        <button type="button" id="reset" class="reset">Reset Sort</button>
-
-    </div>
-
-    <div id="api_key_error">
-        <h2 style="text-align:center; color: grey;" id="api_error"></h2>
-    </div>
-    <table style="display:none;" id="myTable" class="tablesorter-default" ></table>
-</div>
-
 </body>
 <script type="application/javascript">
-
-    // var collection = document.getElementById("collection-table");
-    // var myTable = document.getElementById("myTable");
 
     let loader = document.getElementById("loader");
     let loaderdiv = document.getElementById("loader-wrapper");
     loader.style.display="none";
 
     $(document).ready(function(){
-        // myTable.style.display = "none";
         $('.button').click(function(e){
             e.preventDefault();
             loader.style.display = "block";
             loaderdiv.style.display= "block";
-            // window.location.href = "display.html";
             $.ajax({
                 type: "POST",
                 url: 'getData.php',
@@ -152,9 +130,6 @@ function parse($jarray){
                     console.log(msg);
                     loader.style.display = "none";
                     loaderdiv.style.display= "none";
-                    // collection.style.display= "none";
-                    // myTable.style.display= "block";
-                    // $.getScript("dynData.js");
 
                     window.location.replace('display.html');
                 },
@@ -167,34 +142,6 @@ function parse($jarray){
             });
         });
     });
-
-    // $(function()
-    // {
-    //     $("#myTable").tablesorter({
-    //         theme: 'blue',
-    //         widthFixed : true,
-    //
-    //         widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
-    //         widget_options: {
-    //             filter_childRows: false,
-    //             filter_startsWith: false,
-    //             filter_ignoreCase: true,
-    //             filter_external: '.search',
-    //             filter_reset: '.reset',
-    //             filter_searchDelay : 200,
-    //             filter_saveFilters : true
-    //         }
-    //     });
-    //
-    //     $.tablesorter.filter.bindSearch($table, $('.search'));
-    //     $.tablesorter.fixColumnWidth($table);
-    //
-    //     $('#reset').click(function() {
-    //         $('table').trigger('sortReset');
-    //         // TODO: find way to clear dropdown
-    //         return false;
-    //     });
-    // });
 
 </script>
 </html>
