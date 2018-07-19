@@ -280,15 +280,14 @@ function json_cached_results() {
 
     $expires = time() - 2*60*60; // 2 hours
 
-    // Create files if missing
-    if(!file_exists($cache_dir))
-        fopen($cache_dir, 'r+');
-    if(!file_exists($ckey_dir))
-        fopen($ckey_dir, 'r+');
+    // Create files if missing or get
+    $cfh = fopen($cache_dir, 'r+');
+    $kfh = fopen($ckey_dir, 'r+');
 
     $cache_key = file_get_contents($ckey_dir);
 
 //     echo "\nCache key: " . $cache_key . "\nCkey: " . $ckey . "\n";
+    // Check if stored key matches posted key
     // Check that the file is older than the expire time and that it's not empty
     if ($cache_key != $ckey || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
 
@@ -297,16 +296,20 @@ function json_cached_results() {
         $api_results = json_encode(makeAllData());
 
         if ($api_results != null && $api_results != '')
-            file_put_contents($cache_dir, $api_results);
+            fwrite($cfh, $api_results);
         else
-            file_put_contents($cache_dir, '');
+            fwrite($cfh, '');
 
-        file_put_contents($ckey_dir, $ckey);
+        fwrite($kfh, $ckey);
 
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_dir));
     }
+
+    fclose($cfh);
+    fclose($kfh);
+
     return (($api_results));
 }
 ?>

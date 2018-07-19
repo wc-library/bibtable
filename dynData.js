@@ -15,7 +15,6 @@ request.onload = function(){
         if(this.responseText === "00"){
             // CHECKS IF api key is missing
             document.getElementById("api_error").innerHTML = "error: Missing API key";
-            document.getElementById("loader").style.display = "none";
             die("Api_key Issue");
         }
 
@@ -53,13 +52,12 @@ request.open("GET", "getData.php", true); //request info from api
 request.send();
 
 function showPage(){
-    document.getElementById("loader").style.display = "none"; //hides loading icon
     document.getElementById("myTable").style.display = "block"; //displays the table
 
     // Initialize tablesorter
     $(function()
     {
-        let $table = $("#myTable").tablesorter({
+        $("#myTable").tablesorter({
             theme: 'blue',
             widthFixed : true,
 
@@ -78,7 +76,7 @@ function showPage(){
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
 
-        $('button').click(function() {
+        $('.reset').click(function() {
             $('table').trigger('sortReset');
             // TODO: find way to clear dropdown
             return false;
