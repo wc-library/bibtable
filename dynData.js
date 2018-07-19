@@ -49,8 +49,8 @@ request.onload = function(){
     }
 };
 
-// $.ajax('/getData.php');
-request.open("GET", "getData.php", true); //request info from api
+// TODO: Request is failing in Chrome when call is async
+request.open("GET", "getData.php", false); //request info from api
 request.send();
 
 function showPage(){
