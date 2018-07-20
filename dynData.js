@@ -79,26 +79,39 @@ function showPage(){
             }
         });
 
-        // let array = $.tablesorter.filter.getOptionSource($table[4], 1);
-        // array.sort(function (a, b){
-        //     a = a.toString().toLowerCase();
-        //     b = b.toString().toLowerCase();
-        //     if (a < b)
-        //         return -1;
-        //     else if (b < a)
-        //         return 1;
-        //     else
-        //         return 0;
-        // });
-        //
-        // $('#tags').append('<option>' + array.join('</option>') + '</option>');
+        let array = $.tablesorter.filter.getOptions($table, 4, true); // Get tags array
+
+        let sorted = Array();
+        let x;
+        let y;
+        for(x = 0; x < array.length; x++) {
+            let tmp = array[x].trim().split(','); // Create whitespace trimmed array
+            for(y = 0; y < tmp.length; y++)
+                if (tmp[y].length > 1 && !array.includes(tmp[y])) // Push only unique items
+                    sorted.push(tmp[y]);
+        }
+
+        // Sort items ignoring case
+        sorted.sort(function (a, b){
+            a = a.toString().toLowerCase();
+            b = b.toString().toLowerCase();
+            if (a < b)
+                return -1;
+            else if (b < a)
+                return 1;
+            else
+                return 0;
+        });
+
+        $('#tags').append('<option>' + array.join('</option>') + '</option>');
+        console.log(sorted);
 
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
 
         $('.reset').click(function() {
             $('table').trigger('sortReset'); // Toggle fields
-             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
+            $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
 
             return false;
@@ -135,7 +148,7 @@ function makeTable(num){
                 allTags.push(Tags[i][j]);
 
         if (Tags[i].length > 1)
-            tokenized[i] = Tags[i].join(',').replace(/,/g, ' | ');
+            tokenized[i] = Tags[i].join(','); //.replace(/,/g, ' | ');
         else
             tokenized[i] = '';
     }
