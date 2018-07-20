@@ -83,7 +83,9 @@ function showPage(){
 
         $('.reset').click(function() {
             $('table').trigger('sortReset');
-            // TODO: find way to clear dropdown
+            // console.log($('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex);
+            $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0;
+
             return false;
         });
     });
@@ -123,8 +125,6 @@ function makeTable(num){
             tokenized[i] = '';
     }
 
-    console.log(tokenized);
-
     let table = '<select>';
     for(i=0; i < allTags.length; i++)
         table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
@@ -136,7 +136,7 @@ function makeTable(num){
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
     table += '<th style="display: none;"></th>';
-    table +='</tr></thead><tbody>';
+    table += '</tr></thead><tbody>';
 
     i = 0;
     let size = Titles.length;

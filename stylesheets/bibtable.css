@@ -51,7 +51,7 @@ thead {
 	font-size: 1.15em;
 }
 
-[data-column="4"] {
+tr [data-column="4"] {
 	display: none;
 }
 
