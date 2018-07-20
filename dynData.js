@@ -64,20 +64,34 @@ function showPage(){
     // Initialize tablesorter
     $(function()
     {
-        $table = $("#myTable").tablesorter({
+        let $table = $("#myTable").tablesorter({
             widthFixed : true,
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
                 filter_startsWith: false,
                 filter_ignoreCase: true,
-                filter_external: '.tags',
+                filter_external: '#tags',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
                 filter_resetOnEsc: true,
             }
         });
+
+        // let array = $.tablesorter.filter.getOptionSource($table[4], 1);
+        // array.sort(function (a, b){
+        //     a = a.toString().toLowerCase();
+        //     b = b.toString().toLowerCase();
+        //     if (a < b)
+        //         return -1;
+        //     else if (b < a)
+        //         return 1;
+        //     else
+        //         return 0;
+        // });
+        //
+        // $('#tags').append('<option>' + array.join('</option>') + '</option>');
 
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
@@ -174,12 +188,6 @@ function makeTable(num){
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
             table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
-
-            // let x;
-            // for(x = 0; x < Tags.length; x++)
-            //     table += Tags[x];
-                // for (y = 0; y < Tags[x].length; y++)
-                //         allTags.push(Tags[x][y]);
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 

@@ -17,6 +17,11 @@
 	<script src="tablesorter-master/js/jquery.tablesorter.js"></script>
 	<script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
 
+    <!-- ui theme stylesheet  -->
+    <link rel="stylesheet" href="tablesorter-master/css/theme.jui.css">
+    <!-- jQuery UI theme  -->
+    <!--<link rel="stylesheet" href="tablesorter-master/docs/css/jquery-ui.min.css/">-->
+
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -33,7 +38,9 @@
     <div>
         <a href="collections.php">Back</a><br>
         <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-        <select class="filter-select pull-left filter-match selectable tags" type="search" data-column="4" placeholder="Tags">Tags</select>
+        <select id="tags" class="pull-left filter-match selectable" type="search" data-column="4" placeholder="Tags">
+            <option value="">Tags</option>
+        </select>
         <button type="button" class="reset">Reset Sort</button>
 
     </div>
@@ -46,7 +53,7 @@
         <h2 style="text-align:center; color: grey;" id="api_error"></h2>
     </div>
 
-    <table style="display:none;" id="myTable" class="tablesorter tablesorter-default" ></table>
+    <table style="display:none;" id="myTable" class="tablesorter" ></table>
     <script type="text/javascript" src="dynData.js"></script>
 
 </body>
