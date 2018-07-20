@@ -10,6 +10,9 @@
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
+document.getElementById("loader").style.display = "block";
+document.getElementById("loader-wrapper").style.display = "block";
+
 request.onload = function(){
     if (this.readyState === 4 && this.status === 200){
         if(this.responseText === "00"){
@@ -23,23 +26,23 @@ request.onload = function(){
         num = JSON.parse(this.responseText);
         makeTable(num); // construct a table
 
-        // start the loader that waits while zotero source is called, and table is constructed
+        // Build table from API response
         $(function(){
             myVar = setTimeout(showPage, 500);
         });
 
-        // Allow extra to minimize
+        // Allow extra to collapse
         $(".extra").click(function (){
             $(this).slideToggle(300);
             $("td div", $(this)).hide();
         });
 
-        // Don't minimize when links are selected
+        // Don't collapse when links are selected
         $(".extra a").click(function (e){
             e.stopPropagation();
         });
 
-        // reveals hidden div with abstracts and links
+        // Reveal hidden div with abstracts and links
         $(".source").click(function(event) {
             // $(this).find(".extra").hide();
             $(this).next().slideToggle(300);
@@ -70,7 +73,7 @@ function showPage(){
                 filter_childRows: false,
                 filter_startsWith: false,
                 filter_ignoreCase: true,
-                filter_external: '.search',
+                filter_external: '.tags',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
@@ -198,7 +201,7 @@ function makeTable(num){
 
             // Add Publishers, publishing location, and ISBN as available
             hidden += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
-                constructT(Places[i], " ") + constructT(ISBN[i], ". <b>ISBN</b>: ") + '</div>';
+                constructT(Places[i], " ") + constructT(ISBN[i], "<b>ISBN</b>: ") + '</div>';
 
             table += hidden;
             table += '</tr></td>';
@@ -213,14 +216,15 @@ function makeTable(num){
 }
 
 /**
- *  Method helps with formatting, checks if string is empty. Adds a "." for non-empty strings
+ *  Add ". " after non-empty strings for formatting
  *
- *  parameter: the string to be formatted.
+ *  string: the string to be formatted
+ *  type: string to preface the given item if it exists
  */
 function constructT(string, type){
 
     if (string === "")
         return string;
     else
-        return type + string;
+        return type + string + ". ";
 }

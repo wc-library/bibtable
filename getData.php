@@ -125,12 +125,6 @@ function parseFields($data, $offset){
         $authorString = "";
         if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 
-//            if(isset($scope["creators"][0]["firstName"] )){
-//                $lastName = $scope["creators"][0]["lastName"];
-//            }else if(isset($scope["creators"][0]["name"])){
-//                $lastName = $scope["creators"][0]["name"];
-//            }
-
             $len = count($scope["creators"]); // length of creators array
             // will hold the string of creators built up by the while loop
             $counter = 0; // counts up the number of creators in the creators array
@@ -138,7 +132,7 @@ function parseFields($data, $offset){
             if( $len > 1){ // We will need to loop through all creators
                 /* loop invariant, counter is current creator,
                 at end of loop, the counter will be at the last creators position
-                this will help with formating
+                this will help with formatting
                 */
                 do {
                     if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
@@ -166,17 +160,19 @@ function parseFields($data, $offset){
                     $authorString = $authorString . $scope["creators"][0]["name"];
             }
         }
-                if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
-                    $j = 0;
-                    $content = array();
-                    while (isset($scope["tags"][$j]["tag"])){
-                        $content[$j] = $scope["tags"][$j]["tag"];
-                        $j++;
-                    }
-                    $tags[$i + $offset] = $content;
-                } else
-                    $tags[$i + $offset] = "";
+        // Grab array of associated tags or empty string
+        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+            $j = 0;
+            $content = array();
+            while (isset($scope["tags"][$j]["tag"])){
+                $content[$j] = $scope["tags"][$j]["tag"];
+                $j++;
+            }
+            $tags[$i + $offset] = $content;
+        } else
+            $tags[$i + $offset] = "";
 
+        // Store all items
         $creators[$i + $offset] = $authorString;
         $itemtypes[$i + $offset] = itemT( "itemType", $scope);
         $titles[$i + $offset] = checknStore( "title", $scope);
@@ -292,11 +288,13 @@ function json_cached_results() {
         getApiResults();
         $api_results = json_encode(makeAllData());
 
+        // Write back to cache if results are valid
         if ($api_results != null && $api_results != '')
             fwrite($cfh, $api_results);
         else
             fwrite($cfh, '');
 
+        // Write cache key
         fwrite($kfh, $ckey);
 
     } else {
