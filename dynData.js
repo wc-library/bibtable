@@ -10,10 +10,10 @@
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
 
-document.getElementById("loader").style.display = "block";
-document.getElementById("loader-wrapper").style.display = "block";
-
 request.onload = function(){
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("loader-wrapper").style.display = "block";
+
     if (this.readyState === 4 && this.status === 200){
         if(this.responseText === "00"){
             // CHECKS IF api key is missing
@@ -65,9 +65,7 @@ function showPage(){
     $(function()
     {
         $table = $("#myTable").tablesorter({
-            theme: 'blue',
             widthFixed : true,
-
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
@@ -85,9 +83,9 @@ function showPage(){
         $.tablesorter.fixColumnWidth($table);
 
         $('.reset').click(function() {
-            $('table').trigger('sortReset');
-            // console.log($('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex);
-            $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0;
+            $('table').trigger('sortReset'); // Toggle fields
+             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
+            $('.search').val(""); // Search all box
 
             return false;
         });
@@ -119,7 +117,7 @@ function makeTable(num){
     // TODO: look in Tablesorter API for sorting options
     for(i = 0; i < Tags.length; i++) {
         for (j = 0; j < Tags[i].length; j++)
-            if ($.inArray(Tags[i][j], allTags, i) === -1) // Start at i for small speed optimization
+            if ($.inArray(Tags[i][j], allTags) === -1) // Start at i for small speed optimization
                 allTags.push(Tags[i][j]);
 
         if (Tags[i].length > 1)
@@ -180,11 +178,10 @@ function makeTable(num){
             // let x;
             // for(x = 0; x < Tags.length; x++)
             //     table += Tags[x];
-
                 // for (y = 0; y < Tags[x].length; y++)
                 //         allTags.push(Tags[x][y]);
 
-            table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
+            table += '<tr class="extra tablesorter-childRow"><td class="extra" colspan="4">';
 
             // this constructs the hidden div but does not yet add it to the table
             let hidden = '<div class="extra content " id="' + i + '" style="display: none;">';
@@ -201,7 +198,7 @@ function makeTable(num){
 
             // Add Publishers, publishing location, and ISBN as available
             hidden += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
-                constructT(Places[i], " ") + constructT(ISBN[i], "<b>ISBN</b>: ") + '</div>';
+                constructT(Places[i], "") + constructT(ISBN[i], "<b>ISBN</b>: ") + '</div>';
 
             table += hidden;
             table += '</tr></td>';

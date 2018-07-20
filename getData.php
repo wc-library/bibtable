@@ -116,7 +116,7 @@ function parseFields($data, $offset){
         if(isset($work["data"]["parentItem"]))
             $parentItem[$i + $offset] = $work["data"]["parentItem"];
         else
-            $parentItem[$i + $offset] = ""; // Assign dummy value to keep array index fill for each array
+            $parentItem[$i + $offset] = ""; // Empty string to avoid null
 
 
         $scope = $work["data"];
@@ -129,7 +129,7 @@ function parseFields($data, $offset){
             // will hold the string of creators built up by the while loop
             $counter = 0; // counts up the number of creators in the creators array
 
-            if( $len > 1){ // We will need to loop through all creators
+            if($len > 1){ // We will need to loop through all creators
                 /* loop invariant, counter is current creator,
                 at end of loop, the counter will be at the last creators position
                 this will help with formatting
@@ -296,7 +296,6 @@ function json_cached_results() {
 
         // Write cache key
         fwrite($kfh, $ckey);
-
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_dir));
