@@ -73,7 +73,8 @@ function showPage(){
                 filter_external: '.search',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
-                filter_saveFilters : true
+                filter_saveFilters : true,
+                filter_resetOnEsc: true,
             }
         });
 
@@ -104,14 +105,25 @@ function makeTable(num){
     let Tags = num.tags;
 
     let allTags = Array();
+    allTags.push('');
+    let tokenized = Array();
 
     let i;
     let j;
 
-    for(i = 0; i < Tags.length; i++)
+    // TODO: look in Tablesorter API for sorting options
+    for(i = 0; i < Tags.length; i++) {
         for (j = 0; j < Tags[i].length; j++)
-            if($.inArray(Tags[i][j], allTags, i) === -1) // Start at i for small speed optimization
+            if ($.inArray(Tags[i][j], allTags, i) === -1) // Start at i for small speed optimization
                 allTags.push(Tags[i][j]);
+
+        if (Tags[i].length > 1)
+            tokenized[i] = Tags[i].join(',').replace(/,/g, ' | ');
+        else
+            tokenized[i] = '';
+    }
+
+    console.log(tokenized);
 
     let table = '<select>';
     for(i=0; i < allTags.length; i++)
@@ -123,6 +135,7 @@ function makeTable(num){
     table += '<th>Author</th>';
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
+    table += '<th style="display: none;"></th>';
     table +='</tr></thead><tbody>';
 
     i = 0;
@@ -158,8 +171,15 @@ function makeTable(num){
             table += '<td><b>' + Titles[i] + '</b></td>';
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
-            table += '<td>' + Types[i] + '</td></tr>';
+            table += '<td>' + Types[i] + '</td>';
+            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
 
+            // let x;
+            // for(x = 0; x < Tags.length; x++)
+            //     table += Tags[x];
+
+                // for (y = 0; y < Tags[x].length; y++)
+                //         allTags.push(Tags[x][y]);
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 

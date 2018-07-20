@@ -51,6 +51,10 @@ thead {
 	font-size: 1.15em;
 }
 
+[data-column="4"] {
+	display: none;
+}
+
 #loader-wrapper {
 	top: 0;
 	left: 0;
