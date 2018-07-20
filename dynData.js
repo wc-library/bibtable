@@ -181,7 +181,7 @@ function makeTable(num){
                 // for (y = 0; y < Tags[x].length; y++)
                 //         allTags.push(Tags[x][y]);
 
-            table += '<tr class="extra tablesorter-childRow"><td class="extra" colspan="4">';
+            table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 
             // this constructs the hidden div but does not yet add it to the table
             let hidden = '<div class="extra content " id="' + i + '" style="display: none;">';
