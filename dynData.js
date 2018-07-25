@@ -185,6 +185,8 @@ function makeTable(num){
         i++;
     }
 
+    let validTable = false;
+
     i = 0;
     while (i < size) { // Loop through all items
         let yearRE = /\b\d{4}\b/;
@@ -217,6 +219,9 @@ function makeTable(num){
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 hidden += Attachments[i];
 
+            if (hidden.length > 0)
+                validTable = true;
+
             // Add Publishers, publishing location, and ISBN as available
             hidden += constructT(Publishers[i], "\n<b>Publishers</b>: ") +
                 constructT(Places[i], "") + constructT(ISBN[i], "<b>ISBN</b>: ") + '</div>';
@@ -228,6 +233,8 @@ function makeTable(num){
 
     }
     table += '</tbody>'; // close off table
+    if (!validTable)
+        table += '<div class="invalid"><h2>Table is empty</h2><p>Please try selecting collection again.</p></div>';
 
     var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page

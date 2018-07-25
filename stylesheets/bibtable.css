@@ -33,6 +33,13 @@
     word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
+.invalid {
+	vertical-align: center;
+	margin-left: 250px;
+	margin-top: 50px;
+	position: relative;
+}
+
 .page-header {
 	margin-left: 10px !important;
 }
