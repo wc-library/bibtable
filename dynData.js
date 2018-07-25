@@ -86,12 +86,16 @@ function showPage(){
         let y;
         for(x = 0; x < array.length; x++) {
             let tmp = array[x].trim().split(','); // Create whitespace trimmed array
-            for(y = 0; y < tmp.length; y++) // TODO NOT WORKING AH
-                if (tmp[y].length > 1 && array.indexOf(tmp[y]) === -1) // Push only unique items
-                    sorted.push(tmp[y]);
-            // sorted.push(tmp[y].toLowerCase().split(' ').map(function (word) {
-            //     return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
-            // }).join(' '));
+            console.log("TMP: " + tmp);
+            for(y = 0; y < tmp.length; y++) { // TODO NOT WORKING AH
+                if (tmp[y].length > 1 && array.indexOf(tmp[y]) === -1) { // Push only unique items - not functional
+                    // sorted.push(tmp[y]);
+                    let val = tmp[y].toLowerCase().split(' ').map(function (word) {
+                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); // Capitalize first letter of each word
+                    }).join(' ');
+                    sorted.push(val);
+                }
+            }
         }
 
         // Sort items ignoring case
@@ -141,8 +145,8 @@ function makeTable(num){
     let ParentItems = num.parentItem;
     let Tags = num.tags;
 
-    let allTags = Array();
-    allTags.push('');
+    // let allTags = Array();
+    // allTags.push('');
     let tokenized = Array();
 
     let i;
@@ -151,12 +155,12 @@ function makeTable(num){
     // TODO: look in Tablesorter API for sorting options
     // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
-        for (j = 0; j < Tags[i].length; j++)
-            if (jQuery.inArray(Tags[i][j], allTags) < 0) {
-                allTags.push(Tags[i][j].toLowerCase().split(' ').map(function (word) {
-                    return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
-                }).join(' '));
-            }
+        // for (j = 0; j < Tags[i].length; j++)
+        //     if (jQuery.inArray(Tags[i][j], allTags) < 0) {
+        //         allTags.push(Tags[i][j].toLowerCase().split(' ').map(function (word) {
+        //             return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
+        //         }).join(' '));
+        //     }
 
         if (Tags[i].length > 1)
             tokenized[i] = Tags[i].join(', '); //.replace(/,/g, ' | ');
@@ -176,7 +180,7 @@ function makeTable(num){
     table += '<th>Author</th>';
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
-    table += '<th /*style="display: none;"*/></th>';
+    table += '<th style="display: none;"></th>';
     table += '</tr></thead><tbody>';
 
     i = 0;
@@ -215,7 +219,7 @@ function makeTable(num){
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
-            table += '<td /*style="display: none;"*/>' + tokenized[i] + '</td></tr>';
+            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 
