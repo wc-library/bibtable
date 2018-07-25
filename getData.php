@@ -197,7 +197,7 @@ function parseFields($data, $offset){
 function checknStore($string, $scope){
 
     // Store key if found
-    if(array_key_exists($string, $scope))
+    if(array_key_exists($string, $scope) && $scope[$string] != null)
         return $scope[$string];
     else
         return  "";
@@ -225,7 +225,7 @@ function itemT($string, $scope){
         "conferencePaper" => "Conference Paper"
     );
 
-    if(array_key_exists($string, $scope))
+    if(array_key_exists($string, $scope) && $scope[$string] != null)
         return $items[$scope[$string]];
     else
         return "";

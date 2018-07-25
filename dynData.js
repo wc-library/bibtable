@@ -86,15 +86,17 @@ function showPage(){
         let y;
         for(x = 0; x < array.length; x++) {
             let tmp = array[x].trim().split(','); // Create whitespace trimmed array
-            for(y = 0; y < tmp.length; y++)
-                if (tmp[y].length > 1 && !array.includes(tmp[y])) // Push only unique items
+            for(y = 0; y < tmp.length; y++) // TODO NOT WORKING AH
+                if (tmp[y].length > 1 && array.indexOf(tmp[y]) === -1) // Push only unique items
                     sorted.push(tmp[y]);
         }
 
         // Sort items ignoring case
         sorted.sort(function (a, b){
-            a = a.toString().toLowerCase();
-            b = b.toString().toLowerCase();
+            // a = a.toString().toLowerCase(); // Normalized cases before sort
+            // b = b.toString().toLowerCase();
+
+
             if (a < b)
                 return -1;
             else if (b < a)
@@ -103,7 +105,8 @@ function showPage(){
                 return 0;
         });
 
-        $('#tags').append('<option>' + array.join('</option>') + '</option>');
+        for(x=0; x < array.length; x++)
+            $('#tags').append('<option>' + sorted[x] + '</option>');
         console.log(sorted);
 
         $.tablesorter.filter.bindSearch($table, $('.search'));
@@ -113,6 +116,7 @@ function showPage(){
             $('table').trigger('sortReset'); // Toggle fields
             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
+            // $('#tags').selectedIndex = 0;
 
             return false;
         });
@@ -142,19 +146,25 @@ function makeTable(num){
     let j;
 
     // TODO: look in Tablesorter API for sorting options
+    // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
         for (j = 0; j < Tags[i].length; j++)
-            if ($.inArray(Tags[i][j], allTags) === -1) // Start at i for small speed optimization
-                allTags.push(Tags[i][j]);
+            if (jQuery.inArray(Tags[i][j], allTags) < 0) {
+                allTags.push(Tags[i][j].toLowerCase().split(' ').map(function (word) {
+                    return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
+                }).join(' '));
+            }
 
         if (Tags[i].length > 1)
-            tokenized[i] = Tags[i].join(','); //.replace(/,/g, ' | ');
+            tokenized[i] = Tags[i].join(', '); //.replace(/,/g, ' | ');
         else
             tokenized[i] = '';
     }
 
+    console.log("allTags: " + allTags);
+
     let table = '<select>';
-    for(i=0; i < allTags.length; i++)
+    for(i = 0; i < allTags.length; i++)
         table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
     table += '</select>';
 
@@ -163,7 +173,7 @@ function makeTable(num){
     table += '<th>Author</th>';
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
-    table += '<th style="display: none;"></th>';
+    table += '<th /*style="display: none;"*/></th>';
     table += '</tr></thead><tbody>';
 
     i = 0;
@@ -202,7 +212,7 @@ function makeTable(num){
             table += '<td>' + Authors[i] + '</td>';
             table += '<td>' + year + '</td>';
             table += '<td>' + Types[i] + '</td>';
-            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
+            table += '<td /*style="display: none;"*/>' + tokenized[i] + '</td></tr>';
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 
