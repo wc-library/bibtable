@@ -89,13 +89,15 @@ function showPage(){
             for(y = 0; y < tmp.length; y++) // TODO NOT WORKING AH
                 if (tmp[y].length > 1 && array.indexOf(tmp[y]) === -1) // Push only unique items
                     sorted.push(tmp[y]);
+            // sorted.push(tmp[y].toLowerCase().split(' ').map(function (word) {
+            //     return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
+            // }).join(' '));
         }
 
         // Sort items ignoring case
         sorted.sort(function (a, b){
             // a = a.toString().toLowerCase(); // Normalized cases before sort
             // b = b.toString().toLowerCase();
-
 
             if (a < b)
                 return -1;
@@ -109,6 +111,7 @@ function showPage(){
             $('#tags').append('<option>' + sorted[x] + '</option>');
         console.log(sorted);
 
+        $.tablesorter.filter.bindSearch($table, $('#tags'));
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
 
@@ -116,7 +119,7 @@ function showPage(){
             $('table').trigger('sortReset'); // Toggle fields
             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
-            // $('#tags').selectedIndex = 0;
+            $('#tags')[0].selectedIndex = 0;
 
             return false;
         });
@@ -163,13 +166,13 @@ function makeTable(num){
 
     console.log("allTags: " + allTags);
 
-    let table = '<select>';
-    for(i = 0; i < allTags.length; i++)
-        table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
-    table += '</select>';
+    // let table = '<select>';
+    // for(i = 0; i < allTags.length; i++)
+    //     table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
+    // table += '</select>';
 
     // Create table headers
-    table += '<thead><tr><th>Title</th>';
+    let table = '<thead><tr><th>Title</th>';
     table += '<th>Author</th>';
     table += '<th>Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
