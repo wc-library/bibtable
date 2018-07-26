@@ -16,6 +16,7 @@
 	background-color: #F8F8F8;
 	border-left:3px solid #ccc!important;
 	width: 100% !important;
+	min-width: 100%;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
 }
@@ -73,6 +74,19 @@ a {
 
 thead {
 	font-size: 1.15em;
+}
+
+.title {
+	width: 50%;
+}
+.author {
+	width: 25%;
+}
+.year {
+	width: 10%;
+}
+.type {
+	width: 15%;
 }
 
 tr [data-column="4"] {

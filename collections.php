@@ -54,10 +54,8 @@ $context = stream_context_create($opts); // Create request with API key in heade
 // Grab User Info
 $userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context), true);
 $username = $userInfo["username"];
-$userID = $userInfo["userID"];
 
 echo "<h4 class='lead' id='user'>Username: " . $username . "</h4>";
-echo "<h4 class='lead' id='pwd'>User ID: " . $userID . "</h4>";
 
 ?>
     </div>

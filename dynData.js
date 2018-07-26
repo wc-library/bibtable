@@ -22,7 +22,6 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        // console.log(this.responseText);
         num = JSON.parse(this.responseText);
         makeTable(num); // construct a table
 
@@ -55,9 +54,6 @@ request.onload = function(){
 request.open("GET", "getData.php", false); //request info from api
 request.send();
 
-document.getElementById("loader").style.display = "none";
-document.getElementById("loader-wrapper").style.display = "none";
-
 function showPage(){
     document.getElementById("myTable").style.display = "block"; //displays the table
 
@@ -65,20 +61,34 @@ function showPage(){
     $(function()
     {
         let $table = $("#myTable").tablesorter({
-            widthFixed : true,
+            widthFixed : false,
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
                 filter_startsWith: false,
                 filter_ignoreCase: true,
-                filter_external: '#tags',
                 filter_reset: '.reset',
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
                 filter_resetOnEsc: true,
+                filter_searchFiltered: false
             }
         });
 
+        function uniq_fast(a) {
+            var seen = {};
+            var out = [];
+            var len = a.length;
+            var j = 0;
+            for(var i = 0; i < len; i++) {
+                var item = a[i];
+                if(seen[item] !== 1) {
+                    seen[item] = 1;
+                    out[j++] = item;
+                }
+            }
+            return out;
+        }
         let array = $.tablesorter.filter.getOptions($table, 4, true); // Get tags array
 
         let sorted = Array();
@@ -86,13 +96,15 @@ function showPage(){
         let y;
         for(x = 0; x < array.length; x++) {
             let tmp = array[x].trim().split(','); // Create whitespace trimmed array
-            console.log("TMP: " + tmp);
-            for(y = 0; y < tmp.length; y++) { // TODO NOT WORKING AH
-                if (tmp[y].length > 1 && array.indexOf(tmp[y]) === -1) { // Push only unique items - not functional
+            // console.log("TMP: " + tmp);
+            for(y = 0; y < tmp.length; y++) {
+                if (tmp[y].length > 1 && jQuery.inArray(tmp[y], sorted) === -1) { // Push only unique items TODO not functional
                     // sorted.push(tmp[y]);
+                    // console.log("TMP[y]: " + tmp[y]);
                     let val = tmp[y].toLowerCase().split(' ').map(function (word) {
                         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); // Capitalize first letter of each word
                     }).join(' ');
+                    // console.log("Current: " + val);
                     sorted.push(val);
                 }
             }
@@ -120,6 +132,11 @@ function showPage(){
         $.tablesorter.fixColumnWidth($table);
 
         $('.reset').click(function() {
+            // $('.extra').collapse();
+            // $(".td div", $('.extra')).hide();
+            // $('.source').next().collapse();
+            // $('.source').next().find('.content').collapse();
+
             $('table').trigger('sortReset'); // Toggle fields
             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
@@ -128,6 +145,7 @@ function showPage(){
             return false;
         });
     });
+
 }
 
 function makeTable(num){
@@ -145,35 +163,17 @@ function makeTable(num){
     let ParentItems = num.parentItem;
     let Tags = num.tags;
 
-    // let allTags = Array();
-    // allTags.push('');
     let tokenized = Array();
-
     let i;
-    let j;
 
     // TODO: look in Tablesorter API for sorting options
     // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
-        // for (j = 0; j < Tags[i].length; j++)
-        //     if (jQuery.inArray(Tags[i][j], allTags) < 0) {
-        //         allTags.push(Tags[i][j].toLowerCase().split(' ').map(function (word) {
-        //             return word.replace(word[0], word[0].toUpperCase()); // Capitalize first letter of each word
-        //         }).join(' '));
-        //     }
-
         if (Tags[i].length > 1)
             tokenized[i] = Tags[i].join(', '); //.replace(/,/g, ' | ');
         else
             tokenized[i] = '';
     }
-
-    console.log("allTags: " + allTags);
-
-    // let table = '<select>';
-    // for(i = 0; i < allTags.length; i++)
-    //     table+='<option value="' + allTags[i] + '">' + allTags[i] + '</option>';
-    // table += '</select>';
 
     // Create table headers
     let table = '<thead><tr><th>Title</th>';
@@ -215,10 +215,10 @@ function makeTable(num){
         if (Titles[i] !== "") { // Skip empty titles or attachments
             // add these in the order of the table head array
             table += '<tr class="source">';
-            table += '<td><b>' + Titles[i] + '</b></td>';
-            table += '<td>' + Authors[i] + '</td>';
-            table += '<td>' + year + '</td>';
-            table += '<td>' + Types[i] + '</td>';
+            table += '<td class="title"><b>' + Titles[i] + '</b></td>';
+            table += '<td class="author">' + Authors[i] + '</td>';
+            table += '<td class="year">' + year + '</td>';
+            table += '<td class="type">' + Types[i] + '</td>';
             table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
@@ -252,6 +252,10 @@ function makeTable(num){
     table += '</tbody>'; // close off table
     if (!validTable)
         table += '<div class="invalid"><h2>Table is empty</h2><p>Please try selecting collection again.</p></div>';
+
+    // Stop loaders
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("loader-wrapper").style.display = "none";
 
     var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
