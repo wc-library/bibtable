@@ -51,7 +51,7 @@ request.onload = function(){
 };
 
 // TODO: Request is failing in Chrome when call is async
-request.open("GET", "getData.php", false); //request info from api
+request.open("GET", "getData.php"); //, false); //request info from api
 request.send();
 
 function showPage(){
@@ -75,20 +75,6 @@ function showPage(){
             }
         });
 
-        function uniq_fast(a) {
-            var seen = {};
-            var out = [];
-            var len = a.length;
-            var j = 0;
-            for(var i = 0; i < len; i++) {
-                var item = a[i];
-                if(seen[item] !== 1) {
-                    seen[item] = 1;
-                    out[j++] = item;
-                }
-            }
-            return out;
-        }
         let array = $.tablesorter.filter.getOptions($table, 4, true); // Get tags array
 
         let sorted = Array();

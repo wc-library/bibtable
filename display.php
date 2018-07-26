@@ -1,3 +1,27 @@
+<?php
+/**
+ * Display a given collection as a table pulled from the cache
+ *
+ * Author: Jesse Tatum
+ * Date: 7/5/18
+ */
+include 'api_key.php';
+
+global $ckey;
+global $ckey_dir;
+$ckey_dir = dirname(__FILE__) . '/cachekey.txt';
+global $cache_dir;
+$cache_dir = dirname(__FILE__) . '/cachefile.json';
+
+// This script is called twice. This is minimally problematic due to caching
+// First call gets from post and second pulls from cache
+if (isset($_POST['ckey'])) {
+    $ckey = $_POST['ckey'];
+    file_put_contents($cache_dir, $ckey);
+} else
+    $ckey = file_get_contents($ckey_dir);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,8 +62,8 @@
     <div>
         <a href="collections.php">Back</a><br>
         <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-        <select id="tags" class="pull-left filter-match selectable" type="search" data-column="4" placeholder="Tags">
-            <option value="" class="filter-match search filter-onlyAvail">Tags</option>
+        <select id="tags" class="pull-left filter-match selectable filter-onlyAvail" type="search" data-column="4" placeholder="Tags">
+            <option value="">Tags</option>
         </select>
         <button type="button" class="reset">Reset Sort</button>
 
