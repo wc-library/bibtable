@@ -5,3 +5,4 @@ tablesorter-master/.eslintrc
 node_modules/*
 cachefile.json
 cachekey.txt
+*.json

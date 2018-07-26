@@ -65,9 +65,8 @@ echo "<h4 class='lead' id='user'>Username: " . $username . "</h4>";
 </div>
 
 <?php
-//require 'cachefile.json';
 // Grab collection info for user
-$response = file_get_contents('https://api.zotero.org/users/77162/collections/top', false, $context);
+$response = file_get_contents('https://api.zotero.org/users/77162/collections', false, $context);
 $jarray = json_decode($response, true); // json to array
 
 $table = parse($jarray);
@@ -79,6 +78,7 @@ function parse($jarray){
     global $items;
     global $links;
     global $subcollections;
+    global $parent;
 
     $html = '<table id="collection-table" class="table table-striped"><thead class="thead-light"><tr>' .
         '<th scope="col">Collection Name</th>' .
@@ -93,6 +93,7 @@ function parse($jarray){
         $items[$i] = $piece["meta"]["numItems"];
         $links[$i] = $piece["links"]["self"]["href"];
         $subcollections[$i] = $piece["meta"]["numCollections"];
+        $parent[$i] = $piece["data"]["parentCollection"];
 
         $html .= '</td>' . '<tr><td>' . $names[$i];
         $html .= '<td>' . $items[$i] . '</td>';
@@ -118,9 +119,10 @@ function parse($jarray){
         $('.button').click(function(e){
             e.preventDefault();
             loader.style.display = "block";
-            loaderdiv.style.display= "block";
+            loaderdiv.style.display = "block";
+
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: 'display.php',
                 data: { 'ckey': $(this).val() },
                 success: function(msg) {

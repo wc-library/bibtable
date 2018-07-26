@@ -8,18 +8,22 @@
 include 'api_key.php';
 
 global $ckey;
-global $ckey_dir;
-$ckey_dir = dirname(__FILE__) . '/cachekey.txt';
 global $cache_dir;
-$cache_dir = dirname(__FILE__) . '/cachefile.json';
 
-// This script is called twice. This is minimally problematic due to caching
-// First call gets from post and second pulls from cache
-if (isset($_POST['ckey'])) {
-    $ckey = $_POST['ckey'];
-    file_put_contents($cache_dir, $ckey);
-} else
-    $ckey = file_get_contents($ckey_dir);
+$ckey = $_GET['ckey'];
+
+$cache_dir = dirname(__FILE__) . $ckey . '.json';
+
+$opts = array(
+    'http'=>array(
+        'method'=>"GET",
+        'header'=>"Zotero-API-Key: " . $api_key
+    )
+);
+$context = stream_context_create($opts); // Create request with API key in headers
+
+// Grab User Info
+$json_response = json_decode(file_get_contents('http://localhost/getData.php', false, $context), true);
 
 ?>
 <!DOCTYPE html>
