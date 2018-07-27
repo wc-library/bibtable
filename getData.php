@@ -11,6 +11,8 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
+include 'display.php';
+
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
 
@@ -41,22 +43,18 @@ global $tags;
 $tags = array();    // Description Tags
 
 global $ckey;
-global $ckey_dir;
-$ckey_dir = dirname(__FILE__) . '/cachekey.txt';
-global $cache_dir;
-$cache_dir = dirname(__FILE__) . '/cachefile.json';
-
-
-// This script is called twice. This is minimally problematic due to caching
-// First call gets from post and second pulls from cache
-if (isset($_POST['ckey'])) {
+if(isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
-    file_put_contents($cache_dir, $ckey);
-} else
-    $ckey = file_get_contents($ckey_dir);
+else
+    $ckey = $_GET['ckey'];
+global $cache_dir;
 
-print json_cached_results(); // To export to dynData.js
+if ($ckey === null)
+    die("Error obtaining collection key. Please go back and try again.");
 
+$cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
+
+print json_cached_results();
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
@@ -268,23 +266,18 @@ function makeAllData(){
 
 function json_cached_results() {
 
-    global $ckey;
     global $cache_dir;
-    global $ckey_dir;
 
     $expires = time() - 2*60*60; // 2 hours
 
     // fopen will create or open as needed
     $cfh = fopen($cache_dir, 'wb');
-    $kfh = fopen($ckey_dir, 'wb');
 
-    $cache_key = file_get_contents($ckey_dir);
-
-    // Check if stored key matches posted key
+    // Check if cache entry exists for collection
     // Check that the file is older than the expire time and that it's not empty
-    if ($cache_key != $ckey || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
+    if (!file_exists($cache_dir) || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
 
-        // File is too old, refresh cache
+        // Refresh cache
         getApiResults();
         $api_results = json_encode(makeAllData());
 
@@ -294,8 +287,6 @@ function json_cached_results() {
         else
             fwrite($cfh, '');
 
-        // Write cache key
-        fwrite($kfh, $ckey);
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_dir));
@@ -303,7 +294,6 @@ function json_cached_results() {
 
     // Always close files
     fclose($cfh);
-    fclose($kfh);
 
     return (($api_results));
 }

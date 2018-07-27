@@ -8,7 +8,13 @@
  */
 
 var num; //holds json parsed response from server
+// var first = new XMLHttpRequest();
 var request = new XMLHttpRequest();
+var ckey = $('script[src*=dynData]').attr('data-ckey');
+
+// first.open("POST", "getData.php", false); //request info from api
+// first.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+// first.send('ckey=' + ckey);
 
 request.onload = function(){
     document.getElementById("loader").style.display = "block";
@@ -22,7 +28,8 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        num = JSON.parse(this.responseText);
+        tmp = this.responseText.split('</html>');
+        num = JSON.parse(tmp[1].trim());
         makeTable(num); // construct a table
 
         // Build table from API response
@@ -51,8 +58,9 @@ request.onload = function(){
 };
 
 // TODO: Request is failing in Chrome when call is async
-request.open("GET", "getData.php", false); //request info from api
-request.send();
+request.open("POST", "getData.php", true); //request info from api
+request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+request.send('ckey=' + ckey);
 
 function showPage(){
     document.getElementById("myTable").style.display = "block"; //displays the table
@@ -204,7 +212,12 @@ function makeTable(num){
             table += '<td class="title"><b>' + Titles[i] + '</b></td>';
             table += '<td class="author">' + Authors[i] + '</td>';
             table += '<td class="year">' + year + '</td>';
-            table += '<td class="type">' + Types[i] + '</td>';
+            table += '<td class="type">'
+            if (Types[i] !== null)
+                table += Types[i];
+            else
+                table += 'N/A';
+            table += '</td>';
             table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
