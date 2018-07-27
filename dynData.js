@@ -212,7 +212,12 @@ function makeTable(num){
             table += '<td class="title"><b>' + Titles[i] + '</b></td>';
             table += '<td class="author">' + Authors[i] + '</td>';
             table += '<td class="year">' + year + '</td>';
-            table += '<td class="type">' + Types[i] + '</td>';
+            table += '<td class="type">'
+            if (Types[i] !== null)
+                table += Types[i];
+            else
+                table += 'N/A';
+            table += '</td>';
             table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
