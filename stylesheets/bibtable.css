@@ -50,11 +50,14 @@ table {
 	width: 100% !important;
 	min-width: 100% !important;
 	max-width: 100% !important;
+	white-space: nowrap;
 }
 
-td {
+table td {
 	/*display: inline;*/
 	display: table-cell;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .tablesorter-filter {
@@ -77,16 +80,20 @@ thead {
 }
 
 .title {
-	width: 50%;
+	width: 50% !important;
+	min-width: 50% !important;
 }
 .author {
-	width: 25%;
+	width: 25% !important;
+	min-width: 25% !important;
 }
 .year {
-	width: 10%;
+	width: 10% !important;
+	min-width: 10% !important;
 }
 .type {
-	width: 15%;
+	width: 15% !important;
+	min-width: 15% !important;
 }
 
 tr [data-column="4"] {

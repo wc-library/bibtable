@@ -213,12 +213,12 @@ function makeTable(num){
             table += '<td class="author">' + Authors[i] + '</td>';
             table += '<td class="year">' + year + '</td>';
             table += '<td class="type">';
-            if (Types[i] !== null)
+            if (Types[i] !== null) // Avoid null type
                 table += Types[i];
             else
                 table += 'N/A';
             table += '</td>';
-            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>';
+            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>'; // Invisible row for sorting
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 
@@ -235,6 +235,7 @@ function makeTable(num){
             if (Attachments[i] != null && Attachments[i] !== undefined)
                 hidden += Attachments[i];
 
+            // Verify that table has meaningful contents
             if (hidden.length > 0)
                 validTable = true;
 
@@ -249,7 +250,7 @@ function makeTable(num){
 
     }
     table += '</tbody>'; // close off table
-    if (!validTable)
+    if (!validTable) // Display error message if needed
         table += '<div class="invalid"><h2>Table is empty</h2><p>Please try selecting collection again.</p></div>';
 
     // Stop loaders
