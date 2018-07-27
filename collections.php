@@ -32,34 +32,34 @@
         <h1 class="display-4" id="title">Zotero Collections</h1>
         <div>
 
-<?php
-include 'api_key.php';
-global $links;
-global $api_key;
-global $ckey;
+            <?php
+            include 'api_key.php';
+            global $links;
+            global $api_key;
+            global $ckey;
 
-if($api_key == ''){
-    echo "00";
-    exit;
-}
+            if($api_key == ''){
+                echo "00";
+                exit;
+            }
 
-$opts = array(
-    'http'=>array(
-        'method'=>"GET",
-        'header'=>"Zotero-API-Key: " . $api_key
-    )
-);
-$context = stream_context_create($opts); // Create request with API key in headers
+            $opts = array(
+                'http'=>array(
+                    'method'=>"GET",
+                    'header'=>"Zotero-API-Key: " . $api_key
+                )
+            );
+            $context = stream_context_create($opts); // Create request with API key in headers
 
-// Grab User Info
-$userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context), true);
-$username = $userInfo["username"];
+            // Grab User Info
+            $userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context), true);
+            $username = $userInfo["username"];
 
-echo "<h4 class='lead' id='user'>Username: " . $username . "</h4>";
+            echo "<h4 class='lead' id='user'>Username: " . $username . "</h4>";
 
-?>
+            ?>
+        </div>
     </div>
-</div>
 </div>
 <div class="loader">
 </div>
@@ -121,21 +121,21 @@ function parse($jarray){
             loader.style.display = "block";
             loaderdiv.style.display = "block";
 
-            $.ajax({
-                type: "GET",
-                url: 'display.php',
-                data: { 'ckey': $(this).val() },
-                success: function(msg) {
-                    console.log(msg);
-                    loader.style.display = "none";
-                    loaderdiv.style.display= "none";
-                    window.location.replace('display.php');
-                },
-                error: function(error){
-                    window.location.href = "collections.php";
-                    alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
-                }
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: 'display.php',
+            //     data: { 'ckey': $(this).val() },
+            //     success: function(msg) {
+            // console.log(msg);
+            loader.style.display = "none";
+            loaderdiv.style.display= "none";
+            window.location.replace('display.php?ckey=' + $(this).val());
+            // },
+            // error: function(error){
+            // window.location.href = "collections.php";
+            //     alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
+            // }
+            // });
         });
     });
 

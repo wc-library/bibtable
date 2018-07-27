@@ -9,6 +9,7 @@
 
 var num; //holds json parsed response from server
 var request = new XMLHttpRequest();
+var ckey = $('script[src*=dynData]').attr('data-ckey');
 
 request.onload = function(){
     document.getElementById("loader").style.display = "block";
@@ -51,8 +52,9 @@ request.onload = function(){
 };
 
 // TODO: Request is failing in Chrome when call is async
-request.open("GET", "getData.php"); //, false); //request info from api
-request.send();
+request.open("POST", "getData.php", false); //request info from api
+request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+request.send('ckey=' + ckey);
 
 function showPage(){
     document.getElementById("myTable").style.display = "block"; //displays the table

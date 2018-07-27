@@ -6,25 +6,6 @@
  * Date: 7/5/18
  */
 include 'api_key.php';
-
-global $ckey;
-global $cache_dir;
-
-$ckey = $_GET['ckey'];
-
-$cache_dir = dirname(__FILE__) . $ckey . '.json';
-
-$opts = array(
-    'http'=>array(
-        'method'=>"GET",
-        'header'=>"Zotero-API-Key: " . $api_key
-    )
-);
-$context = stream_context_create($opts); // Create request with API key in headers
-
-// Grab User Info
-$json_response = json_decode(file_get_contents('http://localhost/getData.php', false, $context), true);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,17 +14,17 @@ $json_response = json_decode(file_get_contents('http://localhost/getData.php', f
 
     <meta charset="UTF-8">
 
-	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="stylesheets/bibtable.css">
-	<link rel="stylesheet" type="text/css" href="tablesorter-master/css/theme.default.css">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/bibtable.css">
+    <link rel="stylesheet" type="text/css" href="tablesorter-master/css/theme.default.css">
 
-	<!-- jQuery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-	<!-- tablesorter -->
-	<script src="tablesorter-master/js/jquery.tablesorter.js"></script>
-	<script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
+    <!-- tablesorter -->
+    <script src="tablesorter-master/js/jquery.tablesorter.js"></script>
+    <script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
 
     <!-- ui theme stylesheet  -->
     <link rel="stylesheet" href="tablesorter-master/css/theme.jui.css">
@@ -63,26 +44,48 @@ $json_response = json_decode(file_get_contents('http://localhost/getData.php', f
 </head>
 <body>
 <h1 class="page-header">Bibtable</h1>
-    <div>
-        <a href="collections.php">Back</a><br>
-        <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-        <select id="tags" class="pull-left filter-match selectable filter-onlyAvail" type="search" data-column="4" placeholder="Tags">
-            <option value="">Tags</option>
-        </select>
-        <button type="button" class="reset">Reset Sort</button>
+<div>
+    <a href="collections.php">Back</a><br>
+    <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
+    <select id="tags" class="pull-left filter-match selectable filter-onlyAvail" type="search" data-column="4" placeholder="Tags">
+        <option value="">Tags</option>
+    </select>
+    <button type="button" class="reset">Reset Sort</button>
 
-    </div>
+</div>
 
-    <div id='loader-wrapper'>
-        <div id='loader'></div>
-    </div>
+<div id='loader-wrapper'>
+    <div id='loader'></div>
+</div>
 
-    <div id="api_key_error">
-        <h2 style="text-align:center; color: grey;" id="api_error"></h2>
-    </div>
+<div id="api_key_error">
+    <h2 style="text-align:center; color: grey;" id="api_error"></h2>
+</div>
 
-    <table style="display:none;" id="myTable" class="tablesorter" ></table>
-    <script type="text/javascript" src="dynData.js"></script>
+<table style="display:none;" id="myTable" class="tablesorter" ></table>
+<!--    <script type="text/javascript" src="dynData.js"></script>-->
 
 </body>
 </html>
+
+<?php
+global $ckey;
+global $cache_dir;
+
+$ckey = $_GET['ckey'];
+
+$cache_dir = dirname(__FILE__) . '/' . $ckey . '.json';
+
+$opts = array(
+    'http'=>array(
+        'method'=>"GET",
+//        'header'=>"Zotero-API-Key: " . $api_key,
+        'content' => $ckey
+    )
+);
+$context = stream_context_create($opts); // Create request with API key in headers
+
+// Grab User Info
+echo '<script type="text/javascript" data-ckey="' . $ckey . '" src="dynData.js"></script>';
+
+?>
