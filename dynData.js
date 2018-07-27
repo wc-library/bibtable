@@ -51,7 +51,7 @@ request.onload = function(){
 };
 
 // TODO: Request is failing in Chrome when call is async
-request.open("GET", "getData.php"); //, false); //request info from api
+request.open("GET", "getData.php", false); //request info from api
 request.send();
 
 function showPage(){

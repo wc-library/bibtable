@@ -121,13 +121,14 @@ function parse($jarray){
             loaderdiv.style.display= "block";
             $.ajax({
                 type: "POST",
-                url: 'display.php',
+                url: 'getData.php',
                 data: { 'ckey': $(this).val() },
                 success: function(msg) {
                     console.log(msg);
                     loader.style.display = "none";
                     loaderdiv.style.display= "none";
-                    window.location.replace('display.php');
+                    window.location.replace('display.html');
+                    $.getScript('dynData.js');
                 },
                 error: function(error){
                     window.location.href = "collections.php";
