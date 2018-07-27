@@ -8,8 +8,13 @@
  */
 
 var num; //holds json parsed response from server
+// var first = new XMLHttpRequest();
 var request = new XMLHttpRequest();
 var ckey = $('script[src*=dynData]').attr('data-ckey');
+
+// first.open("POST", "getData.php", false); //request info from api
+// first.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+// first.send('ckey=' + ckey);
 
 request.onload = function(){
     document.getElementById("loader").style.display = "block";
@@ -23,8 +28,9 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        num = JSON.parse(this.responseText);
-        makeTable(num); // construct a table
+        console.log("Response text: " + this.responseText);
+        // num = JSON.parse(this.responseText);
+        // makeTable(num); // construct a table
 
         // Build table from API response
         $(function(){
@@ -52,7 +58,7 @@ request.onload = function(){
 };
 
 // TODO: Request is failing in Chrome when call is async
-request.open("POST", "getData.php", false); //request info from api
+request.open("POST", "getData.php", true); //request info from api
 request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 request.send('ckey=' + ckey);
 

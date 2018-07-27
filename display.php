@@ -6,6 +6,13 @@
  * Date: 7/5/18
  */
 include 'api_key.php';
+
+global $ckey;
+$ckey = $_GET['ckey'];
+
+// Grab User Info
+//echo '<script type="text/javascript" data-ckey="' . $ckey . '" src="dynData.js"></script>';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,29 +70,8 @@ include 'api_key.php';
 </div>
 
 <table style="display:none;" id="myTable" class="tablesorter" ></table>
-<!--    <script type="text/javascript" src="dynData.js"></script>-->
+<script type="text/javascript" data-ckey="<?php echo $ckey ?>" src="dynData.js"></script>
 
 </body>
 </html>
 
-<?php
-global $ckey;
-global $cache_dir;
-
-$ckey = $_GET['ckey'];
-
-$cache_dir = dirname(__FILE__) . '/' . $ckey . '.json';
-
-$opts = array(
-    'http'=>array(
-        'method'=>"GET",
-//        'header'=>"Zotero-API-Key: " . $api_key,
-        'content' => $ckey
-    )
-);
-$context = stream_context_create($opts); // Create request with API key in headers
-
-// Grab User Info
-echo '<script type="text/javascript" data-ckey="' . $ckey . '" src="dynData.js"></script>';
-
-?>

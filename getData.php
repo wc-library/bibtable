@@ -43,7 +43,10 @@ global $tags;
 $tags = array();    // Description Tags
 
 global $ckey;
-$ckey = $_POST['ckey'];
+if(isset($_POST['ckey']))
+    $ckey = $_POST['ckey'];
+else
+    $ckey = $_GET['ckey'];
 global $cache_dir;
 
 if ($ckey === null)
@@ -51,7 +54,7 @@ if ($ckey === null)
 
 $cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
 
-return json_cached_results();
+print json_cached_results();
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
