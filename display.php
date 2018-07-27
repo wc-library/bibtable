@@ -10,9 +10,6 @@ include 'api_key.php';
 global $ckey;
 $ckey = $_GET['ckey'];
 
-// Grab User Info
-//echo '<script type="text/javascript" data-ckey="' . $ckey . '" src="dynData.js"></script>';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

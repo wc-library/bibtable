@@ -50,7 +50,7 @@ else
 global $cache_dir;
 
 if ($ckey === null)
-    die("BROKEN");
+    die("Error obtaining collection key. Please go back and try again.");
 
 $cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
 

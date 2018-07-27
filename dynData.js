@@ -28,9 +28,9 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        console.log("Response text: " + this.responseText);
-        // num = JSON.parse(this.responseText);
-        // makeTable(num); // construct a table
+        tmp = this.responseText.split('</html>');
+        num = JSON.parse(tmp[1].trim());
+        makeTable(num); // construct a table
 
         // Build table from API response
         $(function(){
