@@ -63,13 +63,13 @@ request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 request.send('ckey=' + ckey);
 
 function showPage(){
-    document.getElementById("myTable").style.display = "block"; //displays the table
+    document.getElementById("myTable").style.display = "table"; //displays the table
 
     // Initialize tablesorter
     $(function()
     {
         let $table = $("#myTable").tablesorter({
-            widthFixed : true,
+            widthFixed : false,
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
