@@ -15,13 +15,14 @@
 	padding:4px 4px!important;
 	background-color: #F8F8F8;
 	border-left:3px solid #ccc!important;
-	/*width: 100% !important;*/
-	/*min-width: 100%;*/
-	overflow-wrap: break-word;
-	word-wrap: break-word;
+	width: 1256px;
+	min-width: 100%;
+	/* overflow-wrap: break-word; */
+	/* word-wrap: break-word; */
 }
 
 .extra .a {
+	width: 100%;
 	word-break: break-word;
 	-ms-hyphens: auto;
 	-moz-hyphens: auto;
@@ -46,10 +47,10 @@
 }
 
 table td {
-	/*display: inline;*/
-	display: table-cell;
-	/*overflow: hidden;*/
-	/*white-space: nowrap;*/
+	/* display: inline; */
+	/* display: table-cell; */
+	/* overflow: hidden; */
+	word-wrap: break-word;
 }
 
 .tablesorter-filter {
@@ -67,6 +68,9 @@ a {
 	margin: 5px 5px 5px 5px;
 }
 
+table {
+	border-collapse: unset !important;
+}
 thead {
 	font-size: 1.15em;
 }
