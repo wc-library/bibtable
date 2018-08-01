@@ -54,7 +54,7 @@ table {
 }
 
 table td {
-	/*display: inline;*/
+	display: inline;
 	display: table-cell;
 	overflow: hidden;
 	white-space: nowrap;

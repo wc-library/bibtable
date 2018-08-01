@@ -69,7 +69,7 @@ function showPage(){
     $(function()
     {
         let $table = $("#myTable").tablesorter({
-            widthFixed : false,
+            widthFixed : true,
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
@@ -225,7 +225,7 @@ function makeTable(num){
             // this constructs the hidden div but does not yet add it to the table
             let hidden = '<div class="extra content " id="' + i + '" style="display: none;">';
             if (Abstracts[i] !== "" && Abstracts[i] !== undefined) {
-                hidden += '<p><strong> Abstract</strong>: ' + Abstracts[i] + '</p>';
+                hidden += '<p><strong> Abstract: </strong>  ' + Abstracts[i] + '</p>';
             }
             if (URLs[i] !== "") {
                 hidden += '<p><strong>Link: </strong><a href="' + URLs[i] + '" target="_blank">' + URLs[i] + '</a></p>';

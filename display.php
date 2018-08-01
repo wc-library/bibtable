@@ -51,8 +51,8 @@ $ckey = $_GET['ckey'];
 <div>
     <a href="collections.php">Back</a><br>
     <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-    <select id="tags" class="pull-left filter-match selectable filter-onlyAvail" type="search" data-column="4" placeholder="Tags">
-        <option value="">Tags</option>
+    <select id="tags" class="selectpicker pull-left filter-match" data-live-search="true" type="search" data-column="4" placeholder="Tags">
+        <option value="" data-live-search="true">Tags</option>
     </select>
     <button type="button" class="reset">Reset Sort</button>
 
@@ -66,7 +66,7 @@ $ckey = $_GET['ckey'];
     <h2 style="text-align:center; color: grey;" id="api_error"></h2>
 </div>
 
-<table style="display:none;" id="myTable" class="tablesorter" ></table>
+<table style="display:none; table-layout:fixed;" id="myTable" class="tablesorter" ></table>
 <script type="text/javascript" data-ckey="<?php echo $ckey ?>" src="dynData.js"></script>
 
 </body>
