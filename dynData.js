@@ -117,9 +117,14 @@ function showPage(){
                 return 0;
         });
 
-        for(x=0; x < array.length; x++)
-            $('#tags').append('<option>' + sorted[x] + '</option>');
-        console.log(sorted);
+        var used = [];
+        for(x = 0; x < sorted.length; x++) {
+            tmp = used[sorted[x]];
+            if(tmp !== true)
+                $('#tags').append('<option>' + sorted[x] + '</option>');
+            used[sorted[x]] = true;
+        }
+        // console.log(sorted);
 
         $.tablesorter.filter.bindSearch($table, $('#tags'));
         $.tablesorter.filter.bindSearch($table, $('.search'));
