@@ -25,6 +25,7 @@ $ckey = $_GET['ckey'];
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+
     <!-- tablesorter -->
     <script src="tablesorter-master/js/jquery.tablesorter.js"></script>
     <script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
@@ -41,6 +42,9 @@ $ckey = $_GET['ckey'];
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+    <!-- Bootstrap-select -->
+    <script src="node_modules/bootstrap-select/js/bootstrap-select.js"
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/bibtable.css">
@@ -51,7 +55,7 @@ $ckey = $_GET['ckey'];
 <div>
     <a href="collections.php">Back</a><br>
     <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-    <select id="tags" class="selectpicker pull-left filter-match" data-live-search="true" data-width="fit" type="search" data-column="4" placeholder="Tags">
+    <select id="tags" class="pull-left filter-match" data-live-search="true" data-width="fit" type="search" data-column="4" placeholder="Tags">
         <option value="" data-live-search="true">Tags</option>
     </select>
     <button type="button" class="reset">Reset Sort</button>
@@ -68,7 +72,6 @@ $ckey = $_GET['ckey'];
 
 <table style="display:none; table-layout:fixed;" id="myTable" class="tablesorter" ></table>
 <script type="text/javascript" data-ckey="<?php echo $ckey ?>" src="dynData.js"></script>
-
 </body>
 </html>
 
