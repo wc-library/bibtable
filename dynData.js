@@ -28,7 +28,7 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        tmp = this.responseText.split('</html>');
+        tmp = this.responseText.split('</html>'); // Split source from PHP file
         num = JSON.parse(tmp[1].trim());
         makeTable(num); // construct a table
 
@@ -63,13 +63,13 @@ request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 request.send('ckey=' + ckey);
 
 function showPage(){
-    document.getElementById("myTable").style.display = "table"; //displays the table
+    document.getElementById("myTable").style.display = "table"; // Displays the table as a table
 
     // Initialize tablesorter
     $(function()
     {
         let $table = $("#myTable").tablesorter({
-            widthFixed : false,
+            widthFixed : false, // Allow for table-fixed to work in bibtable.css
             widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
@@ -92,23 +92,17 @@ function showPage(){
             let tmp = array[x].trim().split(','); // Create whitespace trimmed array
             // console.log("TMP: " + tmp);
             for(y = 0; y < tmp.length; y++) {
-                if (tmp[y].length > 1 && jQuery.inArray(tmp[y], sorted) === -1) { // Push only unique items TODO not functional
-                    // sorted.push(tmp[y]);
-                    // console.log("TMP[y]: " + tmp[y]);
+                if (tmp[y].length > 1 && jQuery.inArray(tmp[y], sorted) === -1) {
                     let val = tmp[y].toLowerCase().split(' ').map(function (word) {
                         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); // Capitalize first letter of each word
                     }).join(' ');
-                    // console.log("Current: " + val);
                     sorted.push(val);
                 }
             }
         }
 
-        // Sort items ignoring case
+        // Sort items ignoring case (already normalized)
         sorted.sort(function (a, b){
-            // a = a.toString().toLowerCase(); // Normalized cases before sort
-            // b = b.toString().toLowerCase();
-
             if (a < b)
                 return -1;
             else if (b < a)
@@ -118,10 +112,10 @@ function showPage(){
         });
 
         var used = [];
-        for(x = 0; x < sorted.length; x++) {
+        for(x = 0; x < sorted.length; x++) { // Go through list of used keys to avoid duplicates
             tmp = used[sorted[x]];
             if(tmp !== true)
-                $('#tags').append('<option>' + sorted[x] + '</option>');
+                $('#tags').append('<option>' + sorted[x] + '</option>'); // Add unique keys to Tags dropdown
             used[sorted[x]] = true;
         }
         // console.log(sorted);
