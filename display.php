@@ -50,7 +50,7 @@ $ckey = $_GET['ckey'];
         <select id="tags" class="pull-left filter-match multiple form-control mb-2 mr-sm-2 mb-sm-0" data-width="fit" type="search" data-column="4">
             <option value="">Tags</option>
         </select>
-        <button type="button" class="reset btn btn-primary">Reset Sort</button>
+        <button type="button" class="reset btn">Reset Sort</button>
     </div>
 </div>
 
