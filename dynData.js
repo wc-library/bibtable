@@ -157,11 +157,10 @@ function makeTable(num){
     let tokenized = Array();
     let i;
 
-    // TODO: look in Tablesorter API for sorting options
     // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
         if (Tags[i].length > 1)
-            tokenized[i] = Tags[i].join(', '); //.replace(/,/g, ' | ');
+            tokenized[i] = Tags[i].join(', ');
         else
             tokenized[i] = '';
     }
@@ -241,7 +240,7 @@ function makeTable(num){
                 constructT(Places[i], "") + constructT(ISBN[i], "<b>ISBN</b>: ") + '</div>';
 
             table += hidden;
-            table += '</tr></td>';
+            table += '</td></tr>';
         }
         i++;
 
