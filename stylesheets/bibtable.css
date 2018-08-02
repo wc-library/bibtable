@@ -42,6 +42,10 @@
 	position: relative;
 }
 
+#tags {
+	width: 225px;
+}
+
 .page-header {
 	margin-left: 10px !important;
 }
