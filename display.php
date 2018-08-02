@@ -30,20 +30,12 @@ $ckey = $_GET['ckey'];
     <script src="tablesorter-master/js/jquery.tablesorter.js"></script>
     <script type="application/javascript" src="tablesorter-master/js/jquery.tablesorter.widgets.js"></script>
 
-    <!-- ui theme stylesheet  -->
-    <link rel="stylesheet" href="tablesorter-master/css/theme.jui.css">
-    <!-- jQuery UI theme  -->
-    <!--<link rel="stylesheet" href="tablesorter-master/docs/css/jquery-ui.min.css/">-->
-
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Bootstrap-select -->
-    <script src="node_modules/bootstrap-select/js/bootstrap-select.js"
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -54,12 +46,15 @@ $ckey = $_GET['ckey'];
 <h1 class="page-header">Bibtable</h1>
 <div>
     <a href="collections.php">Back</a><br>
-    <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-    <select id="tags" class="pull-left filter-match" data-live-search="true" data-width="fit" type="search" data-column="4" placeholder="Tags">
-        <option value="" data-live-search="true">Tags</option>
-    </select>
-    <button type="button" class="reset">Reset Sort</button>
 
+    <div class="form-inline">
+        <input class="search pull-left form-control" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
+        <select id="tags" class="pull-left filter-match multiple form-control mb-2 mr-sm-2 mb-sm-0" data-width="fit" type="search" data-column="4">
+            <option value="">Tags</option>
+        </select>
+        <button type="button" class="reset btn btn-primary">Reset Sort</button>
+
+    </div>
 </div>
 
 <div id='loader-wrapper'>
