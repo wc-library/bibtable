@@ -16,6 +16,8 @@ $ckey = $_GET['ckey'];
     <title>Bibtable</title>
 
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="tablesorter-master/css/theme.default.css">
