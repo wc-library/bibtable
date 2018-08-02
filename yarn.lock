@@ -35,6 +35,10 @@ php@^0.0.1:
     "2kenizer" "*"
     sjs "*"
 
+popper.js@^1.14.3:
+  version "1.14.3"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.3.tgz#1438f98d046acf7b4d78cd502bf418ac64d4f095"
+
 sjs@*:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/sjs/-/sjs-0.0.3.tgz#38cb101cfbe57b7f6aaee70062d5b59f8f9b0273"

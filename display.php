@@ -1,16 +1,3 @@
-<?php
-/**
- * Display a given collection as a table pulled from the cache
- *
- * Author: Jesse Tatum
- * Date: 7/5/18
- */
-include 'api_key.php';
-
-global $ckey;
-$ckey = $_GET['ckey'];
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
