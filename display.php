@@ -45,16 +45,19 @@ $ckey = $_GET['ckey'];
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/bibtable.css">
 
+    <!-- Bootstrap-select -->
+    <script src="node_modules/bootstrap-select/js/bootstrap-select.js"></script>
+
 </head>
 <body>
 <h1 class="page-header">Bibtable</h1>
 <div>
     <a href="collections.php">Back</a><br>
     <input class="search pull-left" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
-    <select id="tags" class="selectpicker pull-left filter-match" data-live-search="true" data-width="fit" type="search" data-column="4" placeholder="Tags">
+    <select id="tags" class="pull-left filter-match" data-live-search="true" data-width="fit" type="search" data-column="4" placeholder="Tags">
         <option value="" data-live-search="true">Tags</option>
     </select>
-    <button type="button" class="reset">Reset Sort</button>
+    <button type="button" class="reset">Reset Table</button>
 
 </div>
 

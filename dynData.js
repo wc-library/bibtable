@@ -8,13 +8,8 @@
  */
 
 var num; //holds json parsed response from server
-// var first = new XMLHttpRequest();
 var request = new XMLHttpRequest();
 var ckey = $('script[src*=dynData]').attr('data-ckey');
-
-// first.open("POST", "getData.php", false); //request info from api
-// first.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-// first.send('ckey=' + ckey);
 
 request.onload = function(){
     document.getElementById("loader").style.display = "block";
@@ -49,18 +44,23 @@ request.onload = function(){
         });
 
         // Reveal hidden div with abstracts and links
-        $(".source").click(function(event) {
-            // $(this).find(".extra").hide();
+        $(".source").click(function() {
             $(this).next().slideToggle(300);
             $(this).next().find('.content').slideToggle(300);
         });
+
+        $("#tags").click(function (e){
+            e.stopPropagation();
+            $('.tablesorter-childRow:visible').hide();
+            $('.content').hide();
+        })
     }
 };
 
 // TODO: Request is failing in Chrome when call is async
 request.open("POST", "getData.php", true); //request info from api
-request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-request.send('ckey=' + ckey);
+request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // Encode URL (https)
+request.send('ckey=' + ckey); // Send with collection key
 
 function showPage(){
     document.getElementById("myTable").style.display = "table"; // Displays the table as a table
@@ -83,14 +83,13 @@ function showPage(){
             }
         });
 
-        let array = $.tablesorter.filter.getOptions($table, 4, true); // Get tags array
+        let array = $.tablesorter.filter.getOptions($table, 4, true); // Get tags array (data-column 4)
 
         let sorted = Array();
         let x;
         let y;
         for(x = 0; x < array.length; x++) {
             let tmp = array[x].trim().split(','); // Create whitespace trimmed array
-            // console.log("TMP: " + tmp);
             for(y = 0; y < tmp.length; y++) {
                 if (tmp[y].length > 1 && jQuery.inArray(tmp[y], sorted) === -1) {
                     let val = tmp[y].toLowerCase().split(' ').map(function (word) {
@@ -118,22 +117,21 @@ function showPage(){
                 $('#tags').append('<option>' + sorted[x] + '</option>'); // Add unique keys to Tags dropdown
             used[sorted[x]] = true;
         }
-        // console.log(sorted);
 
+        // Bind searches to element
         $.tablesorter.filter.bindSearch($table, $('#tags'));
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
 
         $('.reset').click(function() {
-            // $('.extra').collapse();
-            // $(".td div", $('.extra')).hide();
-            // $('.source').next().collapse();
-            // $('.source').next().find('.content').collapse();
+            // Hide expanded childRow divs
+            $('.tablesorter-childRow:visible').hide();
+            $('.content').hide();
 
-            $('table').trigger('sortReset'); // Toggle fields
+            $('table').trigger('sortReset'); // Reset input fields
             $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
-            $('#tags')[0].selectedIndex = 0;
+            $('#tags')[0].selectedIndex = 0; // Tags dropdown
 
             return false;
         });
