@@ -47,13 +47,14 @@
                 exit;
             }
 
+            // Create request context with API key in headers
             $opts = array(
                 'http'=>array(
                     'method'=>"GET",
                     'header'=>"Zotero-API-Key: " . $api_key
                 )
             );
-            $context = stream_context_create($opts); // Create request with API key in headers
+            $context = stream_context_create($opts);
 
             // Grab User Info
             $userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api_key, false, $context), true);
@@ -71,11 +72,15 @@
 <?php
 // Grab collection info for user
 $response = file_get_contents('https://api.zotero.org/users/77162/collections', false, $context);
-$jarray = json_decode($response, true); // json to array
+$jarray = json_decode($response, true); // JSON to array
 
 $table = parse($jarray);
 echo $table;
 
+/*
+ * Parses the JSON array returned from collections in the Zotero API
+ * and returns a formatted table with links to the collections
+ */
 function parse($jarray){
     global $keys;
     global $names;
@@ -84,12 +89,14 @@ function parse($jarray){
     global $subcollections;
     global $parent;
 
+    // Create table
     $html = '<table id="collection-table" class="table table-striped"><thead class="thead-light"><tr>' .
         '<th scope="col">Collection Name</th>' .
         '<th scope="col">Items</th>' .
         '<th scope="col">Sub-collections</th>' .
         '<th scope="col">Link</th></tr></thead><tbody>';
 
+    // Loop through array and pull desired values
     $i = 0;
     foreach ($jarray as $piece) {
         $names[$i] = $piece["data"]["name"];

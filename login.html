@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" id="html">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -28,7 +28,7 @@
 <body>
 
 <div class="container">
-    <form name="login">
+    <form name="login" action="login.php" method="POST">
         <div class="form-group">
             <label for="user">Username or User ID</label>
             <input type="text" id="user" class="form-control" placeholder="Username or User ID" required><br>
@@ -39,7 +39,7 @@
             <small id="apiHelp" class="form-text text-muted">This needs to be generated from your <a href="https://www.zotero.org/settings/keys">Zotero</a> account.  </small>
 
         </div>
-        <button type="submit" class="btn btn-primary formbtn" type="submit" id="formbtn">Submit</button>
+        <button type="submit" class="btn btn-primary formbtn" id="formbtn">Submit</button>
     </form>
 </div>
 
@@ -61,16 +61,12 @@
             }
 
             $.ajax({
-                async: false,
-                type: "GET",
+                type: "POST",
                 url: 'login.php',
                 data: {user: user, api: api},
                 complete: function(jqXHR, data) {
                     console.log("Data: " + data);
-                    if(jqXHR.responseText === 'true') {
-                        console.log("TRUE EVAL");
-                        window.location.replace("collections.php");
-                    }
+                    console.log("Response: " + jqXHR.responseText);
                 },
                 error: function(jqXHR, textStatus, errorThrown, data){
                     console.log("XHR: " + JSON.stringify(jqXHR));

@@ -8,11 +8,11 @@
  * that doesn't necessitate a database.
  */
 
-if (count($_GET) <= 1) // Don't run until POST with credentials
+if (count($_POST) <= 1) // Don't run until POST with credentials
     return false;
 
-$user = $_GET['user'];
-$api = $_GET['api'];
+$user = $_POST['user'];
+$api = $_POST['api'];
 
 // Try to use API key
 $opts = array(
@@ -34,13 +34,20 @@ if (json_last_error() == JSON_ERROR_NONE){ // If valid, grab ID and username
 // Check values
 if ($user == $username || $user == $userID) {
 
-    // Writing to api_key.php is equivalent to creating a session
+    // Writing to api_key.php is equivalent to creating a session for a SINGLE USER
+    // TODO: Should be switched to cookies
+    //    $cookie_name = $user;
+    //    $cookie_val = $api;
+    //    setcookie($cookie_name, $cookie_val);
+
     $dir = dirname(__FILE__) . '/api_key.php';
     $fh = fopen($dir, 'w+');
     if($fh == false)
         print(error_get_last());
+
     fwrite($fh,'<?php $api_key = ' . $api . '?>');
-    echo 'true';
+
+//    echo '<script> window.location.replace("collections.php");</script>';
     return true;
 } else
     return false;
