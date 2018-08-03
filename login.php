@@ -11,6 +11,7 @@
 if (count($_POST) <= 1) // Don't run until POST with credentials
     return false;
 
+// Grab posted data
 $user = $_POST['user'];
 $api = $_POST['api'];
 

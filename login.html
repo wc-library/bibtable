@@ -60,7 +60,7 @@
                 return; // Don't submit incomplete form
             }
 
-            $.ajax({
+            $.ajax({ // Post input data to login.php for verification and ideally a redirect
                 type: "POST",
                 url: 'login.php',
                 data: {user: user, api: api},
