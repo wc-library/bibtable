@@ -55,18 +55,27 @@
             console.log("User: " + user);
             console.log("API: " + api);
 
-            if(user === '' || api === '')
+            if(user === '' || api === '') {
                 alert("Please fill out both fields");
+                return; // Don't submit incomplete form
+            }
 
             $.ajax({
-                type: "POST",
+                async: false,
+                type: "GET",
                 url: 'login.php',
                 data: {user: user, api: api},
-                complete: function(data, textStatus) {
-                    if (data.redirect)
-                        window.location.href = data.redirect;
-                    else
-                        console.log("no redirect");
+                complete: function(jqXHR, data) {
+                    console.log("Data: " + data);
+                    if(jqXHR.responseText === 'true') {
+                        console.log("TRUE EVAL");
+                        window.location.replace("collections.php");
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown, data){
+                    console.log("XHR: " + JSON.stringify(jqXHR));
+                    console.log("textStatus: " + textStatus);
+                    console.log("Error thrown: " + errorThrown);
                 }
             })
         });

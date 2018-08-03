@@ -8,11 +8,11 @@
  * that doesn't necessitate a database.
  */
 
-if (count($_POST) <= 1) // Don't run until POST with credentials
+if (count($_GET) <= 1) // Don't run until POST with credentials
     return false;
 
-$user = $_POST['user'];
-$api = $_POST['api'];
+$user = $_GET['user'];
+$api = $_GET['api'];
 
 // Try to use API key
 $opts = array(
@@ -33,28 +33,15 @@ if (json_last_error() == JSON_ERROR_NONE){ // If valid, grab ID and username
 
 // Check values
 if ($user == $username || $user == $userID) {
-    //login
-//        make_session($user, $api);
 
     // Writing to api_key.php is equivalent to creating a session
     $dir = dirname(__FILE__) . '/api_key.php';
     $fh = fopen($dir, 'w+');
+    if($fh == false)
+        print(error_get_last());
     fwrite($fh,'<?php $api_key = ' . $api . '?>');
-    header("Location: collections.php");
+    echo 'true';
     return true;
 } else
     return false;
 
-//function make_session($user, $api){
-//    session_start();
-//    $_SESSION['user'] = $user;
-//    $_SESSION['password'] = $api;
-//}
-//
-//function destroy_session(){
-//    if(isset($_SESSION['user']))
-//        unset($_SESSION['user']);
-//    if(isset($_SESSION['password']))
-//        unset($_SESSION['password']);
-//    session_destroy();
-//}
