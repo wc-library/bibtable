@@ -38,9 +38,7 @@
 
             <?php
             include 'api_key.php';
-            global $links;
-            global $api_key;
-            global $ckey;
+            global $links, $api_key, $ckey, $start;
 
             if($api_key == ''){
                 echo "00";
@@ -70,11 +68,20 @@
 </div>
 
 <?php
-// Grab collection info for user
-$response = file_get_contents('https://api.zotero.org/users/77162/collections', false, $context);
-$jarray = json_decode($response, true); // JSON to array
+// Grab all collection info for user
+$start = 0;
+while(true) { // Run until break
 
-$table = parse($jarray);
+    $response = file_get_contents('https://api.zotero.org/users/77162/collections?limit=100', false, $context);
+    $jarray = json_decode($response, true); // JSON to array
+
+    $table .= parse($jarray);
+
+    if(count($jarray) < 100) // Stop loop if current is less than limit
+        break;
+    $start+=100;
+}
+
 echo $table;
 
 /*
