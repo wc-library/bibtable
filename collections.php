@@ -69,6 +69,7 @@
 
 <?php
 // Grab all collection info for user
+// TODO has not been tested with over 100 collections
 $start = 0;
 while(true) { // Run until break
 
@@ -103,6 +104,7 @@ function parse($jarray){
         '<th scope="col">Sub-collections</th>' .
         '<th scope="col">Link</th></tr></thead><tbody>';
 
+    $rows = Array();
     // Loop through array and pull desired values
     $i = 0;
     foreach ($jarray as $piece) {
@@ -113,14 +115,31 @@ function parse($jarray){
         $subcollections[$i] = $piece["meta"]["numCollections"];
         $parent[$i] = $piece["data"]["parentCollection"];
 
-        $html .= '</td>' . '<tr><td>' . $names[$i];
-        $html .= '<td>' . $items[$i] . '</td>';
-        $html .= '<td>' . $subcollections[$i] . '</td>';
-        $html .= '<td><form method="post">' .
+        $row = '<tr id="' . $keys[$i] . '">';
+        $row .= '<td>' . $names[$i] . '</td>';
+        $row .= '<td>' . $items[$i] . '</td>';
+        $row .= '<td>' . $subcollections[$i] . '</td>';
+        $row .= '<td><form method="post">' .
             '<button type="submit" class="button btn btn-primary" value="' . $keys[$i] .
             '">View table</button></form></td></tr>';
+        $rows[$i] = $row;
+        $html .= $row;
         $i++;
     }
+
+//    for($j = 0; $j < count($rows); $j++){
+//        if ($subcollections[$j] != 0){
+//            $length = $subcollections[$j];
+//            for($k = 0; $k < $length; $k++){
+//                if($parent[$k] == $keys[$j]){
+//                    $rows[$j] += $rows[$k];
+//                    $rows[$k] = '';
+//                }
+//            }
+//        }
+//        $html .= $rows[$j];
+//    }
+
     $html .= "</tbody><div id='loader-wrapper'><div id='loader'></div></div></table>";
     return $html;
 }
