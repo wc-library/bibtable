@@ -8,55 +8,53 @@
  * that doesn't necessitate a database.
  */
 
-include 'api_key.php';
-
 if (count($_POST) <= 1) // Don't run until POST with credentials
     return false;
 
 $user = $_POST['user'];
 $api = $_POST['api'];
 
+// Try to use API key
 $opts = array(
     'http'=>array(
         'method'=>"GET",
-        'header'=>"Zotero-API-Key: " . $api_key
+        'header'=>"Zotero-API-Key: " . $api
     )
 );
 $context = stream_context_create($opts); // Create request with API key in headers
 
 // Grab User Info
 $userInfo = json_decode(file_get_contents('https://api.zotero.org/keys/' . $api, false, $context), true);
-if (json_last_error() == JSON_ERROR_NONE){
+if (json_last_error() == JSON_ERROR_NONE){ // If valid, grab ID and username
     $username = $userInfo["username"];
     $userID = $userInfo["userID"];
-} else
-    handleError("Invalid API key");
+} else                                      // Otherwise the API key given is wrong
+    return false;
 
 // Check values
 if ($user == $username || $user == $userID) {
-    if ($api == $api_key) {
-        //login
-        make_session($user, $api);
-        echo '<script> window.location.href = "collections.php";</script>';
-        header("Location: collections.php");
-        exit();
-    }
-}
+    //login
+//        make_session($user, $api);
 
-function handleError($msg){
-    die("Error: " . $msg);
-}
+    // Writing to api_key.php is equivalent to creating a session
+    $dir = dirname(__FILE__) . '/api_key.php';
+    $fh = fopen($dir, 'w+');
+    fwrite($fh,'<?php $api_key = ' . $api . '?>');
+    header("Location: collections.php");
+    return true;
+} else
+    return false;
 
-function make_session($user, $api){
-    session_start();
-    $_SESSION['user'] = $user;
-    $_SESSION['password'] = $api;
-}
-
-function destroy_session(){
-    if(isset($_SESSION['user']))
-        unset($_SESSION['user']);
-    if(isset($_SESSION['password']))
-        unset($_SESSION['password']);
-    session_destroy();
-}
+//function make_session($user, $api){
+//    session_start();
+//    $_SESSION['user'] = $user;
+//    $_SESSION['password'] = $api;
+//}
+//
+//function destroy_session(){
+//    if(isset($_SESSION['user']))
+//        unset($_SESSION['user']);
+//    if(isset($_SESSION['password']))
+//        unset($_SESSION['password']);
+//    session_destroy();
+//}

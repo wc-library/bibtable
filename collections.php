@@ -115,31 +115,12 @@ function parse($jarray){
 </body>
 <script type="application/javascript">
 
-    let loader = document.getElementById("loader");
-    let loaderdiv = document.getElementById("loader-wrapper");
-    loader.style.display="none";
-
     $(document).ready(function(){
         $('.button').click(function(e){
             e.preventDefault();
-            loader.style.display = "block";
-            loaderdiv.style.display = "block";
 
-            // $.ajax({
-            //     type: "POST",
-            //     url: 'display.php',
-            //     data: { 'ckey': $(this).val() },
-            //     success: function(msg) {
-            // console.log(msg);
-            loader.style.display = "none";
-            loaderdiv.style.display= "none";
+            // Redirect to display with collection key
             window.location.replace('display.php?ckey=' + $(this).val());
-            // },
-            // error: function(error){
-            // window.location.href = "collections.php";
-            //     alert("Error loading table. Please try again.\nError details: " + JSON.stringify(error));
-            // }
-            // });
         });
     });
 
