@@ -70,7 +70,7 @@ function showPage(){
     {
         let $table = $("#myTable").tablesorter({
             widthFixed : false, // Allow for table-fixed to work in bibtable.css
-            widgets: ["zebra", "filter", "pager"], // Color code even and odd rows, add search boxes
+            widgets: ["zebra", "filter"], // Color code even and odd rows, add search boxes
             widget_options: {
                 filter_childRows: false,
                 filter_startsWith: false,
@@ -122,6 +122,8 @@ function showPage(){
         $.tablesorter.filter.bindSearch($table, $('#tags'));
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
+
+        // Set Year tag to automatically filter
 
         $('.reset').click(function() {
             // Hide expanded childRow divs
