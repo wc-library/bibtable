@@ -102,6 +102,7 @@ function parse($jarray){
         '<th scope="col">Collection Name</th>' .
         '<th scope="col">Items</th>' .
         '<th scope="col">Sub-collections</th>' .
+        '<th scope="col">Parent</th>' .
         '<th scope="col">Link</th></tr></thead><tbody>';
 
     $rows = Array();
@@ -119,6 +120,7 @@ function parse($jarray){
         $row .= '<td>' . $names[$i] . '</td>';
         $row .= '<td>' . $items[$i] . '</td>';
         $row .= '<td>' . $subcollections[$i] . '</td>';
+        $row .= '<td>' . $parent[$i] . '</td>';
         $row .= '<td><form method="post">' .
             '<button type="submit" class="button btn btn-primary" value="' . $keys[$i] .
             '">View table</button></form></td></tr>';
