@@ -123,6 +123,10 @@ function showPage(){
         $.tablesorter.filter.bindSearch($table, $('.search'));
         $.tablesorter.fixColumnWidth($table);
 
+        // To set default sort on Year
+        // $('.tablesorter-header th [data-column="2"]').addClass('tablesorter-headerAsc');
+        // console.log($('.tablesorter-header th [data-column="2"]'));
+
         // Set Year tag to automatically filter
 
         $('.reset').click(function() {
@@ -257,6 +261,7 @@ function makeTable(num){
 
     var mainTable = document.getElementById('myTable'); // get the table named "myTable"
     mainTable.innerHTML +=table; // add table to html page
+
 }
 
 /**
