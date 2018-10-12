@@ -79,7 +79,10 @@ function showPage(){
                 filter_searchDelay : 200,
                 filter_saveFilters : true,
                 filter_resetOnEsc: true,
-                filter_searchFiltered: false
+                filter_searchFiltered: false,
+                filter_defaultFilter: {
+                    '.year': 'tablesorter-headerDesc'
+                }
             }
         });
 
@@ -124,10 +127,8 @@ function showPage(){
         $.tablesorter.fixColumnWidth($table);
 
         // To set default sort on Year
-        // $('.tablesorter-header th [data-column="2"]').addClass('tablesorter-headerAsc');
-        // console.log($('.tablesorter-header th [data-column="2"]'));
-
-        // Set Year tag to automatically filter
+        // $('th .tablesorter-header [data-column="2"]').click();
+        // console.log($('th .tablesorter-header [data-column="2"]'));
 
         $('.reset').click(function() {
             // Hide expanded childRow divs
@@ -174,7 +175,7 @@ function makeTable(num){
     // Create table headers
     let table = '<thead><tr><th>Title</th>';
     table += '<th>Author</th>';
-    table += '<th>Year</th>';
+    table += '<th class="year">Year</th>';
     table += '<th class="filter-select filter-onlyAvail">Type</th>';
     table += '<th style="display: none;"></th>';
     table += '</tr></thead><tbody>';
