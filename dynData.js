@@ -146,6 +146,8 @@ function showPage(){
 
 }
 
+
+
 function makeTable(num){
     // Create single-dimensional arrays from JSON
     let Authors = num.creators;
@@ -160,6 +162,7 @@ function makeTable(num){
     let Keys = num.keys;
     let ParentItems = num.parentItem;
     let Tags = num.tags;
+    let Publication = num.publication;
 
     let tokenized = Array();
     let i;
@@ -172,14 +175,15 @@ function makeTable(num){
             tokenized[i] = '';
     }
 
+
     // Create table headers
     let table = '<thead><tr><th>Title</th>';
     table += '<th>Author</th>';
+    table += '<th> Publication</th>';
     table += '<th class="year">Year</th>';
-    table += '<th class="filter-select filter-onlyAvail">Type</th>';
-    table += '<th style="display: none;"></th>';
+    table += '<th class="filter-select">Tags</th>';
     table += '</tr></thead><tbody>';
-
+    //filter-onlyAvail
     i = 0;
     let size = Titles.length;
 
@@ -214,14 +218,18 @@ function makeTable(num){
             table += '<tr class="source">';
             table += '<td class="title"><b>' + Titles[i] + '</b></td>';
             table += '<td class="author">' + Authors[i] + '</td>';
+            table += '<td class="publication ">' + Publication[i] + '</td>';
             table += '<td class="year">' + year + '</td>';
-            table += '<td class="type">';
-            if (Types[i] !== null) // Avoid null type
-                table += Types[i];
-            else
-                table += 'N/A';
-            table += '</td>';
-            table += '<td style="display: none;">' + tokenized[i] + '</td></tr>'; // Invisible row for sorting
+
+            // table += '<td class="type">';
+           
+            // if (Types[i] !== null) // Avoid null type
+            //     table += Types[i];
+            // else
+            //     table += 'N/A';
+            // table += '</td>';
+            table += '<td class="tags">' + tokenized[i] + '</td></tr>'; // Invisible row for sorting
+            
 
             table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
 

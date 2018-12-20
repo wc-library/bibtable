@@ -41,6 +41,8 @@ global $parentItem; // ParentItems
 $parentItem = array();
 global $tags;
 $tags = array();    // Description Tags
+global $publication;
+$publication = array(); //publication title for articles
 
 global $ckey;
 if(isset($_POST['ckey']))
@@ -102,6 +104,7 @@ function parseFields($data, $offset){
     global $keys;       // Keys
     global $parentItem; // ParentItems
     global $tags;       // Item tags
+    global $publication; //publication titles for journal articles
 
 
 
@@ -180,6 +183,7 @@ function parseFields($data, $offset){
         $isbns[$i + $offset] = checknStore("ISBN", $scope);
         $abstracts[$i + $offset] = checknStore("abstractNote", $scope);
         $urls[$i + $offset] = checknStore("url", $scope);
+        $publication[$i + $offset] = checknStore("publicationTitle", $scope);
         $i++;
     }
 }
@@ -245,6 +249,7 @@ function makeAllData(){
     global $urls;
     global $parentItem;
     global $tags;
+    global $publication;
 
     $allData = new stdClass();
     $allData->keys = $keys;
@@ -259,6 +264,7 @@ function makeAllData(){
     $allData->abstracts = $abstracts;
     $allData->parentItem = $parentItem;
     $allData->tags = $tags;
+    $allData->publication = $publication;
 
     return ($allData);
 }

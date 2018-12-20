@@ -76,8 +76,8 @@ thead {
 }
 
 .title {
-	width: 50% !important;
-	min-width: 50% !important;
+	width: 35% !important;
+	min-width: 35% !important;
 }
 .author {
 	width: 25% !important;
@@ -87,17 +87,21 @@ thead {
 	width: 10% !important;
 	min-width: 10% !important;
 }
-.type {
+.tags {
+	width: 15% !important;
+	min-width: 15% !important;
+}
+.publication {
 	width: 15% !important;
 	min-width: 15% !important;
 }
 
-tr [data-column="4"] {
+/*tr [data-column="4"] {
 	display: none;
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	border: 0;
-}
+}*/
 
 #loader-wrapper {
 	top: 0;
