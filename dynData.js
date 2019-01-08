@@ -182,7 +182,7 @@ function makeTable(num){
     table += '<th>Author</th>';
     table += '<th> Publication/Publisher</th>';
     table += '<th class="year">Year</th>';
-    table += '<th class="filter-select">Tags</th>';
+    table += '<th class="tags">Tags</th>';
     table += '</tr></thead><tbody>';
     //filter-onlyAvail
     i = 0;
@@ -241,7 +241,7 @@ function makeTable(num){
             table += '<td class="tags">' + tokenized[i] + '</td></tr>'; // Invisible row for sorting
             
 
-            table += '<tr class="extra tablesorter-childRow"><td colspan="4">';
+            table += '<tr class="extra tablesorter-childRow"><td colspan="5">';
 
             // this constructs the hidden div but does not yet add it to the table
             let hidden = '<div class="extra content " id="' + i + '" style="display: none;">';
