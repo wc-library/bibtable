@@ -69,7 +69,7 @@ function getApiResults(){
     $start = 0;
     while(true) { // Run until break
 
-        $data = 'https://api.zotero.org/users/77162/collections/'. $ckey  . '/items?key=' . $api_key .
+        $data = 'https://api.zotero.org/groups/2264127/collections/'. $ckey  . '/items?key=' . $api_key .
             '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object

@@ -73,7 +73,7 @@
 $start = 0;
 while(true) { // Run until break
 
-    $response = file_get_contents('https://api.zotero.org/users/77162/collections?limit=100', false, $context);
+    $response = file_get_contents('https://api.zotero.org/groups/2264127/collections?limit=100', false, $context);
     $jarray = json_decode($response, true); // JSON to array
 
     $table .= parse($jarray);

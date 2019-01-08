@@ -163,6 +163,7 @@ function makeTable(num){
     let ParentItems = num.parentItem;
     let Tags = num.tags;
     let Publication = num.publication;
+    let Pub = "";
 
     let tokenized = Array();
     let i;
@@ -179,7 +180,7 @@ function makeTable(num){
     // Create table headers
     let table = '<thead><tr><th>Title</th>';
     table += '<th>Author</th>';
-    table += '<th> Publication</th>';
+    table += '<th> Publication/Publisher</th>';
     table += '<th class="year">Year</th>';
     table += '<th class="filter-select">Tags</th>';
     table += '</tr></thead><tbody>';
@@ -215,10 +216,19 @@ function makeTable(num){
 
         if (Titles[i] !== "") { // Skip empty titles or attachments
             // add these in the order of the table head array
+
+            if(Publication[i] !== null && Publication[i] !== ''){
+                Pub = Publication[i];
+            }else if(Publishers[i] !== null && Publishers[i] !== ''){
+                Pub = Publishers[i];
+            }else {
+                Pub = "";
+            }
+
             table += '<tr class="source">';
             table += '<td class="title"><b>' + Titles[i] + '</b></td>';
             table += '<td class="author">' + Authors[i] + '</td>';
-            table += '<td class="publication ">' + Publication[i] + '</td>';
+            table += '<td class="publication ">' + Pub + '</td>';
             table += '<td class="year">' + year + '</td>';
 
             // table += '<td class="type">';
