@@ -92,7 +92,7 @@ function showPage(){
         let x;
         let y;
         for(x = 0; x < array.length; x++) {
-            let tmp = array[x].trim().split(','); // Create whitespace trimmed array
+            let tmp = array[x].trim().split(';'); // Create whitespace trimmed array
             for(y = 0; y < tmp.length; y++) {
                 if (tmp[y].length > 1 && jQuery.inArray(tmp[y], sorted) === -1) {
                     let val = tmp[y].toLowerCase().split(' ').map(function (word) {
@@ -171,7 +171,7 @@ function makeTable(num){
     // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
         if (Tags[i].length > 1)
-            tokenized[i] = Tags[i].join(', ');
+            tokenized[i] = Tags[i].join('; ');
         else
             tokenized[i] = '';
     }
