@@ -135,8 +135,8 @@ function showPage(){
             $('.tablesorter-childRow:visible').hide();
             $('.content').hide();
 
-            $('table').trigger('sortReset'); // Reset input fields
-            $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
+            $('table').trigger('filterAndSortReset'); // Reset input fields
+            // $('.tablesorter-filter-row [data-column="3"] .tablesorter-filter')[0].selectedIndex = 0; // Type field
             $('.search').val(""); // Search all box
             $('#tags')[0].selectedIndex = 0; // Tags dropdown
 

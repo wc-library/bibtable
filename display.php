@@ -47,11 +47,18 @@ $ckey = $_GET['ckey'];
 <div>
     <a href="collections.php">Back</a><br>
     <div class="form-inline">
-        <input class="search pull-left form-control" type="search" id="search" data-column="all" placeholder="Search all" autocomplete="on">
+        <div class="form-group">
+        <input class="search pull-left form-control" type="search" id="search" data-column="all" placeholder="Search all fields" autocomplete="on">
+        </div>
+        <div class="form-group">
       <select id="tags" class="pull-left filter-match multiple form-control mb-2 mr-sm-2 mb-sm-0" data-width="fit" type="search" data-column="4">
-            <option value="">Tags</option>
-        </select> 
-        <button type="button" class="reset btn">Reset Sort</button>
+            <option value="">Filter
+            by Tags</option>
+        </select>
+        </div> 
+        <div class="form-group">
+        <button type="button" class="reset btn-default btn">Reset Sorting and Searches</button>
+    </div>
     </div>
 </div>
 
