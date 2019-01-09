@@ -170,7 +170,7 @@ function makeTable(num){
 
     // Split Tags into a sanitized array with all items and a tokenized string separated by commas
     for(i = 0; i < Tags.length; i++) {
-        if (Tags[i].length > 1)
+        if (Tags[i].length >= 1)
             tokenized[i] = Tags[i].join('; ');
         else
             tokenized[i] = '';
