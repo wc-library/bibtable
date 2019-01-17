@@ -1,155 +1,306 @@
 <?php
 
 /**
-* This  defines methods for parsing data from the Zotero API
-* The set up bassically keep the fields in arrays for easy access
-* If one has the index of all one of the fields, i.e title, the the 
-* index can be applied for other fields that are associated with the 
-* title. There is some unused space in the arrays for some empty fields
-* but this is less of the usual case. Well, I hope. Also, I dont know how to 
-* document in php. Forgivenesss!!!
-*
-* publicationarray[index][somekey][possible value or even array] is the struction of the api return
-*
-*@author Robin Kelmen <robin.kelmen@my.wheaton.edu>
-*/
-$dataNum = 100; // the limit of sources we want to pull
-$start = 99;
-$data = 'https://api.zotero.org/users/77162/collections/89F8HEPX/items?key=&format=json&limit='. $dataNum .'&start=' . $start; // the link to zotero api
-var_dump($data);
-$response = file_get_contents($data); // pulls in the data 
-$info = json_decode($response, true); // decodes jason and creates an object
+ * This script is designed to create a request to the Zotero API and
+ * parse the fields and store them in arrays for easy access.
+ *
+ * The arrays are then sent as JSON to dynData.js for the table creation.
+ * Results are cached to speed load time with a cache expiry time of 2 hours.
+ *
+ *
+ *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
+ */
+include 'api_key.php';
+include 'display.php';
 
+$limit = 100; // the limit of sources we want to pull. This is the max supported by the API
+$start = 0;
 
-$itemTypes = array();//getDataField($info, "itemType");
-$titles = array();//getDataField($info, "title");
-$shortTitles = array();
-$creators = array();//getDataField($info, "creators");
-$dates = array();//getDataField($info,"date");
-$places = array();//getDataField($info,"place");
-$publisher = array();//getDataField($info,"publisher");
-$isbns = array();//getDataField($info,"ISBN");
-$abstracts = array();//getDataField($info, "abstractNote");
-$urls = array(); //getDataField($info, "url");
+// Corresponding name in dynData.js
+global $creators;   // Authors
+$creators = array();
+global $titles;     // Titles
+$titles = array();
+global $isbns;      // ISBNs
+$isbns = array();
+global $itemtypes;  // Types
+$itemtypes = array();
+global $dates ;     // Dates
+$dates = array();
+global $publishers; // Publishers
+$publishers = array();
+global $places;     // Places
+$places = array();
+global $abstracts;  // Abstracts
+$abstracts = array();
+global $urls;       // URL links
+$urls = array();
+global $keys;       // Keys
+$keys = array();
+global $parentItem; // ParentItems
+$parentItem = array();
+global $tags;
+$tags = array();    // Description Tags
+global $publication;
+$publication = array(); //publication title for articles
 
-getClassicFields($info);
-var_dump($itemTypes);
-var_dump($titles);
-var_dump($shortTitles);
-var_dump($creators);
-var_dump($dates);
-var_dump($places);
-var_dump($publisher);
-var_dump($isbns);
-var_dump($abstracts);
-var_dump($urls);
+global $ckey;
+if(isset($_POST['ckey']))
+    $ckey = $_POST['ckey'];
+else
+    $ckey = $_GET['ckey'];
+global $cache_dir;
 
+if ($ckey === null)
+    die("Error obtaining collection key. Please go back and try again.");
 
-/**
-* Searches Through the data field finds fields within data
-* Can be used to return  itemTypes, version, key, title, and creators 
-* in an indexed array
-* 
-*@param data the object to search, 
-*@param field the field (within the data key) of the object to seach
-*@return returnField the the field requested in an indexed array
-*/
-function getDataField($data, $field){
-	$returnField= array();
-	$i = 0;
-	foreach ($data as $work) {
-		$scope = $work["data"];
-		if(array_key_exists($field, $scope))
-			$returnField[$i] = $scope[$field];
-		else
-			$returnField[$i] = "not";
-		$i++;
+$cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
 
-	}
+print json_cached_results();
 
-	var_dump($returnField);
-	return $returnField;
+// Pull all data from Zotero. This (with parsing) is the biggest bottleneck
+function getApiResults(){
+    global $limit, $api_key, $start, $ckey;
+    if($api_key == ''){
+        echo "00";
+        exit;
+    }
+
+    $start = 0;
+    while(true) { // Run until break
+
+        $data = 'https://api.zotero.org/groups/2264127/collections/'. $ckey  . '/items?key=' . $api_key .
+            '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
+        $response = file_get_contents($data); // pulls in the data
+        $info = json_decode($response, true); // decodes json and creates an object
+        parseFields($info, $start);
+
+        if(count($info) < 100) // Stop loop if current is less than limit
+            break;
+        $start+=100;
+    }
 }
 
 /**
-* Searches the whole object for the given field
-* for any publication, is faster because it does loops once for all the publications 
-* 
-*
-*@param data the whole json array or associative entries e.g "key": "value" or "key" : array {...}
-*@param field the field being sought or key
-*@return returnField an indexed array of the requested field
-*/
-function getClassicFields($data){
-	$i = 0;
-	global $itemTypes;
-	global $titles;
-	global $shortTitles;
-	global $creators;
-	global $dates;
-	global $places;
-	global $publisher;
-	global $isbns;
-	global $abstracts;
-	global $urls;
+ * Searches the whole object for the given field
+ * for any publication,  can return an indexed array of
+ * the fields
+ *
+ *@param data the whole json array or associative entries e.g "key": "value" or "key" : array {...}
+ *@param field the field being sought or key
+ */
+function parseFields($data, $offset){
 
-	foreach ($data as $work) {
-		$scope = $work["data"];
+    // Remind globals
+    global $creators;   // Authors
+    global $titles;     // Titles
+    global $isbns;      // ISBNs
+    global $itemtypes;  // Types
+    global $dates ;     // Dates
+    global $publishers; // Publishers
+    global $places;     // Places
+    global $abstracts;  // Abstracts
+    global $urls;       // URL links
+    global $keys;       // Keys
+    global $parentItem; // ParentItems
+    global $tags;       // Item tags
+    global $publication; //publication titles for journal articles
 
-		if(array_key_exists("itemType", $scope))
-			$itemTypes[$i] = $scope["itemType"];
-		else
-			$itemTypes[$i] = "not";
 
-		if(array_key_exists("title", $scope))
-			$titles[$i] = $scope["title"];
-		else
-			$titles[$i] = "not";
 
-		if(array_key_exists("shortTitle", $scope))
-			$shortTitles[$i] = $scope["shortTitle"];
-		else
-			$shortTitles[$i] = "not";
+    //look through all the data
+    $i = 0;
+    foreach ($data as $work) {
 
-		if(array_key_exists("creators", $scope))
-			$creators[$i] = $scope["creators"];
-		else
-			$creators[$i] = "not";
+        $keys[$i + $offset] = $work["key"]; // Guaranteed value
 
-		if(array_key_exists("date", $scope))
-			$dates[$i] = $scope["date"];
-		else
-			$dates[$i] = "not";
+        if(isset($work["data"]["parentItem"]))
+            $parentItem[$i + $offset] = $work["data"]["parentItem"];
+        else
+            $parentItem[$i + $offset] = ""; // Empty string to avoid null
 
-		if(array_key_exists("place", $scope))
-			$places[$i] = $scope["place"];
-		else
-			$places[$i] = "not";
 
-		if(array_key_exists("publisher", $scope))
-			$publishers[$i] = $scope["publisher"];
-		else
-			$publishers[$i] = "not";
+        $scope = $work["data"];
 
-		if(array_key_exists("ISBN", $scope))
-			$isbns[$i] = $scope["ISBN"];
-		else
-			$isbns[$i] = "not";
+        // this handled this way because the creators data comes in different formats
+        $authorString = "";
+        if(array_key_exists("creators", $scope) && array_key_exists("creators", $scope) != NULL){
 
-		if(array_key_exists("abstractNote", $scope))
-			$abstracts[$i] = $scope["abstractNote"];
-		else
-			$abstracts[$i] = "not";
+            $len = count($scope["creators"]); // length of creators array
+            // will hold the string of creators built up by the while loop
+            $counter = 0; // counts up the number of creators in the creators array
 
-		if(array_key_exists("url", $scope))
-			$urls[$i] = $scope["url"];
-		else
-			$urls[$i] = "not";
+            if($len > 1){ // We will need to loop through all creators
+                /* loop invariant, counter is current creator,
+                at end of loop, the counter will be at the last creators position
+                this will help with formatting
+                */
+                do {
+                    if(isset($scope["creators"][$counter]["firstName"] )){ // check if key is set
+                        $authorString = $authorString . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"] . "; "; // the .; is a format from the old broken zotero parser
+                    }
+                    else{
+                        $authorString = $authorString . $scope["creators"][$counter]["name"] . ".; ";
+                    }
 
-		$i++;
-	}
+                    $counter++; // increase counter, to get to next position
+                } while($counter < $len-1 );
+                //at the end of the loop we now hold the postion of last creator,
+                //unfortunately, at this moment there are lots of if blocks, but .... parsing is like this
+                if($len > 1) {
+                    if (isset($scope["creators"][$counter]["firstName"])) {
+                        $authorString = $authorString . "and " . $scope["creators"][$counter]["firstName"] . " " . $scope["creators"][$counter]["lastName"];
+                    } else {
+                        $authorString = $authorString . "and " . $scope["creators"][$counter]["name"];
+                    }
+                }
+            } else if ($len == 1) {
+                if (isset($scope["creators"][$counter]["firstName"]))// check if key is set
+                    $authorString = $authorString . $scope["creators"][0]["firstName"] . " " . $scope["creators"][$counter]["lastName"]; // the .; is a format from the old broken zotero parser
+                else
+                    $authorString = $authorString . $scope["creators"][0]["name"];
+            }
+        }
+        // Grab array of associated tags or empty string
+        if (isset($scope["tags"]) && count($scope["tags"]) > 0) {
+            $j = 0;
+            $content = array();
+            while (isset($scope["tags"][$j]["tag"])){
+                $content[$j] = $scope["tags"][$j]["tag"];
+                $j++;
+            }
+            $tags[$i + $offset] = $content;
+        } else
+            $tags[$i + $offset] = "";
 
+        // Store all items
+        $creators[$i + $offset] = $authorString;
+        $itemtypes[$i + $offset] = itemT( "itemType", $scope);
+        $titles[$i + $offset] = checknStore( "title", $scope);
+        $dates[$i + $offset] = checknStore("date", $scope);
+        $places[$i + $offset] = checknStore("place", $scope);
+        $publishers[$i + $offset] = checknStore("publisher", $scope);
+        $isbns[$i + $offset] = checknStore("ISBN", $scope);
+        $abstracts[$i + $offset] = checknStore("abstractNote", $scope);
+        $urls[$i + $offset] = checknStore("url", $scope);
+        $publication[$i + $offset] = checknStore("publicationTitle", $scope);
+        $i++;
+    }
 }
 
-echo count($info);
+/**
+ * This is a helper method for isolating a field
+ * it helps reduce clutter in the getClassicFields
+ * basically checks if key exists because some json objects
+ * don't have the field, e.g URLs
+ * @param String string - The string that is the key to the value we are looking for e.g creators => "Jane Deer"
+ * @param ArrayObject scope - The scope of our search, certain fields occur within objects within objects
+ */
+function checknStore($string, $scope){
+
+    // Store key if found
+    if(array_key_exists($string, $scope) && $scope[$string] != null)
+        return $scope[$string];
+    else
+        return  "";
+}
+
+/*
+* This method is similar to the checkNStore, except it works on itemtypes
+* The items associative array maps a key which is an item type and
+* returns the same item type in a better format
+* @param The string that is the key to the value we are looking for e.g creators => "Jane Deer"
+* @param The scope of our search, certain fields occur within objects within objects
+*/
+function itemT($string, $scope){
+
+    $items = array(
+        "journalArticle" => "Journal Article",
+        "book" => "Book",
+        "document" => "Document",
+        "attachment" => "Attachment",
+        "webpage" => "Web Page",
+        "bookSection" => "Book Section",
+        "thesis" => "Thesis",
+        "blogPost" => "Blog Post",
+        "magazineArticle" =>"Magazine Article",
+        "conferencePaper" => "Conference Paper"
+    );
+
+    if(array_key_exists($string, $scope) && $scope[$string] != null)
+        return $items[$scope[$string]];
+    else
+        return "";
+}
+
+//$allData = (object) array();
+function makeAllData(){
+
+    // Remind PHP of globals
+    global $keys;
+    global $itemtypes;
+    global $titles;
+    global $creators;
+    global $dates;
+    global $places;
+    global $publishers;
+    global $isbns;
+    global $abstracts;
+    global $urls;
+    global $parentItem;
+    global $tags;
+    global $publication;
+
+    $allData = new stdClass();
+    $allData->keys = $keys;
+    $allData->creators = $creators;
+    $allData->itemtypes = $itemtypes;
+    $allData->titles = $titles;
+    $allData->dates = $dates;
+    $allData->places = $places;
+    $allData->publishers = $publishers;
+    $allData->isbns = $isbns;
+    $allData->urls = $urls;
+    $allData->abstracts = $abstracts;
+    $allData->parentItem = $parentItem;
+    $allData->tags = $tags;
+    $allData->publication = $publication;
+
+    return ($allData);
+}
+
+
+function json_cached_results() {
+
+    global $cache_dir;
+
+    $expires = time() - 2*60*60; // 2 hours
+
+    // fopen will create or open as needed
+    $cfh = fopen($cache_dir, 'wb');
+
+    // Check if cache entry exists for collection
+    // Check that the file is older than the expire time and that it's not empty
+    if (!file_exists($cache_dir) || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
+
+        // Refresh cache
+        getApiResults();
+        $api_results = json_encode(makeAllData());
+
+        // Write back to cache if results are valid
+        if ($api_results != null && $api_results != '')
+            fwrite($cfh, $api_results);
+        else
+            fwrite($cfh, '');
+
+    } else {
+        // Fetch cache
+        $api_results = (file_get_contents($cache_dir));
+    }
+
+    // Always close files
+    fclose($cfh);
+
+    return (($api_results));
+}
 ?>
