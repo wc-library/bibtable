@@ -43,9 +43,9 @@ $ckey = $_GET['ckey'];
 
 </head>
 <body>
-<h1 class="page-header">Bibtable</h1>
+<h1 class="hidden">Bibtable</h1>
+<br/>
 <div>
-    <a href="collections.php">Back</a><br>
     <div class="form-inline">
         <div class="form-group">
         <input class="search pull-left form-control" type="search" id="search" data-column="all" placeholder="Search all fields" autocomplete="on">

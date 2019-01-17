@@ -121,9 +121,11 @@ function parse($jarray){
         $row .= '<td>' . $items[$i] . '</td>';
         $row .= '<td>' . $subcollections[$i] . '</td>';
         $row .= '<td>' . $parent[$i] . '</td>';
-        $row .= '<td><form method="post">' .
-            '<button type="submit" class="button btn btn-primary" value="' . $keys[$i] .
-            '">View table</button></form></td></tr>';
+        $row .= '<td><form class="form-inline btn-toolbar">' .
+            '<button type="button" class="button btn btn-primary form-group button-display" value="' . $keys[$i] .
+            '">View table</button><button type="button" class="button btn btn-primary form-group button-iframe" value="' . $keys[$i] .
+            '">Get iframe</button></form></td></tr>';
+
         $rows[$i] = $row;
         $html .= $row;
         $i++;
@@ -151,12 +153,19 @@ function parse($jarray){
 <script type="application/javascript">
 
     $(document).ready(function(){
-        $('.button').click(function(e){
+        $('.button-display').click(function(e){
             e.preventDefault();
 
             // Redirect to display with collection key
-            window.location.replace('display.php?ckey=' + $(this).val());
+            window.open('/display.php?ckey=' + $(this).val());
         });
+        $('.button-iframe').click(function(e){
+            e.preventDefault();
+
+            //Redirect to display iframe link
+
+            alert('<iframe src="//'+window.location.hostname+'/display.php?ckey=' + $(this).val()+'" width="100%" height="99%"/>');
+        })
     });
 
 </script>
