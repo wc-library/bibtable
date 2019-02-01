@@ -57,20 +57,18 @@ if ($ckey === null)
 $cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
 
 if(isset($_POST['refresh'])){
-    $cache_is_stale = $_POST['refresh'] == 'true' ? true : false;
+    $cache_is_stale = $_POST['refresh'];
 }
 else if(isset($_GET['refresh'])){
-    $cache_is_stale = $_GET['refresh'] == 'true' ? true : false;
+    $cache_is_stale = $_GET['refresh'];
 }
 else {
     $cache_is_stale = false;
 }
 // error_log('cache status: '. var_dump($cache_is_stale));
 if (!$cache_is_stale){
-    error_log('cache was not stale');
     print json_cached_results();
 } else {
-    error_log('cache was stale');
     // The following section is to send a quick response so it doesn't wait for the full cache refresh
     // Start 
     ob_start();
@@ -336,19 +334,14 @@ function writeCache() {
 
 function refreshCache(){
     global $ckey;
-    error_log($ckey);
 
     $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "?refresh='true'&ckey=".$ckey;
-    error_log($url);
 
     $result = file_get_contents($url);
     if ($result === FALSE) { 
         error_log('Something went wrong while requesting the cache to be refreshed.');
     } else {
         error_log('refresh cache request accepted');
-        error_log("$result");
-        error_log("$options");
-        error_log("var_dump($context)");
     }
 }
 
