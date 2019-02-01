@@ -23,8 +23,9 @@ request.onload = function(){
             die("Api_key Issue");
         }
 
-        tmp = this.responseText.split('</html>'); // Split source from PHP file
-        num = JSON.parse(tmp[1].trim());
+        tmp = this.responseText; // Split source from PHP file
+        console.log(tmp); 
+        num = JSON.parse(tmp);
         makeTable(num); // construct a table
 
         // Build table from API response
