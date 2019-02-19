@@ -108,6 +108,7 @@ function parse($jarray){
     $rows = Array();
     // Loop through array and pull desired values
     $i = 0;
+    $host = gethostname();
     foreach ($jarray as $piece) {
         $names[$i] = $piece["data"]["name"];
         $keys[$i] = $piece["data"]["key"];
@@ -123,9 +124,27 @@ function parse($jarray){
         $row .= '<td>' . $parent[$i] . '</td>';
         $row .= '<td><form class="form-inline btn-toolbar">' .
             '<button type="button" class="button btn btn-primary form-group button-display" value="' . $keys[$i] .
-            '">View table</button><button type="button" class="button btn btn-primary form-group button-iframe" value="' . $keys[$i] .
+            '">View table</button><button type="button" class="button btn btn-primary form-group button-iframe" data-toggle="modal" data-target="#Modal' . $i . '" value="' . $keys[$i] .
             '">Get iframe</button></form></td></tr>';
+        
+        $row .='    <div class="modal fade" id="Modal' . $i . '" role="dialog">
+            <div class="modal-dialog">
 
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">iframe</h4>
+                </div>
+                <div class="modal-body">
+                <p>&ltiframe src="//' . $host. '/display.php?ckey=' . $keys[$i] . '" width="100%" height="99%"/&gt"</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            
+            </div>
+        </div>';
         $rows[$i] = $row;
         $html .= $row;
         $i++;
@@ -159,13 +178,15 @@ function parse($jarray){
             // Redirect to display with collection key
             window.open('/display.php?ckey=' + $(this).val());
         });
-        $('.button-iframe').click(function(e){
-            e.preventDefault();
+        //$('.button-iframe').click(function(e){
+        //    e.preventDefault();
 
             //Redirect to display iframe link
 
-            alert('<iframe src="//'+window.location.hostname+'/display.php?ckey=' + $(this).val()+'" width="100%" height="99%"/>');
-        })
+        //    alert('<iframe src="//'+window.location.hostname+'/display.php?ckey=' + $(this).val()+'" width="100%" height="99%"/>');
+            
+            
+        //})
     });
 
 </script>
