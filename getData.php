@@ -11,7 +11,7 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
-include 'display.php';
+// include 'display.php';
 
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
@@ -56,7 +56,42 @@ if ($ckey === null)
 
 $cache_dir = dirname(__FILE__) . '/cache/' . $ckey . '.json';
 
-print json_cached_results();
+if(isset($_POST['refresh'])){
+    $cache_is_stale = $_POST['refresh'];
+}
+else if(isset($_GET['refresh'])){
+    $cache_is_stale = $_GET['refresh'];
+}
+else {
+    $cache_is_stale = false;
+}
+// error_log('cache status: '. var_dump($cache_is_stale));
+if (!$cache_is_stale){
+    print json_cached_results();
+} else {
+    // The following section is to send a quick response so it doesn't wait for the full cache refresh
+    // Start 
+    ob_start();
+    // Send your response. Irrelevant as the refreshCache() function doesn't return anything. 
+    print "Received request for cache refresh";
+    // Get the size of the output.
+    $size = ob_get_length();
+    // Disable compression (in case content length is compressed).
+    header("Content-Encoding: none");
+    // Set the content length of the response.
+    header("Content-Length: {$size}");
+    // Close the connection.
+    header("Connection: close");
+    // Flush all output.
+    ob_end_flush();
+    ob_flush();
+    flush();
+    // Close current session (if it exists).
+    if(session_id()) session_write_close();
+
+    // Do the actual work of updating the requested cache
+    writeCache(); 
+}
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
@@ -269,6 +304,46 @@ function makeAllData(){
     return ($allData);
 }
 
+function writeCache() {
+//TODO: This function shouldn't keep the cache file open so long
+    // Idea one: get the api_results first and then open the file for writing
+    // Idea two: write to a temp file and then copy it into the cache file aftewards. 
+    global $cache_dir;
+
+    // fopen will create or open as needed
+    // we only open it for writing after we know we'll need 
+    // to write to the file (otherwise it's 0 when we check for size)
+    $cfh = fopen($cache_dir, 'wb');
+
+    // Refresh cache
+    getApiResults();
+    $api_results = json_encode(makeAllData()); 
+
+    // Write back to cache if results are valid
+    if ($api_results != null && $api_results != '')
+        fwrite($cfh, $api_results);
+    else 
+        fwrite($cfh, '');
+
+    // Always close files
+    fclose($cfh);
+
+    // Results might be needed
+    return $api_results;
+}
+
+function refreshCache(){
+    global $ckey;
+
+    $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "?refresh='true'&ckey=".$ckey;
+
+    $result = file_get_contents($url);
+    if ($result === FALSE) { 
+        error_log('Something went wrong while requesting the cache to be refreshed.');
+    } else {
+        error_log('refresh cache request accepted');
+    }
+}
 
 function json_cached_results() {
 
@@ -276,30 +351,22 @@ function json_cached_results() {
 
     $expires = time() - 2*60*60; // 2 hours
 
-    // fopen will create or open as needed
-    $cfh = fopen($cache_dir, 'wb');
-
     // Check if cache entry exists for collection
     // Check that the file is older than the expire time and that it's not empty
-    if (!file_exists($cache_dir) || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
+    if (!file_exists($cache_dir) || filesize($cache_dir) <= 0) {
+        //fetch api and write cache
+        $api_results = writeCache();
 
-        // Refresh cache
-        getApiResults();
-        $api_results = json_encode(makeAllData());
-
-        // Write back to cache if results are valid
-        if ($api_results != null && $api_results != '')
-            fwrite($cfh, $api_results);
-        else
-            fwrite($cfh, '');
-
+    } else if (filectime($cache_dir) < $expires) {
+        //Ask for a refresh to start
+        error_log('requesting new cache');
+        refreshCache();
+        // Fetch current cache so it isn't a long wait
+        $api_results = (file_get_contents($cache_dir));
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_dir));
     }
-
-    // Always close files
-    fclose($cfh);
 
     return (($api_results));
 }
