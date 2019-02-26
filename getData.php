@@ -11,6 +11,7 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
+include 'json_cache.php';
 global $config;
 $config = include('configuration.php');
 // include 'display.php';
@@ -69,7 +70,7 @@ else {
 }
 // error_log('cache status: '. var_dump($cache_is_stale));
 if (!$cache_is_stale){
-    print json_cached_results();
+    print json_cached_results($cache_dir);
 } else {
     // The following section is to send a quick response so it doesn't wait for the full cache refresh
     // Start 
@@ -348,7 +349,7 @@ function refreshCache(){
         error_log('refresh cache request accepted');
     }
 }
-
+/*
 function json_cached_results() {
 
     global $cache_dir;
@@ -373,5 +374,5 @@ function json_cached_results() {
     }
 
     return (($api_results));
-}
+}*/
 ?>
