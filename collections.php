@@ -6,6 +6,7 @@
  * Author: Jesse Tatum
  * Date: 7/5/18
  */
+$config = include('configuration.php');
 ?>
 <html>
 <head>
@@ -39,7 +40,7 @@
             <?php
             include 'api_key.php';
             global $links, $api_key, $ckey, $start;
-
+            
             if($api_key == ''){
                 echo "00";
                 exit;
@@ -70,10 +71,15 @@
 <?php
 // Grab all collection info for user
 // TODO has not been tested with over 100 collections
+//$configure = include('configuration.php');
 $start = 0;
+$type = $config['collectionType'];
+$groupID = $config['groupID'];
+$address = 'https://api.zotero.org/'.$type.'/'.$groupID.'/collections?limit=100';
+print($address);
 while(true) { // Run until break
 
-    $response = file_get_contents('https://api.zotero.org/groups/2264127/collections?limit=100', false, $context);
+    $response = file_get_contents($address, false, $context);
     $jarray = json_decode($response, true); // JSON to array
 
     $table .= parse($jarray);
@@ -176,7 +182,7 @@ function parse($jarray){
             e.preventDefault();
 
             // Redirect to display with collection key
-            window.open('/display.php?ckey=' + $(this).val());
+            window.open('display.php?ckey=' + $(this).val());
         });
         //$('.button-iframe').click(function(e){
         //    e.preventDefault();

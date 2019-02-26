@@ -11,6 +11,8 @@
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
 include 'api_key.php';
+global $config;
+$config = include('configuration.php');
 // include 'display.php';
 
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
@@ -95,16 +97,18 @@ if (!$cache_is_stale){
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
-    global $limit, $api_key, $start, $ckey;
+    global $limit, $api_key, $start, $ckey, $config;
     if($api_key == ''){
         echo "00";
         exit;
     }
 
     $start = 0;
+    $type = $config['collectionType'];
+    $groupID = $config['groupID'];
     while(true) { // Run until break
 
-        $data = 'https://api.zotero.org/groups/2264127/collections/'. $ckey  . '/items?key=' . $api_key .
+        $data = 'https://api.zotero.org/'.$type.'/'.$groupID.'/collections/'. $ckey  . '/items?key=' . $api_key .
             '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object
