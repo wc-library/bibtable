@@ -1,11 +1,16 @@
 <?php
+include getData.php;
 
-
+/**
+* This function retreves the information for a spesificed cache 
+* or creates a new cache if it does not exist
+* @param String cache_dir path for cache to be collected
+*/
 function json_cached_results($cache_dir) {
     //include config file
     $config = include('configuration.php');
 
-    $expires = time() - $config['expireTime']; // 2 hours
+    $expires = time() - $config['expireTime']*60; // 2 hours
 
     // fopen will create or open as needed
     $cfh = fopen($cache_dir, 'wb');

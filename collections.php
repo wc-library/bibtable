@@ -39,7 +39,7 @@ $config = include('configuration.php');
 
             <?php
             include 'api_key.php';
-            global $links, $api_key, $ckey, $start;
+            global $ckey;
             
             if($api_key == ''){
                 echo "00";
@@ -76,13 +76,12 @@ $start = 0;
 $type = $config['collectionType'];
 $groupID = $config['groupID'];
 $address = 'https://api.zotero.org/'.$type.'/'.$groupID.'/collections?limit=100';
-print($address);
 while(true) { // Run until break
 
     $response = file_get_contents($address, false, $context);
     $jarray = json_decode($response, true); // JSON to array
 
-    $table .= parse($jarray);
+    $table .= parseTable($jarray);
 
     if(count($jarray) < 100) // Stop loop if current is less than limit
         break;
@@ -95,13 +94,13 @@ echo $table;
  * Parses the JSON array returned from collections in the Zotero API
  * and returns a formatted table with links to the collections
  */
-function parse($jarray){
-    global $keys;
-    global $names;
-    global $items;
-    global $links;
-    global $subcollections;
-    global $parent;
+function parseTable($jarray){
+    $keys;
+    $names;
+    $items;
+    $links;
+    $subcollections;
+    $parent;
 
     // Create table
     $html = '<table id="collection-table" class="table table-striped"><thead class="thead-light"><tr>' .
@@ -184,15 +183,6 @@ function parse($jarray){
             // Redirect to display with collection key
             window.open('display.php?ckey=' + $(this).val());
         });
-        //$('.button-iframe').click(function(e){
-        //    e.preventDefault();
-
-            //Redirect to display iframe link
-
-        //    alert('<iframe src="//'+window.location.hostname+'/display.php?ckey=' + $(this).val()+'" width="100%" height="99%"/>');
-            
-            
-        //})
     });
 
 </script>

@@ -6,8 +6,8 @@
 *
 *
 */
-
+$config = include('configuration.php');
 // API key goes here
-$api_key = 'some key';
+$api_key = $config['api_key'];
 
 ?>
