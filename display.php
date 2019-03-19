@@ -5,7 +5,6 @@
  * Author: Jesse Tatum
  * Date: 7/5/18
  */
-include 'api_key.php';
 global $ckey;
 $ckey = $_GET['ckey'];
 ?>

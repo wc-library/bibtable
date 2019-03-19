@@ -10,7 +10,6 @@
  *
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
-include 'api_key.php';
 include 'json_cache.php';
 global $config;
 $config = include('configuration.php');
@@ -85,8 +84,8 @@ if (!$cache_is_stale){
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
-    global $limit, $api_key, $ckey, $start, $config;
-    if($api_key == ''){
+    global $limit, $ckey, $start, $config;
+    if($config['api_key'] == ''){
         echo "00";
         exit;
     }

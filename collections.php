@@ -38,10 +38,9 @@ $config = include('configuration.php');
         <div>
 
             <?php
-            include 'api_key.php';
             global $ckey;
             
-            if($api_key == ''){
+            if($config['api_key'] == ''){
                 echo "00";
                 exit;
             }
