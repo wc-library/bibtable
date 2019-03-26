@@ -12,7 +12,9 @@
  */
 include 'json_cache.php';
 global $config;
-$config = include('configuration.php');
+//$config = include('configuration.php');
+$conString = file_get_contents("configuration.json");
+$config = json_decode($conString, true);
 // include 'display.php';
 
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API

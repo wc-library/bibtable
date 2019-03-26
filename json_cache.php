@@ -8,7 +8,9 @@ include getData.php;
 */
 function json_cached_results($cache_dir) {
     //include config file
-    $config = include('configuration.php');
+    //$config = include('configuration.php');
+    $conString = file_get_contents("configuration.json");
+    $config = json_decode($conString, true);
 
     $expires = time() - $config['expireTime']*60; // 2 hours
 

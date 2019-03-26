@@ -6,7 +6,9 @@
  * Author: Jesse Tatum
  * Date: 7/5/18
  */
-$config = include('configuration.php');
+//$config = include('configuration.php');
+$conString = file_get_contents("configuration.json");
+$config = json_decode($conString, true);
 ?>
 <html>
 <head>
