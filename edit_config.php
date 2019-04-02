@@ -38,25 +38,36 @@
 <body>
 
 <div class="container">
-    <form name="login" action="" method="POST">
+    <form name="login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
         
         
 </html>
 <?php
 $conString = file_get_contents('configuration.json');
 $config = json_decode($conString, true);
+if (count($_POST) >= 1){ // Don't run until POST with credentials
+    //echo 'found some posts';
+    //echo $_POST['expireTime'];
+    foreach($config as $key => $hold){
+        //echo $key;
+        $config[$key] = $_POST[$key];
+    }
+    //echo $config['expireTime'];
+    $newJson = json_encode($config);
+    file_put_contents('configuration.json', $newJson);
+}
 foreach($config as $key => $hold)
   {
 
         echo '<div class="form-group">
-        <label for="user">'.$key.'</label><input type="text" id="user" class="form-control" value="'.$hold.'" required></input><br></div>';
+        <label for="user">'.$key.'</label><input type="text" id="user" name="'.$key.'" class="form-control" value="'.$hold.'" required></input><br></div>';
   }
 //echo $html;
 //echo '<button type="submit" class="btn btn-primary formbtn" id="formbtn">Submit</button>';
 ?>
 <html lang="en" id="html">
 
-        <button class="btn btn-primary formbtn" id="formbtn" onclick="select()">Update</button>
+        <button type="submit" class="btn btn-primary formbtn" id="formbtn" onclick="select()">Update</button>
     </form>
 </div>
 
@@ -64,18 +75,18 @@ foreach($config as $key => $hold)
 
 </html>
 <?php
-$config['expireTime'] = 130;
+//$config['expireTime'] = 130;
 $newJson = json_encode($config);
-$contemp = json_decode($newJson, true);
-echo $contemp['expireTime'];
-function select(){
+//$contemp = json_decode($newJson, true);
+//echo $contemp['expireTime'];
+/*function select(){
     foreach($config as $key => $hold){
-        $config[$key] = $_GET[$key];
+        $config[$key] = $_POST[$key];
     }
     //echo $config['expireTime'];
     $newJson = json_encode($config);
     file_put_contents('configuration.json', $newJson);
 
-}
+}*/
 
 ?>

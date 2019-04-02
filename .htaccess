@@ -1,0 +1,4 @@
+<FilesMatch "\.(htaccess|json)$">
+Order Allow,Deny
+    Deny from all
+</FilesMatch>
