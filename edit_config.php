@@ -1,11 +1,11 @@
 <?php
 /**
- * Author: Jesse Tatum
- * Date: 7/18/18
+ * Author: Tristan Hoppe
+ * Date: 4/09/19
  *
- * Simple login form that checks the given username against the given API key
- * The API key is not public facing and is a sufficient substitute for a password
- * that doesn't necessitate a database.
+ * Simple form that allows a user to update the values in the configuration file
+ * 
+ * 
  */
 ?>
 <html lang="en" id="html">
@@ -41,18 +41,15 @@
     <form name="login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
         
         
-</html>
+
 <?php
 $conString = file_get_contents('configuration.json');
 $config = json_decode($conString, true);
-if (count($_POST) >= 1){ // Don't run until POST with credentials
-    //echo 'found some posts';
-    //echo $_POST['expireTime'];
+if (count($_POST) >= 1){ 
+
     foreach($config as $key => $hold){
-        //echo $key;
         $config[$key] = $_POST[$key];
     }
-    //echo $config['expireTime'];
     $newJson = json_encode($config);
     file_put_contents('configuration.json', $newJson);
 }
@@ -62,10 +59,10 @@ foreach($config as $key => $hold)
         echo '<div class="form-group">
         <label for="user">'.$key.'</label><input type="text" id="user" name="'.$key.'" class="form-control" value="'.$hold.'" required></input><br></div>';
   }
-//echo $html;
-//echo '<button type="submit" class="btn btn-primary formbtn" id="formbtn">Submit</button>';
+
+$newJson = json_encode($config);
 ?>
-<html lang="en" id="html">
+
 
         <button type="submit" class="btn btn-primary formbtn" id="formbtn" onclick="select()">Update</button>
     </form>
@@ -74,19 +71,3 @@ foreach($config as $key => $hold)
 </body>
 
 </html>
-<?php
-//$config['expireTime'] = 130;
-$newJson = json_encode($config);
-//$contemp = json_decode($newJson, true);
-//echo $contemp['expireTime'];
-/*function select(){
-    foreach($config as $key => $hold){
-        $config[$key] = $_POST[$key];
-    }
-    //echo $config['expireTime'];
-    $newJson = json_encode($config);
-    file_put_contents('configuration.json', $newJson);
-
-}*/
-
-?>
