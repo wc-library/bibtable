@@ -10,46 +10,37 @@
  *
  *@author Robin Kelmen <robin.kelmen@my.wheaton.edu>, Jesse Tatum <jesse.tatum@my.wheaton.edu>
  */
-include 'api_key.php';
+include 'json_cache.php';
+global $config;
+//$config = include('configuration.php');
+$conString = file_get_contents("configuration.json");
+$config = json_decode($conString, true);
 // include 'display.php';
 
 $limit = 100; // the limit of sources we want to pull. This is the max supported by the API
 $start = 0;
-
+global $dataValue;
+$dataValues = array(
 // Corresponding name in dynData.js
-global $creators;   // Authors
-$creators = array();
-global $titles;     // Titles
-$titles = array();
-global $isbns;      // ISBNs
-$isbns = array();
-global $itemtypes;  // Types
-$itemtypes = array();
-global $dates ;     // Dates
-$dates = array();
-global $publishers; // Publishers
-$publishers = array();
-global $places;     // Places
-$places = array();
-global $abstracts;  // Abstracts
-$abstracts = array();
-global $urls;       // URL links
-$urls = array();
-global $keys;       // Keys
-$keys = array();
-global $parentItem; // ParentItems
-$parentItem = array();
-global $tags;
-$tags = array();    // Description Tags
-global $publication;
-$publication = array(); //publication title for articles
-
+'creators' => array(), // Authors
+'titles' => array(),// Titles
+'isbns' => array(),// ISBNs
+'itemtypes' => array(),// Types
+'dates' => array(),// Dates
+'publishers' => array(),// Publishers
+'places' => array(),// Places
+'abstracts' => array(),// Abstracts
+'urls' => array(),// URL links
+'keys' => array(),// Keys
+'parentItem' => array(),// ParentItems
+'tags' => array(),    // Description Tags
+'publication' => array() //publication title for articles
+);
 global $ckey;
 if(isset($_POST['ckey']))
     $ckey = $_POST['ckey'];
 else
     $ckey = $_GET['ckey'];
-global $cache_dir;
 
 if ($ckey === null)
     die("Error obtaining collection key. Please go back and try again.");
@@ -67,7 +58,7 @@ else {
 }
 // error_log('cache status: '. var_dump($cache_is_stale));
 if (!$cache_is_stale){
-    print json_cached_results();
+    print json_cached_results($cache_dir);
 } else {
     // The following section is to send a quick response so it doesn't wait for the full cache refresh
     // Start 
@@ -90,21 +81,23 @@ if (!$cache_is_stale){
     if(session_id()) session_write_close();
 
     // Do the actual work of updating the requested cache
-    writeCache(); 
+    writeCache($cache_dir); 
 }
 
 // Pull all data from Zotero. This (with parsing) is the biggest bottleneck
 function getApiResults(){
-    global $limit, $api_key, $start, $ckey;
-    if($api_key == ''){
+    global $limit, $ckey, $start, $config;
+    if($config['api_key'] == ''){
         echo "00";
         exit;
     }
 
     $start = 0;
+    $type = $config['collectionType'];
+    $groupID = $config['groupID'];
     while(true) { // Run until break
 
-        $data = 'https://api.zotero.org/groups/2264127/collections/'. $ckey  . '/items?key=' . $api_key .
+        $data = 'https://api.zotero.org/'.$type.'/'.$groupID.'/collections/'. $ckey  . '/items?key=' . $api_key .
             '&itemTypes?locale&format=json&limit=' . $limit . '&start=' . $start;
         $response = file_get_contents($data); // pulls in the data
         $info = json_decode($response, true); // decodes json and creates an object
@@ -127,32 +120,18 @@ function getApiResults(){
 function parseFields($data, $offset){
 
     // Remind globals
-    global $creators;   // Authors
-    global $titles;     // Titles
-    global $isbns;      // ISBNs
-    global $itemtypes;  // Types
-    global $dates ;     // Dates
-    global $publishers; // Publishers
-    global $places;     // Places
-    global $abstracts;  // Abstracts
-    global $urls;       // URL links
-    global $keys;       // Keys
-    global $parentItem; // ParentItems
-    global $tags;       // Item tags
-    global $publication; //publication titles for journal articles
-
-
+    global $dataValues;
 
     //look through all the data
     $i = 0;
     foreach ($data as $work) {
 
-        $keys[$i + $offset] = $work["key"]; // Guaranteed value
+        $dataValues['keys'][$i + $offset] = $work["key"]; // Guaranteed value
 
         if(isset($work["data"]["parentItem"]))
-            $parentItem[$i + $offset] = $work["data"]["parentItem"];
+        $dataValues['parentItem'][$i + $offset] = $work["data"]["parentItem"];
         else
-            $parentItem[$i + $offset] = ""; // Empty string to avoid null
+        $dataValues['parentItem'][$i + $offset] = ""; // Empty string to avoid null
 
 
         $scope = $work["data"];
@@ -204,21 +183,20 @@ function parseFields($data, $offset){
                 $content[$j] = $scope["tags"][$j]["tag"];
                 $j++;
             }
-            $tags[$i + $offset] = $content;
+            $dataValues['tags'][$i + $offset] = $content;
         } else
-            $tags[$i + $offset] = "";
-
-        // Store all items
-        $creators[$i + $offset] = $authorString;
-        $itemtypes[$i + $offset] = itemT( "itemType", $scope);
-        $titles[$i + $offset] = checknStore( "title", $scope);
-        $dates[$i + $offset] = checknStore("date", $scope);
-        $places[$i + $offset] = checknStore("place", $scope);
-        $publishers[$i + $offset] = checknStore("publisher", $scope);
-        $isbns[$i + $offset] = checknStore("ISBN", $scope);
-        $abstracts[$i + $offset] = checknStore("abstractNote", $scope);
-        $urls[$i + $offset] = checknStore("url", $scope);
-        $publication[$i + $offset] = checknStore("publicationTitle", $scope);
+        $dataValues['tags'][$i + $offset] = "";
+        $dataValues['creators'][$i + $offset] = $authorString;
+        $dataValues['itemtypes'][$i + $offset] = itemT( "itemType", $scope);
+        $dataValues['titles'][$i + $offset] = checknStore( "title", $scope);
+        $dataValues['dates'][$i + $offset] = checknStore("date", $scope);
+        $dataValues['places'][$i + $offset] = checknStore("place", $scope);
+        $dataValues['publishers'][$i + $offset] = checknStore("publisher", $scope);
+        $dataValues['isbns'][$i + $offset] = checknStore("ISBN", $scope);
+        $dataValues['abstracts'][$i + $offset] = checknStore("abstractNote", $scope);
+        $dataValues['urls'][$i + $offset] = checknStore("url", $scope);
+        $dataValues['publication'][$i + $offset] = checknStore("publicationTitle", $scope);
+       
         $i++;
     }
 }
@@ -240,7 +218,7 @@ function checknStore($string, $scope){
         return  "";
 }
 
-/*
+/**
 * This method is similar to the checkNStore, except it works on itemtypes
 * The items associative array maps a key which is an item type and
 * returns the same item type in a better format
@@ -272,43 +250,31 @@ function itemT($string, $scope){
 function makeAllData(){
 
     // Remind PHP of globals
-    global $keys;
-    global $itemtypes;
-    global $titles;
-    global $creators;
-    global $dates;
-    global $places;
-    global $publishers;
-    global $isbns;
-    global $abstracts;
-    global $urls;
-    global $parentItem;
-    global $tags;
-    global $publication;
+    global $dataValues;
 
     $allData = new stdClass();
-    $allData->keys = $keys;
-    $allData->creators = $creators;
-    $allData->itemtypes = $itemtypes;
-    $allData->titles = $titles;
-    $allData->dates = $dates;
-    $allData->places = $places;
-    $allData->publishers = $publishers;
-    $allData->isbns = $isbns;
-    $allData->urls = $urls;
-    $allData->abstracts = $abstracts;
-    $allData->parentItem = $parentItem;
-    $allData->tags = $tags;
-    $allData->publication = $publication;
+    $allData->keys = $dataValues['keys'];
+    $allData->creators = $dataValues['creators'];
+    $allData->itemtypes = $dataValues['itemtypes'];
+    $allData->titles = $dataValues['titles'];
+    $allData->dates = $dataValues['dates'];
+    $allData->places = $dataValues['places'];
+    $allData->publishers = $dataValues['publishers'];
+    $allData->isbns = $dataValues['isbns'];
+    $allData->urls = $dataValues['urls'];
+    $allData->abstracts = $dataValues['abstracts'];
+    $allData->parentItem = $dataValues['parentItem'];
+    $allData->tags = $dataValues['tags'];
+    $allData->publication = $dataValues['publication'];
 
     return ($allData);
 }
 
-function writeCache() {
+function writeCache($cache_dir) {
 //TODO: This function shouldn't keep the cache file open so long
     // Idea one: get the api_results first and then open the file for writing
     // Idea two: write to a temp file and then copy it into the cache file aftewards. 
-    global $cache_dir;
+    //global $cache_dir;
 
     // fopen will create or open as needed
     // we only open it for writing after we know we'll need 
@@ -343,31 +309,5 @@ function refreshCache(){
     } else {
         error_log('refresh cache request accepted');
     }
-}
-
-function json_cached_results() {
-
-    global $cache_dir;
-
-    $expires = time() - 2*60*60; // 2 hours
-
-    // Check if cache entry exists for collection
-    // Check that the file is older than the expire time and that it's not empty
-    if (!file_exists($cache_dir) || filesize($cache_dir) <= 0) {
-        //fetch api and write cache
-        $api_results = writeCache();
-
-    } else if (filectime($cache_dir) < $expires) {
-        //Ask for a refresh to start
-        error_log('requesting new cache');
-        refreshCache();
-        // Fetch current cache so it isn't a long wait
-        $api_results = (file_get_contents($cache_dir));
-    } else {
-        // Fetch cache
-        $api_results = (file_get_contents($cache_dir));
-    }
-
-    return (($api_results));
 }
 ?>

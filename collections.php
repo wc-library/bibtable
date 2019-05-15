@@ -6,6 +6,9 @@
  * Author: Jesse Tatum
  * Date: 7/5/18
  */
+//$config = include('configuration.php');
+$conString = file_get_contents("configuration.json");
+$config = json_decode($conString, true);
 ?>
 <html>
 <head>
@@ -37,10 +40,9 @@
         <div>
 
             <?php
-            include 'api_key.php';
-            global $links, $api_key, $ckey, $start;
-
-            if($api_key == ''){
+            global $ckey;
+            
+            if($config['api_key'] == ''){
                 echo "00";
                 exit;
             }
@@ -70,13 +72,17 @@
 <?php
 // Grab all collection info for user
 // TODO has not been tested with over 100 collections
+//$configure = include('configuration.php');
 $start = 0;
+$type = $config['collectionType'];
+$groupID = $config['groupID'];
+$address = 'https://api.zotero.org/'.$type.'/'.$groupID.'/collections?limit=100';
 while(true) { // Run until break
 
-    $response = file_get_contents('https://api.zotero.org/groups/2264127/collections?limit=100', false, $context);
+    $response = file_get_contents($address, false, $context);
     $jarray = json_decode($response, true); // JSON to array
 
-    $table .= parse($jarray);
+    $table .= parseTable($jarray);
 
     if(count($jarray) < 100) // Stop loop if current is less than limit
         break;
@@ -89,13 +95,13 @@ echo $table;
  * Parses the JSON array returned from collections in the Zotero API
  * and returns a formatted table with links to the collections
  */
-function parse($jarray){
-    global $keys;
-    global $names;
-    global $items;
-    global $links;
-    global $subcollections;
-    global $parent;
+function parseTable($jarray){
+    $keys;
+    $names;
+    $items;
+    $links;
+    $subcollections;
+    $parent;
 
     // Create table
     $html = '<table id="collection-table" class="table table-striped"><thead class="thead-light"><tr>' .
@@ -108,6 +114,7 @@ function parse($jarray){
     $rows = Array();
     // Loop through array and pull desired values
     $i = 0;
+    $host = gethostname();
     foreach ($jarray as $piece) {
         $names[$i] = $piece["data"]["name"];
         $keys[$i] = $piece["data"]["key"];
@@ -123,9 +130,27 @@ function parse($jarray){
         $row .= '<td>' . $parent[$i] . '</td>';
         $row .= '<td><form class="form-inline btn-toolbar">' .
             '<button type="button" class="button btn btn-primary form-group button-display" value="' . $keys[$i] .
-            '">View table</button><button type="button" class="button btn btn-primary form-group button-iframe" value="' . $keys[$i] .
+            '">View table</button><button type="button" class="button btn btn-primary form-group button-iframe" data-toggle="modal" data-target="#Modal' . $i . '" value="' . $keys[$i] .
             '">Get iframe</button></form></td></tr>';
+        
+        $row .='    <div class="modal fade" id="Modal' . $i . '" role="dialog">
+            <div class="modal-dialog">
 
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">iframe</h4>
+                </div>
+                <div class="modal-body">
+                <p>&ltiframe src="//' . $host. '/display.php?ckey=' . $keys[$i] . '" width="100%" height="99%"/&gt"</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            
+            </div>
+        </div>';
         $rows[$i] = $row;
         $html .= $row;
         $i++;
@@ -157,15 +182,8 @@ function parse($jarray){
             e.preventDefault();
 
             // Redirect to display with collection key
-            window.open('/display.php?ckey=' + $(this).val());
+            window.open('display.php?ckey=' + $(this).val());
         });
-        $('.button-iframe').click(function(e){
-            e.preventDefault();
-
-            //Redirect to display iframe link
-
-            alert('<iframe src="//'+window.location.hostname+'/display.php?ckey=' + $(this).val()+'" width="100%" height="99%"/>');
-        })
     });
 
 </script>
