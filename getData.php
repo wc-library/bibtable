@@ -274,14 +274,16 @@ function json_cached_results() {
 
     global $cache_dir;
 
-    $expires = time() - 2*60*60; // 2 hours
-
-    // fopen will create or open as needed
-    $cfh = fopen($cache_dir, 'wb');
+    $expires = time() - 24*60*60; // 2 hours
 
     // Check if cache entry exists for collection
     // Check that the file is older than the expire time and that it's not empty
     if (!file_exists($cache_dir) || filectime($cache_dir) < $expires || filesize($cache_dir) <= 0) {
+
+        // fopen will create or open as needed
+        // we only open it for writing after we know 
+        // we'll need to write to the file (otherwise it's 0 when we check for size)
+        $cfh = fopen($cache_dir, 'wb');
 
         // Refresh cache
         getApiResults();
@@ -290,16 +292,18 @@ function json_cached_results() {
         // Write back to cache if results are valid
         if ($api_results != null && $api_results != '')
             fwrite($cfh, $api_results);
-        else
+        else 
             fwrite($cfh, '');
+
+        // Always close files
+        fclose($cfh);
 
     } else {
         // Fetch cache
         $api_results = (file_get_contents($cache_dir));
     }
 
-    // Always close files
-    fclose($cfh);
+    
 
     return (($api_results));
 }

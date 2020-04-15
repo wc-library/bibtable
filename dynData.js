@@ -36,6 +36,9 @@ request.onload = function(){
         $(".extra").click(function (){
             $(this).slideToggle(300);
             $("td div", $(this)).hide();
+	    $(this).prev().find("span.expanded").text("+ ");
+	    $(this).prev().find("span.expanded").attr("class", "collapsed");
+	     
         });
 
         // Don't collapse when links are selected
@@ -47,6 +50,13 @@ request.onload = function(){
         $(".source").click(function() {
             $(this).next().slideToggle(300);
             $(this).next().find('.content').slideToggle(300);
+            if($(this).find("span.collapsed").hasClass("collapsed")){
+	    	$(this).find("span.collapsed").text("- ");
+	    	$(this).find("span.collapsed").attr("class", "expanded");
+	    } else {
+ 		$(this).find("span.expanded").text("+ ");
+		$(this).find("span.expanded").attr("class","collapsed");
+	    }     
         });
 
         $("#tags").click(function (e){
@@ -226,7 +236,7 @@ function makeTable(num){
             }
 
             table += '<tr class="source">';
-            table += '<td class="title"><b>' + Titles[i] + '</b></td>';
+            table += '<td class="title"><span class="collapsed">+ </span><b>' + Titles[i] + '</b></td>';
             table += '<td class="author">' + Authors[i] + '</td>';
             table += '<td class="publication ">' + Pub + '</td>';
             table += '<td class="year">' + year + '</td>';
