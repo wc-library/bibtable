@@ -71,7 +71,7 @@ $ckey = $_GET['ckey'];
 </div>
 
 <table style="display:none; table-layout:fixed;" id="myTable" class="tablesorter" ></table>
-<script type="text/javascript" data-ckey="<?php echo $ckey ?>" src="dynData.js"></script>
+<script type="text/javascript" data-ckey="<?php echo htmlspecialchars($ckey) ?>" src="dynData.js"></script>
 </body>
 </html>
 
